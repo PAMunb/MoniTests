@@ -1,0 +1,29 @@
+import java.io.*;
+import java.util.*;
+import java.security.*;
+
+// This property monitors appropriate handling to generate message digest.
+
+MsgDigest(MessageDigest P) {
+        pointcut g1(): call(* MessageDigest.getInstance(String));
+        pointcut g2(): call(* MessageDigest.getInstance(String, String));
+
+        event getInstance after(String alg) :
+        (g1() || g2()) && args(alg) { System.out.println(alg); }
+
+        event update after() :
+        call(* MessageDigest.update(byte[])) {}
+
+        event reset before() :
+        call(* MessageDigest.reset(..)) {}
+
+        event digest before() :
+        call(* MessageDigest.digest()) {}
+
+        ere : getInstance update (update* reset* update* digest)*
+
+@fail {
+        System.err.println("Problem in Message Digest has occurred!");
+        __RESET;
+      }
+}
