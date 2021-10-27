@@ -8,7 +8,6 @@ import java.security.MessageDigest;
 // class (from the JCA specification).
 MessageDigestSpec() {
 
-		    
 	event g1 after(String alg): call(public static MessageDigest MessageDigest.getInstance(String)) && args(alg) {}
 
 	event update after(): call(* MessageDigest.update(byte[])) { }
@@ -20,9 +19,9 @@ MessageDigestSpec() {
 	ere : g1 update (update* reset* digest)*
 
 	@fail {
-	      System.out.println("Incorrect usage of MessageDigest");
+        __RESET;
+        throw new RuntimeException();
 	}
-
 }
 
 
