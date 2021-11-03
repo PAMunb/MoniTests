@@ -23,7 +23,7 @@ MessageDigestSpec() {
 	ere : g1 update (update* reset* digest)*
 
 	@fail {
-        __RESET;
+	    __RESET;
         throw new RuntimeException();
 	}
 }
