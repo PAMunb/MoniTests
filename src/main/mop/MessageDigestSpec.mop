@@ -2,13 +2,17 @@
 package mop;
 
 import java.security.MessageDigest;
+import java.util.List;
 
 // The MessageDigestSpec specifies
 // the correct usage of the MessageDigest
 // class (from the JCA specification).
 MessageDigestSpec() {
 
-	event g1 after(String alg): call(public static MessageDigest MessageDigest.getInstance(String)) && args(alg) {}
+    List<String> algorithms = Arrays.asList("SHA-256", "SHA-384", "SHA-512");
+
+	event g1 after(String alg): call(public static MessageDigest MessageDigest.getInstance(String))
+	  && args(alg) && condition(algorithms.contains(alg.toUpperCase())) {}
 
 	event update after(): call(* MessageDigest.update(byte[])) { }
 
