@@ -14,7 +14,7 @@ public class SecureRandomTest {
 
     @After
     public void tearDown() {
-        ErrorCollector.instance().printErrors();
+        // ErrorCollector.instance().printErrors();
     }
 
     @Test
@@ -39,6 +39,15 @@ public class SecureRandomTest {
         byte[] seed = "password".getBytes();
         random.setSeed(seed);
         random.nextInt(123);
+        assertTrue(ErrorCollector.instance().getErrors().isEmpty());
+    }
+
+    @Test
+    public void validExecutionWithNativePRNGBlockingNextIntWithoutParameter() throws Exception {
+        SecureRandom random = SecureRandom.getInstance("NativePRNGBlocking");
+        byte[] seed = "password".getBytes();
+        random.setSeed(seed);
+        random.nextInt();    // TODO: The test case is still passing even commenting this line.
         assertTrue(ErrorCollector.instance().getErrors().isEmpty());
     }
 

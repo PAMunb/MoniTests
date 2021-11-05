@@ -23,9 +23,12 @@ SecureRandomSpec(SecureRandom r) {
 
     event s2 before(SecureRandom r): call(public void SecureRandom.setSeed(byte[])) && target(r) {  }
 
-    event n1 after(SecureRandom r): call(public int SecureRandom.nextInt(int)) && target(r) { }
+    event next before(SecureRandom r):
+      (call(public int SecureRandom.nextInt(int))
+       || call(public int SecureRandom.nextInt())
+       || call(public void SecureRandom.nextBytes(byte[]))) && target(r) { }
 
-    ere : (g1 | g2) (s1 | s2) n1
+    ere : (g1 | g2) (s1 | s2) next+
 
     @fail {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));

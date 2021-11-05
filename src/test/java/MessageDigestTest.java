@@ -30,7 +30,4 @@ public class MessageDigestTest  {
         byte[] aMessageDigest = md.digest();
         assertEquals(3, ErrorCollector.instance().getErrors().size());
     }
-
-
-
 }
