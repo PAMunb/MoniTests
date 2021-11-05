@@ -1,15 +1,19 @@
 import java.security.*;
 
 import br.unb.cic.eh.ErrorCollector;
-import br.unb.cic.eh.ErrorDescription;
+import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class MessageDigestTest  {
+    @Before
+    public void setUp() {
+        ErrorCollector.instance().reset();
+    }
 
     @Test
     public void validExecution() throws Exception {
-        ErrorCollector.instance().reset();
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         String Password = "secret";
         byte[] msg = Password.getBytes();
@@ -20,19 +24,13 @@ public class MessageDigestTest  {
 
     @Test
     public void missingUpdateCall() throws Exception {
-        ErrorCollector.instance().reset();
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         String Password = "secret";
         byte[] msg = Password.getBytes();
         byte[] aMessageDigest = md.digest();
         assertEquals(3, ErrorCollector.instance().getErrors().size());
-        printErrors();
     }
 
-    public void printErrors() {
-        for(ErrorDescription e: ErrorCollector.instance().getErrors()) {
-            System.out.println(e);
-        }
-    }
+
 
 }

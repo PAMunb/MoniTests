@@ -31,4 +31,10 @@ public class ErrorCollector {
     public List<ErrorDescription> getErrors() {
         return errors;
     }
+
+    public void printErrors() {
+        for(ErrorDescription e: getErrors()) {
+            System.out.println(e);
+        }
+    }
 }

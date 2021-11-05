@@ -16,8 +16,8 @@ MessageDigestSpec() {
 	  && args(alg) && condition(algorithms.contains(alg.toUpperCase())) {}
 
 	event g2 after(String alg): call(public static MessageDigest MessageDigest.getInstance(String))
-    	  && args(alg) && condition(!algorithms.contains(alg.toUpperCase())) {
-
+    	  && args(alg) && condition(!algorithms.contains(alg.toUpperCase()))
+    {
        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
         "one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
     }
@@ -31,8 +31,8 @@ MessageDigestSpec() {
 	ere : g1 update (update* reset* digest)*
 
 	@fail {
-	    __RESET;
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+	    __RESET;
 	}
 }
 
