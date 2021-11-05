@@ -1,0 +1,29 @@
+package mop;
+
+import java.security.SecureRandom;
+
+SecureRandomSpec(SecureRandom r) {
+
+    List<String> algorithms = Arrays.asList("SHA1PRNG", "Windows-PRNG", "NativePRNG",
+        "NativePRNGBlocking", "NativePRNGNonBlocking", "PKCS11");
+
+    event g1 after(String alg) returning(SecureRandom r): call(public static SecureRandom SecureRandom.getInstance(String))
+      && args(alg) && condition(algorithms.contains(alg)) { }
+
+    event g2 after() returning(SecureRandom r): call(public static SecureRandom SecureRandom.getInstanceStrong()) { }
+
+    event s1 before(SecureRandom r): call(public void SecureRandom.setSeed(long)) && target(r) {  }
+
+    event n1 after(SecureRandom r): call(public int SecureRandom.nextInt(int)) && target(r) { }
+
+    ere : (g1 | g2) s1 n1
+
+    @fail {
+   	    __RESET;
+        throw new RuntimeException();
+    }
+
+    @match {
+       __RESET;
+    }
+}
