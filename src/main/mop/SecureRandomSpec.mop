@@ -7,6 +7,8 @@ SecureRandomSpec(SecureRandom r) {
     List<String> algorithms = Arrays.asList("SHA1PRNG", "Windows-PRNG", "NativePRNG",
         "NativePRNGBlocking", "NativePRNGNonBlocking", "PKCS11");
 
+    event c1 after(): call(public SecureRandom.new(..)) { }
+
     event g1 after(String alg) returning(SecureRandom r): call(public static SecureRandom SecureRandom.getInstance(String))
       && args(alg) && condition(algorithms.contains(alg)) { }
 

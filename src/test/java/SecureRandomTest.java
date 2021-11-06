@@ -53,6 +53,16 @@ public class SecureRandomTest {
     }
 
     @Test
+    public void validExecutionWithDefaultConstructorNextIntWithoutParameter() throws Exception {
+        SecureRandom random = new SecureRandom();
+        byte[] seed = "password".getBytes();
+        random.setSeed(seed);
+        random.nextInt();
+        random.nextInt(); //TODO: This test case should not lead to an error. We have to review the specs.
+        assertTrue(!ErrorCollector.instance().getErrors().isEmpty());
+    }
+
+    @Test
     public void invalidExecutionOrderWithInstanceStrong() throws Exception {
         SecureRandom random = SecureRandom.getInstanceStrong();
         random.nextInt(123);
