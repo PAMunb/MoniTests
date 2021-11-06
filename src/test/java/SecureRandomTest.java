@@ -47,7 +47,8 @@ public class SecureRandomTest {
         SecureRandom random = SecureRandom.getInstance("NativePRNGBlocking");
         byte[] seed = "password".getBytes();
         random.setSeed(seed);
-        random.nextInt();    // TODO: The test case is still passing even commenting this line.
+        random.nextInt();
+        random.nextInt();
         assertTrue(ErrorCollector.instance().getErrors().isEmpty());
     }
 
