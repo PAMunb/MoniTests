@@ -21,6 +21,12 @@ BlockCipherSpec() {
    event g1 after(String transformation): call(public static Cipher Cipher.getInstance(String)) && args(transformation)
    && condition(isValid(transformation)) { }
 
+   event invalidGetInstance after(String transformation): call(public static Cipher Cipher.getInstance(String)) && args(transformation)
+      && condition(!isValid(transformation)) {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+                "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + transformation + "."));
+   }
+
    event i3 after(int mode, java.security.Key key): call(public void Cipher.init(int, java.security.Key)) && args(mode, key)  { }
 
    event u1 before(byte[] plainText): call(public byte[] Cipher.update(byte[])) && args(plainText)  { }
