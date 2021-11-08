@@ -1,4 +1,4 @@
-package br.unb.cic.eh;
+package br.unb.cic.mop.jca.eh;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,6 +2,8 @@ package mop;
 
 import java.security.SecureRandom;
 
+import br.unb.cic.mop.jca.eh.*;
+
 SecureRandomSpec(SecureRandom r) {
 
     List<String> algorithms = Arrays.asList("SHA1PRNG", "Windows-PRNG", "NativePRNG",

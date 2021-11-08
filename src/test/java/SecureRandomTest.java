@@ -1,4 +1,4 @@
-import br.unb.cic.eh.ErrorCollector;
+import br.unb.cic.mop.jca.eh.ErrorCollector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

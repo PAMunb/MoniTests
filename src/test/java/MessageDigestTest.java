@@ -1,6 +1,6 @@
 import java.security.*;
 
-import br.unb.cic.eh.ErrorCollector;
+import br.unb.cic.mop.jca.eh.ErrorCollector;
 import org.junit.Before;
 import org.junit.Test;
 
