@@ -23,11 +23,13 @@ BlockCipherSpec() {
 
    event i3 after(int mode, java.security.Key key): call(public void Cipher.init(int, java.security.Key)) && args(mode, key)  { }
 
-   event u1 before(byte[] plainText): call(public * Cipher.update(byte[])) && args(plainText)  {
-     System.out.println("=============");
-   }
+   event u1 before(byte[] plainText): call(public byte[] Cipher.update(byte[])) && args(plainText)  { }
 
-   ere : g1 i3 u1
+   event f1 after():
+        (call(public byte[] Cipher.doFinal())
+         || call(public byte[] Cipher.doFinal(byte[])) ) {  }
+
+   ere : g1 i3 u1 f1
 
    @fail {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
