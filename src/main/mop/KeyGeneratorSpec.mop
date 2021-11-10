@@ -1,0 +1,40 @@
+package mop;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
+
+KeyGeneratorSpec(KeyGenerator k) {
+
+    List<String> safeAlgorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384",
+    "HmacSHA512");
+
+    event g1 after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
+    && args(alg) && condition(algorithms.contains(alg)) { }
+
+    event g2 after() returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String, String)) { }
+
+    event i1 before(KeyGenerator k): call(public void KeyGenerator.init(int)) && target(k) {  }
+
+    event i2 before(KeyGenerator k): call(public void KeyGenerator.init(int, SecureRandom)) && target(k) {  }
+
+    event i3 before(KeyGenerator k): call(public void KeyGenerator.init(AlgorithmParameterSpec)) && target(k) {  }
+
+    event i4 before(KeyGenerator k): call(public void KeyGenerator.init(AlgorithmParameterSpec, SecureRandom)) && target(k) {  }
+
+    event i5 before(KeyGenerator k): call(public void KeyGenerator.init(SecureRandom)) && target(k) {  }
+
+    event gk1 after(KeyGenerator k): call(public SecretKey KeyGenerator.generateKey()) && target(k) { }
+
+    ere : (g1 | g2) (i1 | i2 | i3 | i4 | i5) gk1
+
+    @fail {
+        __RESET;
+        throw new RuntimeException();
+    }
+
+    @match {
+        __RESET;
+    }
+}
