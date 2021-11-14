@@ -5,6 +5,8 @@ import javax.crypto.SecretKey;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
+import br.unb.cic.mop.jca.util.ExecutionContext;
+
 KeyGeneratorSpec(KeyGenerator k) {
 
     List<String> algorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384",
@@ -31,7 +33,9 @@ KeyGeneratorSpec(KeyGenerator k) {
          call(public void KeyGenerator.init(SecureRandom))
        ) && target(k) { }
 
-    event gk1 after(KeyGenerator k): call(public SecretKey KeyGenerator.generateKey()) && target(k) { }
+    event gk1 after(KeyGenerator k) returning(SecretKey key): call(public SecretKey KeyGenerator.generateKey()) && target(k) {
+        ExecutionContext.getInstance().setProperty(ExecutionContext.Property.GENERATED_KEY, key);
+    }
 
     ere : (g1 | g2) init gk1
 
