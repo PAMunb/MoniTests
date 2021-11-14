@@ -3,7 +3,6 @@ import br.unb.cic.mop.jca.eh.ErrorCollector;
 import br.unb.cic.mop.jca.util.ExecutionContext;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -28,7 +27,7 @@ public class KeyGeneratorTest {
         generator.init(192);
         SecretKey key = generator.generateKey();
         assertTrue(ErrorCollector.instance().getErrors().isEmpty());
-        assertTrue(ExecutionContext.getInstance().validate(ExecutionContext.Property.GENERATED_KEY, key));
+        assertTrue(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key));
     }
 
     @Test

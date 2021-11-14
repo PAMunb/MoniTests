@@ -21,7 +21,7 @@ public class ExecutionContext {
         context = new HashMap<>();
     }
 
-    public static ExecutionContext getInstance() {
+    public static ExecutionContext instance() {
         if(instance == null) {
             instance = new ExecutionContext();
         }

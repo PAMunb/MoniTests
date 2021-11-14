@@ -34,13 +34,14 @@ KeyGeneratorSpec(KeyGenerator k) {
        ) && target(k) { }
 
     event gk1 after(KeyGenerator k) returning(SecretKey key): call(public SecretKey KeyGenerator.generateKey()) && target(k) {
-        ExecutionContext.getInstance().setProperty(ExecutionContext.Property.GENERATED_KEY, key);
+        ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, key);
     }
 
     ere : (g1 | g2) init gk1
 
     @fail {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+        ExecutionContext.instance().remove(ExecutionContext.Property.GENERATED_KEY);
         __RESET;
     }
 }
