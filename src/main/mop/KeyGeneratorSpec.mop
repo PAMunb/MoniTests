@@ -11,15 +11,17 @@ KeyGeneratorSpec(KeyGenerator k) {
     "HmacSHA512");
 
     event g1 after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
-    && args(alg) && condition(algorithms.contains(alg)) { }
+      && args(alg) && condition(algorithms.contains(alg)) { }
 
     event unsafeAlgorithm after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
-    && args(alg) && condition(!algorithms.contains(alg))  {
+      && args(alg) && condition(!algorithms.contains(alg))  {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
         "one of" + String.join(",", algorithms) + " but found " + alg + "."));
     }
 
-    event g2 after() returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String, String)) { }
+    event g2 after(String alg, String prov) returning(KeyGenerator k):
+      call(public static KeyGenerator KeyGenerator.getInstance(String, String))
+      && args(alg, prov) && condition(!algorithms.contains(alg)) { }
 
     event init before(KeyGenerator k):
        ( call(public void KeyGenerator.init(int)) ||
@@ -27,7 +29,7 @@ KeyGeneratorSpec(KeyGenerator k) {
          call(public void KeyGenerator.init(AlgorithmParameterSpec)) ||
          call(public void KeyGenerator.init(AlgorithmParameterSpec, SecureRandom)) ||
          call(public void KeyGenerator.init(SecureRandom))
-       ) && target(k) {  }
+       ) && target(k) { }
 
     event gk1 after(KeyGenerator k): call(public SecretKey KeyGenerator.generateKey()) && target(k) { }
 

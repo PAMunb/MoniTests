@@ -20,9 +20,8 @@ public class KeyGeneratorTest {
          ErrorCollector.instance().printErrors();
     }
 
-    @Ignore
+    @Test
     public void safeAlgorithmWithoutSpecifiedProvider() throws Exception {
-        SecureRandom random = new SecureRandom();
         KeyGenerator generator = KeyGenerator.getInstance("AES");
         generator.init(192);
         generator.generateKey();
