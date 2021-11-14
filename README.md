@@ -1,9 +1,14 @@
 # MoniTests
 
-This project aims to apply JavaMop, a Java implementation of Monitoring-Oriented Programming, to verify the correct usage of cryptographic llibraries
+This project aims to apply JavaMop, a Java implementation of Monitoring-Oriented Programming, to verify the correct usage of cryptographic libraries
 
 ## Configuration
 
+   * Install AspectJ locally
+
+```
+$ 
+```
    * create a directory to hold the projects
 
 ```{shell}
@@ -37,12 +42,7 @@ $ mvn compile package install
    * setup the classpath
 
 ```{shell}
- export CLASSPATH=<ASPECTJ_HOME>/lib/aspectjrt.jar:\
-                  <ASPECTJ_HOME>/lib/aspectjtools.jar\
-		  <ASPECTJ_HOME>/lib/aspectjweaver.jar\
-                  <MAVEN_HOME>/repository/com/runtimeverification/rvmonitor/rv-monitor/1.4-SNAPSHOT/rv-monitor-1.4-SNAPSHOT.jar:\
-		  <MAVEN_HOME>/repository/com/runtimeverification/rvmonitor/rv-monitor-rt/1.4-SNAPSHOT/rv-monitor-rt-1.4-SNAPSHOT.jar
-		  
+$ source ./config.sh		  
 ````
 
    * clone the repository and execute the test cases

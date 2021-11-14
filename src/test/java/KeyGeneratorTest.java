@@ -2,6 +2,7 @@ import br.unb.cic.mop.jca.eh.ErrorCollector;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -19,7 +20,7 @@ public class KeyGeneratorTest {
          ErrorCollector.instance().printErrors();
     }
 
-    @Test
+    @Ignore
     public void safeAlgorithmWithoutSpecifiedProvider() throws Exception {
         SecureRandom random = new SecureRandom();
         KeyGenerator generator = KeyGenerator.getInstance("AES");

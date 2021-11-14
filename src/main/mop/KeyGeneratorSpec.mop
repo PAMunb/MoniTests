@@ -7,33 +7,31 @@ import java.security.spec.AlgorithmParameterSpec;
 
 KeyGeneratorSpec(KeyGenerator k) {
 
-    List<String> safeAlgorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384",
+    List<String> algorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384",
     "HmacSHA512");
 
     event g1 after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
     && args(alg) && condition(algorithms.contains(alg)) { }
 
     event unsafeAlgorithm after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
-    && args(alg) && condition(!safeAlgorithms.contains(alg))  {
+    && args(alg) && condition(!algorithms.contains(alg))  {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
-        "one of" + String.join(",", safeAlgorithms) + " but found " + alg + "."));
+        "one of" + String.join(",", algorithms) + " but found " + alg + "."));
     }
 
     event g2 after() returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String, String)) { }
 
-    event i1 before(KeyGenerator k): call(public void KeyGenerator.init(int)) && target(k) {  }
-
-    event i2 before(KeyGenerator k): call(public void KeyGenerator.init(int, SecureRandom)) && target(k) {  }
-
-    event i3 before(KeyGenerator k): call(public void KeyGenerator.init(AlgorithmParameterSpec)) && target(k) {  }
-
-    event i4 before(KeyGenerator k): call(public void KeyGenerator.init(AlgorithmParameterSpec, SecureRandom)) && target(k) {  }
-
-    event i5 before(KeyGenerator k): call(public void KeyGenerator.init(SecureRandom)) && target(k) {  }
+    event init before(KeyGenerator k):
+       ( call(public void KeyGenerator.init(int)) ||
+         call(public void KeyGenerator.init(int, SecureRandom)) ||
+         call(public void KeyGenerator.init(AlgorithmParameterSpec)) ||
+         call(public void KeyGenerator.init(AlgorithmParameterSpec, SecureRandom)) ||
+         call(public void KeyGenerator.init(SecureRandom))
+       ) && target(k) {  }
 
     event gk1 after(KeyGenerator k): call(public SecretKey KeyGenerator.generateKey()) && target(k) { }
 
-    ere : (g1 | g2) (i1 | i2 | i3 | i4 | i5) gk1
+    ere : (g1 | g2) init gk1
 
     @fail {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
