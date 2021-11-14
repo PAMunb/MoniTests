@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.unb.cic</groupId>
+    <artifactId>mop-test-suite</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.runtimeverification.rvmonitor</groupId>
+            <artifactId>rv-monitor</artifactId>
+            <!-- Allow any released (non-snapshot) RV-Monitor release >= 1.3 -->
+            <version>1.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>br.unb.cic</groupId>
+                <artifactId>mop-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>mop-gen</goal>
+                            <goal>agent-gen</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                   <pathToMopFiles>src/main/mop</pathToMopFiles>
+                    <pathToJavaMop>${basedir}/../javamop/bin</pathToJavaMop>
+                    <pathToMonitor>${basedir}/../rv-monitor/bin</pathToMonitor>
+                </configuration>
+            </plugin>
+	    <plugin>
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-surefire-plugin</artifactId>
+		   <configuration>
+                <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+		        <argLine>-javaagent:${basedir}/JavaMOPAgent.jar</argLine>
+                <runOrder>alphabetical</runOrder>
+    		</configuration>
+      	</plugin>
+        </plugins>
+    </build>
+
+</project>

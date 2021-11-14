@@ -1,0 +1,42 @@
+package mop;
+
+import java.security.SecureRandom;
+
+import br.unb.cic.mop.jca.eh.*;
+
+SecureRandomSpec(SecureRandom r) {
+
+    List<String> algorithms = Arrays.asList("SHA1PRNG", "Windows-PRNG", "NativePRNG",
+        "NativePRNGBlocking", "NativePRNGNonBlocking", "PKCS11");
+
+    event c1 after(): call(public SecureRandom.new(..)) { }
+
+    event g1 after(String alg) returning(SecureRandom r): call(public static SecureRandom SecureRandom.getInstance(String))
+      && args(alg) && condition(algorithms.contains(alg)) { }
+
+    event g2 after() returning(SecureRandom r): call(public static SecureRandom SecureRandom.getInstanceStrong()) { }
+
+    event g3 after(String alg) returning(SecureRandom r): call(public static SecureRandom SecureRandom.getInstance(String))
+          && args(alg) && condition(!algorithms.contains(alg))
+    {
+       ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+        "one of " + String.join(",", algorithms) + " but found " + alg + "."));
+    }
+
+    event s1 before(SecureRandom r): call(public void SecureRandom.setSeed(long)) && target(r) {  }
+
+    event s2 before(SecureRandom r): call(public void SecureRandom.setSeed(byte[])) && target(r) {  }
+
+    event next before(SecureRandom r):
+      (call(public int SecureRandom.nextInt(int))
+       || call(public int SecureRandom.nextInt())
+       || call(public void SecureRandom.nextBytes(byte[]))) && target(r) { }
+
+    ere : (g1 | g2) (s1 | s2) next+
+
+    @fail {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+   	    __RESET;
+    }
+
+}
