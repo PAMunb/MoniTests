@@ -45,4 +45,17 @@ public class BlockCipherTest {
         cipherText = cipher.doFinal();
         assertTrue(!ErrorCollector.instance().getErrors().isEmpty());
     }
+
+    @Test
+    public void invalidKeyTest() throws Exception {
+        KeyGenerator keygen = KeyGenerator.getInstance("DES");
+        keygen.init(56);
+        SecretKey key = keygen.generateKey();
+
+        Cipher cipher = Cipher.getInstance("DES");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] cipherText = cipher.update("secret".getBytes());
+        cipherText = cipher.doFinal();
+        assertTrue(!ErrorCollector.instance().getErrors().isEmpty());
+    }
 }
