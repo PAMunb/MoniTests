@@ -1,0 +1,5 @@
+BlockCipherTest.class
+KeyGeneratorTest.class
+MessageDigestTest.class
+SecureRandomTest.class
+br/unb/cic/mop/jca/util/CipherTransformationUtilTest.class

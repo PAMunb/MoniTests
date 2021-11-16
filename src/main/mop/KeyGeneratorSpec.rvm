@@ -1,0 +1,46 @@
+package mop;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
+import br.unb.cic.mop.jca.util.ExecutionContext;
+KeyGeneratorSpec(KeyGenerator k) {
+
+	List<String> algorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384", "HmacSHA512");
+	event g1(String alg, KeyGenerator k){
+		if ( ! (algorithms.contains(alg)) ) {
+			return false;
+		}
+		{
+		}
+	}
+	event unsafeAlgorithm(String alg, KeyGenerator k){
+		if ( ! (!algorithms.contains(alg)) ) {
+			return false;
+		}
+		{
+			ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC, "one of" + String.join(",", algorithms) + " but found " + alg + "."));
+		}
+	}
+	event g2(String alg, String prov, KeyGenerator k){
+		if ( ! (!algorithms.contains(alg)) ) {
+			return false;
+		}
+		{
+		}
+	}
+	event init(KeyGenerator k){
+	}
+	event gk1(KeyGenerator k, SecretKey key){
+		ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, key);
+	}
+	ere:  (g1 | g2) init gk1
+
+	@fail
+	{
+		ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+		ExecutionContext.instance().remove(ExecutionContext.Property.GENERATED_KEY);
+		__RESET;
+	}
+}

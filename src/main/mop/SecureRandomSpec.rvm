@@ -1,0 +1,40 @@
+package mop;
+
+import java.security.SecureRandom;
+import br.unb.cic.mop.jca.eh.*;
+SecureRandomSpec(SecureRandom r) {
+
+	List<String> algorithms = Arrays.asList("SHA1PRNG", "Windows-PRNG", "NativePRNG", "NativePRNGBlocking", "NativePRNGNonBlocking", "PKCS11");
+	event c1(){
+	}
+	event g1(String alg, SecureRandom r){
+		if ( ! (algorithms.contains(alg)) ) {
+			return false;
+		}
+		{
+		}
+	}
+	event g2(SecureRandom r){
+	}
+	event g3(String alg, SecureRandom r){
+		if ( ! (!algorithms.contains(alg)) ) {
+			return false;
+		}
+		{
+			ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC, "one of " + String.join(",", algorithms) + " but found " + alg + "."));
+		}
+	}
+	event s1(SecureRandom r){
+	}
+	event s2(SecureRandom r){
+	}
+	event next(SecureRandom r){
+	}
+	ere:  (g1 | g2) (s1 | s2) next+
+
+	@fail
+	{
+		ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+		__RESET;
+	}
+}
