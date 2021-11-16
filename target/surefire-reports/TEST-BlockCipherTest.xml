@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="BlockCipherTest" time="0.336" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="BlockCipherTest" time="0.262" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
@@ -61,7 +61,7 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="BlockCipherTest" name="simpleTest" time="0.319"/>
-  <testcase classname="BlockCipherTest" name="invalidTransformationTest" time="0.009"/>
-  <testcase classname="BlockCipherTest" name="invalidKeyTest" time="0.008"/>
+  <testcase classname="BlockCipherTest" name="simpleTest" time="0.252"/>
+  <testcase classname="BlockCipherTest" name="invalidTransformationTest" time="0.004"/>
+  <testcase classname="BlockCipherTest" name="invalidKeyTest" time="0.006"/>
 </testsuite>

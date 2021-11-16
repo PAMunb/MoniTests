@@ -1,0 +1,17 @@
+mop/MultiSpec_1RuntimeMonitor.class
+mop/KeyGeneratorSpecMonitor_Set.class
+mop/SecureRandomSpecMonitor_Set.class
+br/unb/cic/mop/jca/util/ExecutionContext$Property.class
+br/unb/cic/mop/jca/util/CipherTransformationUtil.class
+mop/ISecureRandomSpecMonitor.class
+mop/KeyGeneratorSpecMonitor.class
+mop/MessageDigestSpecMonitor_Set.class
+br/unb/cic/mop/jca/eh/ErrorCollector.class
+mop/BlockCipherSpecMonitor.class
+br/unb/cic/mop/jca/eh/ErrorDescription.class
+mop/BlockCipherSpecMonitor_Set.class
+br/unb/cic/mop/jca/eh/ErrorType.class
+mop/SecureRandomSpecMonitor.class
+mop/SecureRandomSpecDisableHolder.class
+br/unb/cic/mop/jca/util/ExecutionContext.class
+mop/MessageDigestSpecMonitor.class
