@@ -1,0 +1,37 @@
+package mop;
+
+import java.security.MessageDigest;
+import java.util.List;
+import br.unb.cic.mop.jca.eh.*;
+MessageDigestSpec() {
+
+	List<String> algorithms = Arrays.asList("SHA-256", "SHA-384", "SHA-512");
+	event g1(String alg){
+		if ( ! (algorithms.contains(alg.toUpperCase())) ) {
+			return false;
+		}
+		{
+		}
+	}
+	event g2(String alg){
+		if ( ! (!algorithms.contains(alg.toUpperCase())) ) {
+			return false;
+		}
+		{
+			ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC, "one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
+		}
+	}
+	event update(){
+	}
+	event reset(){
+	}
+	event digest(){
+	}
+	ere:  g1 update (update* reset* digest)*
+
+	@fail
+	{
+		ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+		__RESET;
+	}
+}
