@@ -6,12 +6,17 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 KeyGeneratorSpec(KeyGenerator k) {
+    String hashingAlgorithm = "";
 
     List<String> algorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384",
     "HmacSHA512");
 
+    List<int> validAESKeySizes = Arrays.asList(128, 192, 256);
+
     event g1 after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
-      && args(alg) && condition(algorithms.contains(alg)) { }
+      && args(alg) && condition(algorithms.contains(alg)) {
+        hashingAlgorithm = alg;
+        }
 
     event unsafeAlgorithm after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
       && args(alg) && condition(!algorithms.contains(alg))  {
@@ -30,6 +35,14 @@ KeyGeneratorSpec(KeyGenerator k) {
          call(public void KeyGenerator.init(AlgorithmParameterSpec, SecureRandom)) ||
          call(public void KeyGenerator.init(SecureRandom))
        ) && target(k) { }
+
+    event invalidAESKeySize before(int keySize):
+        ( call(public void KeyGenerator.init(int)) ||
+          call(public void KeyGenerator.init(int, SecureRandom))
+        ) && args(alg, keySize) && condition(hashingAlgorithm == "AES" && !validAESKeySizes.contains(keySize)) {
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidKeySize, "" + __LOC,
+            "one of" + Arrays.toString(validAESKeySizes) + " but found " + keySize.toString() + "."));
+        }
 
     event gk1 after(KeyGenerator k): call(public SecretKey KeyGenerator.generateKey()) && target(k) { }
 
