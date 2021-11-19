@@ -7,6 +7,8 @@ br/unb/cic/mop/jca/util/CipherTransformationUtil.class
 mop/ISecureRandomSpecMonitor.class
 mop/KeyGeneratorSpecMonitor.class
 mop/MessageDigestSpecMonitor_Set.class
+mop/CipherOutputStreamSpecMonitor.class
+mop/CipherOutputStreamSpecMonitor_Set.class
 br/unb/cic/mop/jca/eh/ErrorCollector.class
 mop/BlockCipherSpecMonitor.class
 mop/CipherInputStreamSpecMonitor_Set.class

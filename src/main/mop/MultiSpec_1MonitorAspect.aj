@@ -6,6 +6,8 @@ import static br.unb.cic.mop.jca.util.CipherTransformationUtil.*;
 import br.unb.cic.mop.jca.util.ExecutionContext;
 import javax.crypto.CipherInputStream;
 import java.io.InputStream;
+import javax.crypto.CipherOutputStream;
+import java.io.OutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.SecureRandom;
@@ -114,7 +116,30 @@ public aspect MultiSpec_1MonitorAspect implements com.runtimeverification.rvmoni
 
 	pointcut CipherInputStreamSpec_cl1() : (call(public void CipherInputStream.close())) && MOP_CommonPointCut();
 	after () : CipherInputStreamSpec_cl1() {
+		//CipherInputStreamSpec_cl1
 		MultiSpec_1RuntimeMonitor.CipherInputStreamSpec_cl1Event();
+		//CipherOutputStreamSpec_cl
+		MultiSpec_1RuntimeMonitor.CipherOutputStreamSpec_clEvent();
+	}
+
+	pointcut CipherOutputStreamSpec_c1() : (call(public CipherOutputStream.new(OutputStream, Cipher))) && MOP_CommonPointCut();
+	after () : CipherOutputStreamSpec_c1() {
+		MultiSpec_1RuntimeMonitor.CipherOutputStreamSpec_c1Event();
+	}
+
+	pointcut CipherOutputStreamSpec_w1() : (call(public void CipherInputStream.write(int)) || call(public void CipherInputStream.write(byte[]))) && MOP_CommonPointCut();
+	after () : CipherOutputStreamSpec_w1() {
+		MultiSpec_1RuntimeMonitor.CipherOutputStreamSpec_w1Event();
+	}
+
+	pointcut CipherOutputStreamSpec_w2(byte[] b, int off, int len) : (call(public void CipherInputStream.write(byte[], int, int)) && args(b, off, len)) && MOP_CommonPointCut();
+	after (byte[] b, int off, int len) : CipherOutputStreamSpec_w2(b, off, len) {
+		MultiSpec_1RuntimeMonitor.CipherOutputStreamSpec_w2Event(b, off, len);
+	}
+
+	pointcut CipherOutputStreamSpec_fl() : (call(public void CipherInputStream.flush())) && MOP_CommonPointCut();
+	after () : CipherOutputStreamSpec_fl() {
+		MultiSpec_1RuntimeMonitor.CipherOutputStreamSpec_flEvent();
 	}
 
 	pointcut KeyGeneratorSpec_g1(String alg) : (call(public static KeyGenerator KeyGenerator.getInstance(String)) && args(alg)) && MOP_CommonPointCut();
