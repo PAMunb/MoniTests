@@ -15,17 +15,20 @@ MessageDigestSpec() {
     List<String> algorithms = Arrays.asList("SHA-256", "SHA-384", "SHA-512");
     MessageDigest md = null;
 
-	event g1 after(String alg) returning(MessageDigest digest): call(public static MessageDigest MessageDigest.getInstance(String))
-	     && args(alg) && condition(algorithms.contains(alg.toUpperCase())) {
+	event g1 after(String alg) returning(MessageDigest digest):
+	  call(public static MessageDigest MessageDigest.getInstance(String))
+	  && args(alg) && condition(algorithms.contains(alg.toUpperCase()))
+        {
 	  md = digest;
 	}
 
-	event g2 after(String alg): call(public static MessageDigest MessageDigest.getInstance(String))
+	event g2 after(String alg):
+	  call(public static MessageDigest MessageDigest.getInstance(String))
     	  && args(alg) && condition(!algorithms.contains(alg.toUpperCase()))
-    {
-       ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
-        "one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
-    }
+        {
+          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+             "one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
+        }
 
 	event update after(): call(* MessageDigest.update(byte[])) { }
 
@@ -38,15 +41,15 @@ MessageDigestSpec() {
 	ere : g1 update (update* reset* digest)*
 
 	@fail {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
-        ExecutionContext.instance().unsetObjectAsInAcceptingState(md);
-        ExecutionContext.instance().remove(Property.DIGESTED);
-        System.out.println("calling the reset on failure");
-	    __RESET;
+           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+           ExecutionContext.instance().unsetObjectAsInAcceptingState(md);
+           ExecutionContext.instance().remove(Property.DIGESTED);
+           System.out.println("calling the reset on failure");
+           __RESET;
 	}
 
 	@match {
-        ExecutionContext.instance().setObjectAsInAcceptingState(md);
+           ExecutionContext.instance().setObjectAsInAcceptingState(md);
 	}
 }
 
