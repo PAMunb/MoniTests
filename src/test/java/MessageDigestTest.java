@@ -3,6 +3,7 @@ import java.security.*;
 import br.unb.cic.mop.jca.eh.ErrorCollector;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -40,12 +41,12 @@ public class MessageDigestTest  {
         assertEquals(3, ErrorCollector.instance().getErrors().size());
     }
 
-//    @Test
-//    public void messageDigestValidTest1() throws NoSuchAlgorithmException {
-//        byte[] inbytearr = "secret".getBytes();
-//        MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256");
-//        byte[] out = messageDigest0.digest(inbytearr);
-//        Assertions.hasNotEnsuredPredicate(out);
-//        Assertions.mustNotBeInFinalState(messageDigest0);
-//    }
+    @Ignore
+    public void messageDigestValidTest1() throws NoSuchAlgorithmException {
+        byte[] inbytearr = "secret".getBytes();
+        MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256");
+        byte[] out = messageDigest0.digest(inbytearr);
+        Assertions.hasNotEnsuredPredicate(out);
+        Assertions.mustNotBeInFinalState(messageDigest0);
+    }
 }
