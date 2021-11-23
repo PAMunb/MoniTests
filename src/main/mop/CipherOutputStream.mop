@@ -1,0 +1,26 @@
+package mop;
+
+import javax.crypto.CipherOutputStream;
+import java.io.OutputStream;
+import javax.crypto.Cipher;
+import br.unb.cic.mop.jca.eh.*;
+
+CipherOutputStreamSpec() {
+    event c1 after() : call(public CipherOutputStream.new(OutputStream, Cipher)) { }
+
+    event w1 after() : call(public void CipherInputStream.write(int)) || call(public void CipherInputStream.write(byte[])) {  }
+
+    event w2 after(byte[] b, int off, int len) :
+     call(public void CipherInputStream.write(byte[], int, int)) && args(b, off, len) { }
+
+    event fl after() : call(public void CipherInputStream.flush()) { }
+
+    event cl after(): call(public void CipherInputStream.close()) { }
+
+    ere : c1 (w1 | w2 | fl)+ cl
+
+    @fail {
+           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+           __RESET;
+        }
+}

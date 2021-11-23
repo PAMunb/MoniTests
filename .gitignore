@@ -27,5 +27,4 @@ src/main/mop/*.rvm
 src/main/mop/*.aj
 
 target
-
 .idea
