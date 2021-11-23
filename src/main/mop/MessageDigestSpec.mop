@@ -38,7 +38,7 @@ MessageDigestSpec() {
 	    ExecutionContext.instance().setProperty(Property.DIGESTED, out);
 	}
  		
-	ere : g1 update (update* reset* digest)*
+	ere : (g1 update (update* reset* digest)*)+
 
 	@fail {
            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
