@@ -1,7 +1,0 @@
-BlockCipherTest.class
-KeyGeneratorTest.class
-CipherInputStreamTest.class
-br/unb/cic/mop/jca/util/CipherTransformationUtilTest.class
-CipherOutputStreamTest.class
-MessageDigestTest.class
-SecureRandomTest.class
