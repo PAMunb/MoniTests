@@ -27,7 +27,6 @@ public class MessageDigestTest  {
         byte[] msg = Password.getBytes();
         md.update(msg);
         byte[] out = md.digest();
-        //assertTrue(ErrorCollector.instance().getErrors().isEmpty());
         Assertions.hasEnsuredPredicate(out);
         Assertions.mustBeInFinalState(md);
     }
@@ -41,7 +40,7 @@ public class MessageDigestTest  {
         assertEquals(3, ErrorCollector.instance().getErrors().size());
     }
 
-    @Ignore
+    @Test
     public void messageDigestValidTest1() throws NoSuchAlgorithmException {
         byte[] inbytearr = "secret".getBytes();
         MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256");

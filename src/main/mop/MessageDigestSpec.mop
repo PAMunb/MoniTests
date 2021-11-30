@@ -34,7 +34,8 @@ MessageDigestSpec() {
 
 	event reset before(): call(* MessageDigest.reset(..)) { }
 
-	event digest after() returning(byte[] out): call(public byte[] MessageDigest.digest()) {
+	event digest after() returning(byte[] out):
+	 (call(public byte[] MessageDigest.digest()) || call(public byte[] MessageDigest.digest(byte[])))  {
 	    ExecutionContext.instance().setProperty(Property.DIGESTED, out);
 	}
  		
