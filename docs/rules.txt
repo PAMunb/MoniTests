@@ -1,6 +1,6 @@
 MessageDigest
 Mac
-Cipher
+Cipher        ->     KeyGenerator
 Signature
 SSLContext
 KeyStore

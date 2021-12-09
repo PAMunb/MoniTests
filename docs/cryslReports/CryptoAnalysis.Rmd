@@ -39,7 +39,7 @@ acm <- sqldf("select Project as project, ViolatedRule as rule, ErrorType as misu
 ```{r summary-cm}
 # total of violations: 
 
-sqldf("select rule, count(*) from cm")
+sqldf("select count(*) from cm")
 
 # total of violations (over rule)
 
@@ -54,7 +54,7 @@ sqldf("select rule, count(*) from cm
 ```{r summary-acm}
 # total of violations: 
 
-sqldf("select rule, count(*) from cm")
+sqldf("select count(*) from acm")
 
 # total of violations (over rule)
 

@@ -191,9 +191,9 @@ acm &lt;- sqldf(&quot;select Project as project, ViolatedRule as rule, ErrorType
 <h3>Summary of Violations for CryptoMine</h3>
 <pre class="r"><code># total of violations: 
 
-sqldf(&quot;select rule, count(*) from cm&quot;)</code></pre>
-<pre><code>##           rule count(*)
-## 1 SecureRandom     2619</code></pre>
+sqldf(&quot;select count(*) from cm&quot;)</code></pre>
+<pre><code>##   count(*)
+## 1     2619</code></pre>
 <pre class="r"><code># total of violations (over rule)
 
 sqldf(&quot;select rule, count(*) from cm 
@@ -220,9 +220,9 @@ sqldf(&quot;select rule, count(*) from cm
 <h3>Summary of Violations for AndroidCryptoMine</h3>
 <pre class="r"><code># total of violations: 
 
-sqldf(&quot;select rule, count(*) from cm&quot;)</code></pre>
-<pre><code>##           rule count(*)
-## 1 SecureRandom     2619</code></pre>
+sqldf(&quot;select count(*) from acm&quot;)</code></pre>
+<pre><code>##   count(*)
+## 1     2035</code></pre>
 <pre class="r"><code># total of violations (over rule)
 
 sqldf(&quot;select rule, count(*) from acm 
