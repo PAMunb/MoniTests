@@ -40,8 +40,8 @@ MessageDigestSpec() {
 		System.out.println("Inside digest() call");
 	    ExecutionContext.instance().setProperty(Property.DIGESTED, out);
 	 }
- 		
-	ere : (safeAlgorithm udpate digest)
+
+	ere : safeAlgorithm update (update* reset* digest)*
 
 	@fail {
            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
@@ -51,9 +51,9 @@ MessageDigestSpec() {
            __RESET;
 	}
 
-//	@match {
-//           ExecutionContext.instance().setObjectAsInAcceptingState(md);
-//	}
+	@match {
+		ExecutionContext.instance().setObjectAsInAcceptingState(md);
+	}
 }
 
 

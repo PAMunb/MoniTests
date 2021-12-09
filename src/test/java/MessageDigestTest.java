@@ -27,8 +27,8 @@ public class MessageDigestTest  {
         byte[] msg = MESSAGE_STRING.getBytes();
         md.update(msg);
         byte[] out = md.digest();
-//        Assertions.hasNotEnsuredPredicate(out);
-//        Assertions.mustNotBeInFinalState(md);
+        Assertions.hasEnsuredPredicate(out);
+        Assertions.mustBeInFinalState(md);
     }
 
 //    @Test
