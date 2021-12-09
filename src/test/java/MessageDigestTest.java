@@ -27,35 +27,39 @@ public class MessageDigestTest  {
         byte[] msg = MESSAGE_STRING.getBytes();
         md.update(msg);
         byte[] out = md.digest();
-        Assertions.hasEnsuredPredicate(out);
-        Assertions.mustBeInFinalState(md);
+//        Assertions.hasEnsuredPredicate(out);
+//        Assertions.mustBeInFinalState(md);
     }
 
-//    @Test
-//    public void unsafeAlgorithmWithCorrectCallSequenceDefaultDigest() throws Exception {
-//        MessageDigest md = MessageDigest.getInstance("SHA-1");
-//        byte[] msg = MESSAGE_STRING.getBytes();
-//        md.update(msg);
-//        byte[] out = md.digest();
-//        // Which Assertions have to be made here, and why?
+    @Test
+    public void unsafeAlgorithmWithCorrectCallSequenceDefaultDigest() throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        byte[] msg = MESSAGE_STRING.getBytes();
+        md.update(msg);
+        byte[] out = md.digest();
 //        Assertions.hasNotEnsuredPredicate(out);
 //        Assertions.mustNotBeInFinalState(md);
-//    }
-//
-//    @Test
-//    public void unsafeAlgorithmMissingUpdateCallDefaultDigest() throws Exception {
-//        MessageDigest md = MessageDigest.getInstance("SHA-1");
-//        byte[] msg = MESSAGE_STRING.getBytes();
-//        byte[] aMessageDigest = md.digest();
-//        assertEquals(3, ErrorCollector.instance().getErrors().size());
-//    }
+    }
 
-//    @Test
-//    public void safeAlgorithmMissingUpdateCallByteArrayDigest() throws Exception {
-//        MessageDigest md = MessageDigest.getInstance("SHA-256");
-//        byte[] inbytearr = MESSAGE_STRING.getBytes();
-//        byte[] out = md.digest(inbytearr);
+    @Test
+    public void unsafeAlgorithmMissingUpdateCallDefaultDigest() throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        /*
+        Missing calls will be left as comment in test cases
+        byte[] msg = MESSAGE_STRING.getBytes();
+        md.update(msg);
+        */
+        byte[] out = md.digest();
 //        Assertions.hasNotEnsuredPredicate(out);
 //        Assertions.mustNotBeInFinalState(md);
-//    }
+    }
+
+    @Test
+    public void safeAlgorithmMissingUpdateCallByteArrayDigest() throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] inbytearr = MESSAGE_STRING.getBytes();
+        byte[] out = md.digest(inbytearr);
+//        Assertions.hasNotEnsuredPredicate(out);
+//        Assertions.mustNotBeInFinalState(md);
+    }
 }
