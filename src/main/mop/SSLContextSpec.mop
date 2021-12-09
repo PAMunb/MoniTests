@@ -1,0 +1,68 @@
+package mop;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.TrustManager;
+
+import br.unb.cic.mop.jca.eh.*;
+import br.unb.cic.mop.jca.util.ExecutionContext;
+
+
+/**
+ * SSLContextSpec
+ *
+ * A JavaMOP specification of the correct usage of the
+ * javax.net.ssl.SSLContext class.
+ *
+ * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/SSLContext.crysl
+ */
+SSLContextSpec() {
+
+   List<String> protocols = Arrays.asList("TLSV1.2", "TLSV1.3");
+
+   SSLContext context;
+
+   SSLEngine engine;
+
+   event get after(String protocol) returning(SSLContext ctx):
+    call(public static SSLContext SSLContext.getInstance(String, ..))
+    && args(protocol)
+    && condition(protocols.contains(protocol.toUpperCase())) {
+      context = ctx;
+    }
+
+   event unsafe_protocol after(String protocol):
+    call(public static SSLContext SSLContext.getInstance(String, ..))
+    && args(protocol)
+    && condition(!protocols.contains(protocol.toUpperCase())) {
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+                "one of {TLSv1.2, TLSv1.3} but found " + protocol + "."));
+   }
+
+   event init after(): call(public void SSLContext.init(KeyManager[], TrustManager[], SecureRandom)) {
+     ExecutionContext.instance().setProperty(Property.GENERATE_SSL_CONTEXT, context);
+   }
+
+   event createEngine after() returning(SSLEngine eng) : call(public void SSLContext.createEngine(..)) {
+       ExecutionContext.instance().setProperty(Property.GENERATE_SSL_ENGINE, eng);
+   }
+
+   fsm :
+    start [
+       get -> s1
+    ]
+    s1 [
+       init -> end
+    ]
+    end [
+       createEngine -> end
+    ]
+
+    alias match01 = end
+
+    @match01 {
+      System.out.println("******");
+      __RESET;
+    }
+}
