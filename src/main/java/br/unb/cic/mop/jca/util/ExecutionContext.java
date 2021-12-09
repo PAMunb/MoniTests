@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class ExecutionContext {
     public enum Property {
-        GENERATED_KEY, DIGESTED
+        GENERATED_KEY, DIGESTED, GENERATE_SSL_CONTEXT, GENERATE_SSL_ENGINE
     }
 
     private Map<Property, Object> context;
@@ -21,6 +21,7 @@ public class ExecutionContext {
     private Set<Object> acceptingState;
 
     private static ExecutionContext instance;
+
     private ExecutionContext() {
         context = new HashMap<>();
         acceptingState = new HashSet<>();
