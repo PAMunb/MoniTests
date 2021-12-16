@@ -36,7 +36,7 @@ public class MessageDigestTest  {
         String Password = "secret";
         byte[] msg = Password.getBytes();
         byte[] aMessageDigest = md.digest();
-        assertEquals(3, ErrorCollector.instance().getErrors().size());
+        Assertions.expectingNonEmptySetOfErrors(3);
     }
 
     @Test
