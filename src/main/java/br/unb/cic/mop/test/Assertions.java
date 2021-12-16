@@ -12,7 +12,7 @@ public class Assertions extends Assert {
             assertTrue(true);
         }
         else {
-            fail("Object is not in a final state.");
+            fail("Object is not in accepting state.");
         }
     }
 

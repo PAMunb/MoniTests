@@ -1,3 +1,4 @@
+import br.unb.cic.mop.jca.util.ExecutionContext;
 import br.unb.cic.mop.test.Assertions;
 
 import org.junit.Test;
@@ -19,8 +20,6 @@ public class SSLContextTest {
         SSLContext sSLContext0 = SSLContext.getInstance("TLSv1.2");
         sSLContext0.init(kms, tms, (SecureRandom) null);
         Assertions.hasEnsuredPredicate(sSLContext0);
-      //  Assertions.mustBeInAcceptingState(sSLContext0);
-
     }
 
     @Test
@@ -31,8 +30,6 @@ public class SSLContextTest {
         SSLContext sSLContext0 = SSLContext.getInstance("SSL");
         sSLContext0.init(kms, tms, (SecureRandom) null);
         Assertions.hasNotEnsuredPredicate(sSLContext0);
-        //  Assertions.mustBeInAcceptingState(sSLContext0);
-
     }
 
 }

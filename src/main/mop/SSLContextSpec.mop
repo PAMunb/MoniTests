@@ -41,28 +41,25 @@ SSLContextSpec() {
    }
 
    event init after(): call(public void SSLContext.init(KeyManager[], TrustManager[], SecureRandom)) {
+     System.out.println("*****");
      ExecutionContext.instance().setProperty(Property.GENERATE_SSL_CONTEXT, context);
    }
 
-   event createEngine after() returning(SSLEngine eng) : call(public void SSLContext.createEngine(..)) {
+   event engine after() returning(SSLEngine eng) : call(public void SSLContext.createEngine(..)) {
        ExecutionContext.instance().setProperty(Property.GENERATE_SSL_ENGINE, eng);
    }
 
-   fsm :
-    start [
-       get -> s1
-    ]
-    s1 [
-       init -> end
-    ]
-    end [
-       createEngine -> end
-    ]
+   ere: get init engine
 
-    alias match01 = end
+   @fail {
+     ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+     ExecutionContext.instance().unsetObjectAsInAcceptingState(context);
+     ExecutionContext.instance().remove(Property.GENERATE_SSL_ENGINE);
+     ExecutionContext.instance().remove(Property.GENERATE_SSL_CONTEXT);
+     __RESET;
+   }
 
-    @match01 {
-      System.out.println("******");
-      __RESET;
-    }
+   @match {
+      ExecutionContext.instance().setObjectAsInAcceptingState(context);
+   }
 }
