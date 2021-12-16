@@ -1,6 +1,7 @@
 import br.unb.cic.mop.jca.eh.ErrorCollector;
 
 import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.test.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +27,8 @@ public class KeyGeneratorTest {
         KeyGenerator generator = KeyGenerator.getInstance("AES");
         generator.init(192);
         SecretKey key = generator.generateKey();
-        assertTrue(ErrorCollector.instance().getErrors().isEmpty());
-        assertTrue(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key));
+        Assertions.expectingEmptySetOfErrors();
+        Assertions.hasEnsuredPredicate(ExecutionContext.Property.GENERATED_KEY, key);
     }
 
     @Test
@@ -36,7 +37,7 @@ public class KeyGeneratorTest {
         KeyGenerator generator = KeyGenerator.getInstance("DES");
         generator.init(56);
         generator.generateKey();
-        assertTrue(!ErrorCollector.instance().getErrors().isEmpty());
+        Assertions.expectingNonEmptySetOfErrors();
     }
 
 }
