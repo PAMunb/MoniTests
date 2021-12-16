@@ -1,4 +1,5 @@
 import br.unb.cic.mop.jca.eh.ErrorCollector;
+import br.unb.cic.mop.test.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class SecureRandomTest {
         random.setSeed(seed);
         random.nextInt();
         random.nextInt();
-        assertTrue(ErrorCollector.instance().getErrors().isEmpty());
+        Assertions.expectingEmptySetOfErrors();
     }
 
     @Test
@@ -59,14 +60,14 @@ public class SecureRandomTest {
         random.setSeed(seed);
         random.nextInt();
         random.nextInt(); //TODO: This test case should not lead to an error. We have to review the specs.
-        assertTrue(!ErrorCollector.instance().getErrors().isEmpty());
+        Assertions.expectingNonEmptySetOfErrors();
     }
 
     @Test
     public void invalidExecutionOrderWithInstanceStrong() throws Exception {
         SecureRandom random = SecureRandom.getInstanceStrong();
         random.nextInt(123);
-        assertTrue(!ErrorCollector.instance().getErrors().isEmpty());
+        Assertions.expectingNonEmptySetOfErrors();
     }
 
 }
