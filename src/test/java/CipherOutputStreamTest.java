@@ -1,4 +1,5 @@
 import br.unb.cic.mop.jca.eh.ErrorCollector;
+import br.unb.cic.mop.test.Assertions;
 import org.junit.Test;
 
 import javax.crypto.Cipher;
@@ -25,6 +26,6 @@ public class CipherOutputStreamTest {
         cipherOutputStream.flush();
         cipherOutputStream.close();
 
-        assertTrue(!ErrorCollector.instance().getErrors().isEmpty());
+        Assertions.expectingNonEmptySetOfErrors();
     }
 }
