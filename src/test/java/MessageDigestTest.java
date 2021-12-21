@@ -3,7 +3,6 @@ import java.security.*;
 import br.unb.cic.mop.jca.eh.ErrorCollector;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -28,7 +27,7 @@ public class MessageDigestTest  {
         md.update(msg);
         byte[] out = md.digest();
         Assertions.hasEnsuredPredicate(out);
-        Assertions.mustBeInFinalState(md);
+        Assertions.mustBeInAcceptingState(md);
     }
 
     @Test
@@ -37,7 +36,7 @@ public class MessageDigestTest  {
         String Password = "secret";
         byte[] msg = Password.getBytes();
         byte[] aMessageDigest = md.digest();
-        assertEquals(3, ErrorCollector.instance().getErrors().size());
+        Assertions.expectingNonEmptySetOfErrors(3);
     }
 
     @Test
@@ -46,6 +45,6 @@ public class MessageDigestTest  {
         MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256");
         byte[] out = messageDigest0.digest(inbytearr);
         Assertions.hasNotEnsuredPredicate(out);
-        Assertions.mustNotBeInFinalState(messageDigest0);
+        Assertions.mustNotBeInAcceptingState(messageDigest0);
     }
 }

@@ -1,6 +1,7 @@
 import br.unb.cic.mop.jca.eh.ErrorCollector;
 
 import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.test.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,17 +32,19 @@ public class MacTest {
         m.init(new SecretKeySpec(hmacKey.getEncoded(), "HmacSHA512"));
         m.update("message".getBytes());
         byte[] senderMac = m.doFinal();
+        Assertions.expectingEmptySetOfErrors();
     }
 
     @Test
     public void unsafeAlgorithm() throws Exception {
-        KeyGenerator keygen = KeyGenerator.getInstance("HmacSHA512"); // Use a secure underlying hash for HMAC algorithm.
+        KeyGenerator keygen = KeyGenerator.getInstance("HmacSHA1"); // Use a secure underlying hash for HMAC algorithm.
         keygen.init(256); // Explicitly initializing keyGenerator. Specify key size, and trust the provider supplied randomness.
         SecretKey hmacKey = keygen.generateKey(); // SecretKey holds Symmetric Key(K)
         Mac m = Mac.getInstance("HmacSHA1");
         m.init(new SecretKeySpec(hmacKey.getEncoded(), "HmacSHA512"));
         m.update("message".getBytes());
         byte[] senderMac = m.doFinal();
+        Assertions.expectingNonEmptySetOfErrors();
     }
 
 }
