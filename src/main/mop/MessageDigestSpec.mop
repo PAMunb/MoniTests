@@ -50,27 +50,29 @@ MessageDigestSpec() {
 	event defaultDigest after() returning(byte[] out):
 	 call(public byte[] MessageDigest.digest())  {
 	    ExecutionContext.instance().setProperty(Property.DIGESTED, out);
+		// final state
 	 }
 //
 	event digestByteArray after() returning(byte[] out):
 	 call(public byte[] MessageDigest.digest(byte[]))  {
 		System.out.println("Calling digest...");
 		ExecutionContext.instance().setProperty(Property.DIGESTED, out);
+		// final state
 	 }
 
-		ere: (getInstanceSafe | getInstanceUnsafe | getInstanceUsingProviderSafe) (digestByteArray | (update+ (defaultDigest)))+
+	ere: (getInstanceSafe | getInstanceUsingProviderSafe) (digestByteArray | (update+ (defaultDigest)))+
 
-		@fail {
-			ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
-			ExecutionContext.instance().unsetObjectAsInAcceptingState(md);
-			ExecutionContext.instance().remove(Property.DIGESTED);
-			System.out.println("calling the reset on failure");
-			__RESET;
-		}
+	@fail {
+		ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+		ExecutionContext.instance().unsetObjectAsInAcceptingState(md);
+		ExecutionContext.instance().remove(Property.DIGESTED);
+		System.out.println("calling the reset on failure");
+		__RESET;
+	}
 
-		@match {
-			ExecutionContext.instance().setObjectAsInAcceptingState(md);
-		}
+	@match {
+		ExecutionContext.instance().setObjectAsInAcceptingState(md);
+	}
 //	fsm:
 //		initial [
 //			getInstanceSafe -> instantiated

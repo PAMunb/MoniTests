@@ -23,24 +23,24 @@ public class MessageDigestTest  {
         ErrorCollector.instance().printErrors();
     }
 
-    @Ignore
+    @Test
     public void safeAlgorithmWithCorrectCallSequenceDefaultDigest() throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] msg = MESSAGE_STRING.getBytes();
         md.update(msg);
         byte[] out = md.digest();
-//        Assertions.hasEnsuredPredicate(out);
-//        Assertions.mustBeInFinalState(md);
+        Assertions.hasEnsuredPredicate(out);
+        Assertions.mustBeInFinalState(md);
     }
 
-    @Ignore
+    @Test
     public void unsafeAlgorithmWithCorrectCallSequenceDefaultDigest() throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         byte[] msg = MESSAGE_STRING.getBytes();
         md.update(msg);
         byte[] out = md.digest();
-//        Assertions.hasNotEnsuredPredicate(out);
-//        Assertions.mustNotBeInFinalState(md);
+        Assertions.hasNotEnsuredPredicate(out);
+        Assertions.mustNotBeInFinalState(md);
     }
 
     @Ignore
@@ -65,7 +65,7 @@ public class MessageDigestTest  {
 //        Assertions.mustNotBeInFinalState(md);
     }
 
-    @Test
+    @Ignore
     public void safeAlgorithmCorrectCallSequenceDigestsByteArrayBeforeUpdate() throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] msg = MESSAGE_STRING.getBytes();
