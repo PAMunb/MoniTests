@@ -1,15 +1,21 @@
 import br.unb.cic.mop.jca.eh.ErrorCollector;
+import br.unb.cic.mop.jca.util.ExecutionContext;
 import br.unb.cic.mop.test.Assertions;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Provider;
 import java.security.SecureRandom;
 
 public class SecureRandomTest {
     @Before
     public void setUp() {
+        ExecutionContext.instance().reset();
         ErrorCollector.instance().reset();
     }
 
@@ -23,7 +29,7 @@ public class SecureRandomTest {
         SecureRandom random = SecureRandom.getInstance("NativePRNG");
         random.setSeed(123L);
         random.nextInt(123);
-        assertTrue(ErrorCollector.instance().getErrors().isEmpty());
+        Assertions.expectingEmptySetOfErrors();
     }
 
     @Test
@@ -31,7 +37,7 @@ public class SecureRandomTest {
         SecureRandom random = SecureRandom.getInstanceStrong();
         random.setSeed(123L);
         random.nextInt(123);
-        assertTrue(ErrorCollector.instance().getErrors().isEmpty());
+        Assertions.expectingEmptySetOfErrors();
     }
 
     @Test
@@ -59,15 +65,52 @@ public class SecureRandomTest {
         byte[] seed = "password".getBytes();
         random.setSeed(seed);
         random.nextInt();
-        random.nextInt(); //TODO: This test case should not lead to an error. We have to review the specs.
-        Assertions.expectingNonEmptySetOfErrors();
+        random.nextInt();
+        Assertions.expectingEmptySetOfErrors();
     }
 
     @Test
-    public void invalidExecutionOrderWithInstanceStrong() throws Exception {
-        SecureRandom random = SecureRandom.getInstanceStrong();
-        random.nextInt(123);
-        Assertions.expectingNonEmptySetOfErrors();
+    public void secureRandomValidTest1() throws NoSuchAlgorithmException {
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+    }
+
+    @Ignore
+    public void secureRandomValidTest2() throws NoSuchAlgorithmException, NoSuchProviderException {
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG", (Provider) null);
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+    }
+
+    @Test
+    public void secureRandomValidTest3() throws NoSuchAlgorithmException {
+        SecureRandom secureRandom0 = SecureRandom.getInstanceStrong();
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+    }
+
+    @Test
+    public void secureRandomValidTest4() {
+        SecureRandom secureRandom0 = new SecureRandom();
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+    }
+
+    @Test
+    public void secureRandomValidTest5() throws NoSuchAlgorithmException {
+
+        int num = 0;
+
+        SecureRandom secureRandom1 = SecureRandom.getInstance("SHA1PRNG");
+        byte[] genSeed = secureRandom1.generateSeed(num);
+        Assertions.hasEnsuredPredicate(genSeed);
+        Assertions.mustBeInAcceptingState(secureRandom1);
+
+        SecureRandom secureRandom0 = new SecureRandom(genSeed);
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
     }
 
 }

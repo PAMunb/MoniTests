@@ -22,7 +22,8 @@ public class ExecutionContext {
         GENERATED_KEY,
         DIGESTED,
         GENERATE_SSL_CONTEXT,
-        GENERATE_SSL_ENGINE
+        GENERATE_SSL_ENGINE,
+        RANDOMIZED
     }
 
     private Map<Property, Object> context;
