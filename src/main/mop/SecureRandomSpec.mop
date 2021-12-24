@@ -21,7 +21,6 @@ SecureRandomSpec(SecureRandom r) {
 
     // this event captures the following events in the original CrySL specification.
     //  - g1: getInstance(algorithm);
-    //  - g2: getInstance(algorithm, _);
     event g1 after(String alg) returning(SecureRandom r):
       call(public static SecureRandom SecureRandom.getInstance(String))
       && args(alg)
@@ -55,10 +54,25 @@ SecureRandomSpec(SecureRandom r) {
         ExecutionContext.instance().setProperty(Property.RANDOMIZED, seed);
     }
 
-    event next before(SecureRandom r):
-      (call(public int SecureRandom.nextInt(int))
-       || call(public int SecureRandom.nextInt())
-       || call(public void SecureRandom.nextBytes(byte[]))) && target(r) { }
+    event next1 before(SecureRandom r, int randIntInRange):
+      call(public int SecureRandom.nextInt(int))
+      && args(randIntInRange)
+      && target(r) {
+         ExecutionContext.instance().setProperty(Property.RANDOMIZED, randIntInRange);
+    }
+
+    event next2 before(SecureRandom r, byte[] bytes):
+      call(public void SecureRandom.nextBytes(byte[]))
+      && args(bytes)
+      && target(r) {
+         ExecutionContext.instance().setProperty(Property.RANDOMIZED, bytes);
+    }
+
+    event next3 after(SecureRandom r) returning(int randInt) :
+      call(public int SecureRandom.nextInt())
+      && target(r) {
+         ExecutionContext.instance().setProperty(Property.RANDOMIZED, randInt);
+    }
 
     fsm :
       start [
@@ -67,15 +81,18 @@ SecureRandomSpec(SecureRandom r) {
          g2 -> init
       ]
       init [
-         c1      -> init
-         genSeed -> end
-         setSeed -> end
-         next    -> end
+         c1       -> init
+         genSeed  -> end
+         setSeed  -> end
+         next1    -> end
+         next2    -> end
+         next3    -> end
       ]
       end [
-         genSeed -> end
-         setSeed -> end
-         next    -> end
+         genSeed  -> end
+         setSeed  -> end
+         next1    -> end
+         next3    -> end
       ]
 
     alias match1 = init
