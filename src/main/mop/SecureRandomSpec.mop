@@ -5,10 +5,19 @@ import java.security.SecureRandom;
 import br.unb.cic.mop.jca.eh.*;
 import br.unb.cic.mop.jca.util.ExecutionContext;
 
-
+/**
+ * SecureRandomSpec
+ *
+ * A JavaMOP specification of the correct usage of the
+ * java.security.SecureRandom class.
+ *
+ * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/SecureRandom.crysl
+ */
 SecureRandomSpec(SecureRandom r) {
 
     SecureRandom sr;
+
+    // the expected algorithms for SecureRandom
     List<String> algorithms = Arrays.asList("SHA1PRNG", "Windows-PRNG", "NativePRNG",
         "NativePRNGBlocking", "NativePRNGNonBlocking", "PKCS11");
 
@@ -19,7 +28,7 @@ SecureRandomSpec(SecureRandom r) {
       sr = r;
     }
 
-    // this event captures the following events in the original CrySL specification.
+    // this event captures the following event in the original CrySL specification.
     //  - g1: getInstance(algorithm);
     event g1 after(String alg) returning(SecureRandom r):
       call(public static SecureRandom SecureRandom.getInstance(String))
@@ -28,7 +37,7 @@ SecureRandomSpec(SecureRandom r) {
        sr = r;
     }
 
-    // this event captures the following events in the original CrySL specification.
+    // this event captures the following event in the original CrySL specification.
     //  - g2: getInstance(algorithm, provider);
     event g2 after(String alg) returning(SecureRandom r):
       call(public static SecureRandom SecureRandom.getInstance(String, ..))
