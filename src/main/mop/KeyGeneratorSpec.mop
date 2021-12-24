@@ -7,23 +7,41 @@ import java.security.spec.AlgorithmParameterSpec;
 
 import br.unb.cic.mop.jca.util.ExecutionContext;
 
+/**
+ * KeyGeneratorSpec
+ *
+ * A JavaMOP specification of the correct usage of the
+ * javax.crypto.KeyGenerator class.
+ *
+ * https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/KeyGenerator.crysl
+ */
 KeyGeneratorSpec(KeyGenerator k) {
 
-    List<String> algorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384",
-    "HmacSHA512");
+    List<String> algorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384", "HmacSHA512");
 
-    event g1 after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
-      && args(alg) && condition(algorithms.contains(alg)) { }
+    KeyGenerator keyGenerator = null;
 
-    event unsafeAlgorithm after(String alg) returning(KeyGenerator k): call(public static KeyGenerator KeyGenerator.getInstance(String))
-      && args(alg) && condition(!algorithms.contains(alg))  {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
-        "one of" + String.join(",", algorithms) + " but found " + alg + "."));
+    event g1 after(String alg) returning(KeyGenerator k):
+      call(public static KeyGenerator KeyGenerator.getInstance(String))
+      && args(alg)
+      && condition(algorithms.contains(alg)) {
+        keyGenerator = k;
     }
 
-    event g2 after(String alg, String prov) returning(KeyGenerator k):
-      call(public static KeyGenerator KeyGenerator.getInstance(String, String))
-      && args(alg, prov) && condition(!algorithms.contains(alg)) { }
+    event g2 after(String alg) returning(KeyGenerator k):
+      call(public static KeyGenerator KeyGenerator.getInstance(String, ..))
+      && args(alg, *)
+      && condition(algorithms.contains(alg)) {
+        keyGenerator = k;
+    }
+
+    event g3 after(String alg) returning(KeyGenerator k):
+      call(public static KeyGenerator KeyGenerator.getInstance(String))
+      && args(alg)
+      && condition(!algorithms.contains(alg))  {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+          "one of" + String.join(",", algorithms) + " but found " + alg + "."));
+    }
 
     event init before(KeyGenerator k):
        ( call(public void KeyGenerator.init(int)) ||
@@ -31,17 +49,25 @@ KeyGeneratorSpec(KeyGenerator k) {
          call(public void KeyGenerator.init(AlgorithmParameterSpec)) ||
          call(public void KeyGenerator.init(AlgorithmParameterSpec, SecureRandom)) ||
          call(public void KeyGenerator.init(SecureRandom))
-       ) && target(k) { }
+       ) && target(k) {  }
 
-    event gk1 after(KeyGenerator k) returning(SecretKey key): call(public SecretKey KeyGenerator.generateKey()) && target(k) {
+    event gk1 after(KeyGenerator k) returning(SecretKey key):
+      call(public SecretKey KeyGenerator.generateKey())
+      && target(k) {
         ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, key);
     }
 
-    ere : (g1 | g2) init gk1
+    ere : (g1 | g2) ((init gk1) | gk1)
 
     @fail {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+        ExecutionContext.instance().unsetObjectAsInAcceptingState(keyGenerator);
         ExecutionContext.instance().remove(ExecutionContext.Property.GENERATED_KEY);
+
         __RESET;
+    }
+
+    @match {
+       ExecutionContext.instance().setObjectAsInAcceptingState(keyGenerator);
     }
 }
