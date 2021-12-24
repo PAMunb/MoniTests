@@ -3,13 +3,11 @@ import br.unb.cic.mop.jca.util.ExecutionContext;
 import br.unb.cic.mop.test.Assertions;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.Provider;
 import java.security.SecureRandom;
 
 public class SecureRandomTest {
@@ -76,9 +74,9 @@ public class SecureRandomTest {
         Assertions.mustBeInAcceptingState(secureRandom0);
     }
 
-    @Ignore
+    @Test
     public void secureRandomValidTest2() throws NoSuchAlgorithmException, NoSuchProviderException {
-        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG", (Provider) null);
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG", "SUN");
         Assertions.hasEnsuredPredicate(secureRandom0);
         Assertions.mustBeInAcceptingState(secureRandom0);
     }
@@ -130,7 +128,7 @@ public class SecureRandomTest {
 
     }
 
-    @Ignore
+    @Test
     public void secureRandomValidTest7() throws NoSuchAlgorithmException, NoSuchProviderException {
 
         int num = 0;
@@ -140,7 +138,7 @@ public class SecureRandomTest {
         Assertions.hasEnsuredPredicate(genSeed);
         Assertions.mustBeInAcceptingState(secureRandom1);
 
-        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG", (Provider) null);
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG", "SUN");
         secureRandom0.setSeed(genSeed);
         Assertions.hasEnsuredPredicate(secureRandom0);
         Assertions.mustBeInAcceptingState(secureRandom0);
@@ -222,12 +220,12 @@ public class SecureRandomTest {
 
     }
 
-    @Ignore
+    @Test
     public void secureRandomValidTest13() throws NoSuchAlgorithmException, NoSuchProviderException {
 
         int num = 0;
 
-        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG", (Provider) null);
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG","SUN");
         byte[] genSeed = secureRandom0.generateSeed(num);
         Assertions.hasEnsuredPredicate(genSeed);
         Assertions.mustBeInAcceptingState(secureRandom0);

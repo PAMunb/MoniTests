@@ -28,14 +28,23 @@ SecureRandomSpec(SecureRandom r) {
        sr = r;
     }
 
+    // this event captures the following events in the original CrySL specification.
+    //  - g2: getInstance(algorithm, provider);
+    event g2 after(String alg) returning(SecureRandom r):
+      call(public static SecureRandom SecureRandom.getInstance(String, ..))
+      && args(alg, *)
+      && condition(algorithms.contains(alg)) {
+       sr = r;
+    }
+
     // CrySL gI: getInstanceStrong() event
-    event g2 after() returning(SecureRandom r):
+    event g3 after() returning(SecureRandom r):
       call(public static SecureRandom SecureRandom.getInstanceStrong()) {
       sr = r;
     }
 
     // getInstance with an invalid algorithm.
-    event g3 after(String alg) returning(SecureRandom r):
+    event g4 after(String alg) returning(SecureRandom r):
       call(public static SecureRandom SecureRandom.getInstance(String, ..))
       && args(alg)
       && condition(!algorithms.contains(alg))
@@ -79,6 +88,7 @@ SecureRandomSpec(SecureRandom r) {
          c1 -> init
          g1 -> init
          g2 -> init
+         g3 -> init
       ]
       init [
          c1       -> init
