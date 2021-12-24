@@ -60,11 +60,6 @@ SecureRandomSpec(SecureRandom r) {
        || call(public int SecureRandom.nextInt())
        || call(public void SecureRandom.nextBytes(byte[]))) && target(r) { }
 
-    // TODO: Due to additional test case, we might enable the following ere
-    //   (g1 | g2) ((setSeed (generateSeed | next)*) | (generateSeed | next)*)
-
-    // ere : (g1 | g2) (((genSeed | next)) | (setSeed (genSeed | next)*))+
-
     fsm :
       start [
          c1 -> init
@@ -84,10 +79,8 @@ SecureRandomSpec(SecureRandom r) {
       ]
 
     alias match1 = init
-    alias match2 = end
 
     @match1 {
-        System.out.println("*******");
         ExecutionContext.instance().setObjectAsInAcceptingState(sr);
         ExecutionContext.instance().setProperty(Property.RANDOMIZED, sr);
     }
