@@ -34,7 +34,7 @@ public class Assertions extends Assert {
         }
     }
 
-    public static void hasNotEnsuredPredicate(Object obj) {
+    public static void notHasEnsuredPredicate(Object obj) {
         if(ExecutionContext.instance().hasEnsuredPredicate(obj)) {
             fail("Object has an ensured predicate.");
         }
