@@ -1,4 +1,3 @@
-import br.unb.cic.mop.jca.util.ExecutionContext;
 import br.unb.cic.mop.test.Assertions;
 
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class SSLContextTest {
 
         SSLContext sSLContext0 = SSLContext.getInstance("SSL");
         sSLContext0.init(kms, tms, (SecureRandom) null);
-        Assertions.hasNotEnsuredPredicate(sSLContext0);
+        Assertions.notHasEnsuredPredicate(sSLContext0);
     }
 
 }
