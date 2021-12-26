@@ -43,7 +43,7 @@ public class MessageDigestTest  {
         byte[] inbytearr = "secret".getBytes();
         MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256");
         byte[] out = messageDigest0.digest(inbytearr);
-        Assertions.hasNotEnsuredPredicate(out);
+        Assertions.notHasEnsuredPredicate(out);
         Assertions.mustNotBeInAcceptingState(messageDigest0);
     }
 }
