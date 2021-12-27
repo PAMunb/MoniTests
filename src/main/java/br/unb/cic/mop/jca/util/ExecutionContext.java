@@ -25,6 +25,8 @@ public class ExecutionContext {
         GENERATE_SSL_ENGINE,
         RANDOMIZED,
         GENERATED_KEY_MANAGERS,
+        GENERATED_TRUST_MANAGER,
+        GENERATED_TRUST_MANAGERS,
         GENERATED_KEY_STORE
     }
 

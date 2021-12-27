@@ -40,7 +40,7 @@ KeyManagerFactorySpec(KeyManagerFactory k) {
       && args(alg)
       && condition(!algorithms.contains(alg))  {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
-          "one of" + String.join(",", algorithms) + " but found " + alg + "."));
+          "one of " + String.join(",", algorithms) + " but found " + alg + "."));
     }
 
     event init before(KeyManagerFactory k):
