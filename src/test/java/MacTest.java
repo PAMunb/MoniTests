@@ -3,6 +3,7 @@ import br.unb.cic.mop.jca.eh.ErrorCollector;
 import br.unb.cic.mop.test.Assertions;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.crypto.KeyGenerator;
