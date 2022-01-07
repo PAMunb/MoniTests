@@ -21,6 +21,7 @@ public class ExecutionContext {
     public enum Property {
         GENERATED_KEY,
         DIGESTED,
+        GENERATED_MAC,
         GENERATE_SSL_CONTEXT,
         GENERATE_SSL_ENGINE,
         RANDOMIZED,
