@@ -1,6 +1,21 @@
 # MoniTests
 
 This project aims to apply JavaMop, a Java implementation of Monitoring-Oriented Programming, to verify the correct usage of cryptographic libraries
+## Status 
+
+   * [ ] Cipher
+   * [ ] Mac
+   * [ ] MessageDigest
+   * [x] KeyGenerator
+   * [x] KeyManagerFactory
+   * [x] KeyStore 
+   * [ ] KeyPair
+   * [ ] SecretKey
+   * [x] SecretKeySpec
+   * [x] SecureRandom
+   * [ ] Signature
+   * [x] SSLContext
+   * [x] TrustManagerFactory
 
 ## Configuration
 
