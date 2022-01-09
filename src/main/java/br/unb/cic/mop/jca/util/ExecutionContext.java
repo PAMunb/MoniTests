@@ -28,7 +28,8 @@ public class ExecutionContext {
         GENERATED_KEY_MANAGERS,
         GENERATED_TRUST_MANAGER,
         GENERATED_TRUST_MANAGERS,
-        GENERATED_KEY_STORE
+        GENERATED_KEY_STORE,
+        PREPARED_HMAC
     }
 
     private Map<Property, Object> context;

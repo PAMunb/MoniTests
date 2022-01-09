@@ -1,0 +1,33 @@
+package mop;
+
+import javax.xml.crypto.dsig.spec.HMACParameterSpec;
+
+import br.unb.cic.mop.jca.util.ExecutionContext;
+
+/**
+ * HMACParameterSpecSpec
+ *
+ * A JavaMOP specification of the correct usage of the
+ * javax.xml.crypto.dsig.spec.HMACParameterSpec
+ *
+ * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/HMACParameterSpec.crysl
+ */
+HMACParameterSpecSpec(HMACParameterSpec hmacParameterSpec) {
+
+   HMACParameterSpec spec;
+
+   event c after() returning(HMACParameterSpec s):
+    call(public HMACParameterSpec.new(int)) {
+      spec = s;
+    }
+
+   ere : c
+
+   @fail {}
+
+   @match {
+      ExecutionContext.instance().setObjectAsInAcceptingState(spec);
+      ExecutionContext.instance().setProperty(ExecutionContext.Property.PREPARED_HMAC, spec);
+   }
+
+}
