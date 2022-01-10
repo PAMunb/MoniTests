@@ -4,6 +4,7 @@ This project aims to apply JavaMop, a Java implementation of Monitoring-Oriented
 ## Status 
 
    * [ ] Cipher
+   * [x] HMACParameterSpec
    * [x] Mac
    * [x] MessageDigest
    * [x] KeyGenerator
