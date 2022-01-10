@@ -62,13 +62,11 @@ MessageDigestSpec(MessageDigest digest) {
        ExecutionContext.instance().setProperty(Property.DIGESTED, out);
     }
 
-	ere : (g1 | g2) (d2 | (update+ (d1 | d2 | d3))+)+
+	ere : (g1 | g2) (d2 | (update+ (d1 | d2 | d3)))+
 
 	@fail {
            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
            ExecutionContext.instance().unsetObjectAsInAcceptingState(md);
-           ExecutionContext.instance().remove(Property.DIGESTED);
-           System.out.println("calling the reset on failure");
            __RESET;
 	}
 
