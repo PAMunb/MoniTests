@@ -35,8 +35,23 @@ public class MessageDigestTest  {
 
         byte[] inbytearr = "secret".getBytes();
 
-        MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256", "SunJCE");
+        MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256", "SUN");
         byte[] out = messageDigest0.digest(inbytearr);
+        Assertions.hasEnsuredPredicate(out);
+        Assertions.mustBeInAcceptingState(messageDigest0);
+
+    }
+
+    @Test
+    public void messageDigestValidTest3() throws NoSuchAlgorithmException {
+
+        byte[] inbytearr = "secret".getBytes();
+        byte pre_inbyte = 0;
+
+        MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256");
+        byte[] out = messageDigest0.digest(inbytearr);
+        messageDigest0.update(pre_inbyte);
+        out = messageDigest0.digest();
         Assertions.hasEnsuredPredicate(out);
         Assertions.mustBeInAcceptingState(messageDigest0);
 

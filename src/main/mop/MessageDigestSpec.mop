@@ -21,12 +21,18 @@ MessageDigestSpec(MessageDigest digest) {
 	  md = digest;
 	}
 
-	event g2 after(String alg):
+	event g2 after(String alg) returning(MessageDigest digest):
+      call(public static MessageDigest MessageDigest.getInstance(String, ..))
+      && args(alg, *) && condition(algorithms.contains(alg.toUpperCase())) {
+      md = digest;
+    }
+
+	event g3 after(String alg):
 	  call(public static MessageDigest MessageDigest.getInstance(String))
     	  && args(alg) && condition(!algorithms.contains(alg.toUpperCase()))
         {
           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
-             "one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
+             "expecting one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
         }
 
 	event update after(MessageDigest digest):
@@ -56,7 +62,7 @@ MessageDigestSpec(MessageDigest digest) {
        ExecutionContext.instance().setProperty(Property.DIGESTED, out);
     }
 
-	ere : g1 (d2 | (update+ (d1 | d2 | d3))+)
+	ere : (g1 | g2) (d2 | (update+ (d1 | d2 | d3))+)+
 
 	@fail {
            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
