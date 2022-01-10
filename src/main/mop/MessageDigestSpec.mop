@@ -10,15 +10,14 @@ import br.unb.cic.mop.jca.util.ExecutionContext.Property;
 // The MessageDigestSpec specifies
 // the correct usage of the MessageDigest
 // class (from the JCA specification).
-MessageDigestSpec() {
+MessageDigestSpec(MessageDigest digest) {
 
     List<String> algorithms = Arrays.asList("SHA-256", "SHA-384", "SHA-512");
     MessageDigest md = null;
 
 	event g1 after(String alg) returning(MessageDigest digest):
 	  call(public static MessageDigest MessageDigest.getInstance(String))
-	  && args(alg) && condition(algorithms.contains(alg.toUpperCase()))
-        {
+	  && args(alg) && condition(algorithms.contains(alg.toUpperCase())) {
 	  md = digest;
 	}
 
@@ -30,16 +29,34 @@ MessageDigestSpec() {
              "one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
         }
 
-	event update after(): call(* MessageDigest.update(byte[])) { }
+	event update after(MessageDigest digest):
+	  call(void MessageDigest.update(..)) &&
+	  target(digest) { }
 
-	event reset before(): call(* MessageDigest.reset(..)) { }
+	event reset before(MessageDigest digest):
+	  call(void MessageDigest.reset()) &&
+	  target(digest) { }
 
-	event digest after() returning(byte[] out):
-	 (call(public byte[] MessageDigest.digest()) || call(public byte[] MessageDigest.digest(byte[])))  {
+	event d1 after(MessageDigest digest) returning(byte[] out):
+	 call(public byte[] MessageDigest.digest()) &&
+	 target(digest) {
 	    ExecutionContext.instance().setProperty(Property.DIGESTED, out);
 	}
- 		
-	ere : g1 update (update* reset* digest)*
+
+	event d2 after(MessageDigest digest) returning(byte[] out):
+     call(public byte[] MessageDigest.digest(byte[])) &&
+     target(digest) {
+    	ExecutionContext.instance().setProperty(Property.DIGESTED, out);
+    }
+
+    event d3 after(byte[] out, int offset, int len, MessageDigest digest):
+     call(public int MessageDigest.digest(byte[], int, int)) &&
+     args(out, offset, len) &&
+     target(digest) {
+       ExecutionContext.instance().setProperty(Property.DIGESTED, out);
+    }
+
+	ere : g1 (d2 | (update+ (d1 | d2 | d3))+)
 
 	@fail {
            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
