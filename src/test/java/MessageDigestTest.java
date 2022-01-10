@@ -29,4 +29,16 @@ public class MessageDigestTest  {
         Assertions.mustBeInAcceptingState(messageDigest0);
 
     }
+
+    @Test
+    public void messageDigestValidTest2() throws NoSuchAlgorithmException, NoSuchProviderException {
+
+        byte[] inbytearr = "secret".getBytes();
+
+        MessageDigest messageDigest0 = MessageDigest.getInstance("SHA-256", "SunJCE");
+        byte[] out = messageDigest0.digest(inbytearr);
+        Assertions.hasEnsuredPredicate(out);
+        Assertions.mustBeInAcceptingState(messageDigest0);
+
+    }
 }
