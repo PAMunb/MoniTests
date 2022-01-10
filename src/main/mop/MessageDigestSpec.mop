@@ -1,60 +1,76 @@
 package mop;
 
 import java.security.MessageDigest;
+import java.security.Provider;
 import java.util.List;
 
 import br.unb.cic.mop.jca.eh.*;
 import br.unb.cic.mop.jca.util.ExecutionContext;
 import br.unb.cic.mop.jca.util.ExecutionContext.Property;
 
-// The MessageDigestSpec specifies
-// the correct usage of the MessageDigest
-// class (from the JCA specification).
-MessageDigestSpec() {
+MessageDigestSpec(MessageDigest digester) {
+	MessageDigest md = null;
+	List<String> safeAlgorithms = Arrays.asList("SHA-256", "SHA-384", "SHA-512");
 
-    List<String> algorithms = Arrays.asList("SHA-256", "SHA-384", "SHA-512");
-    MessageDigest md = null;
+	event getInstanceSafe after(String alg) returning(MessageDigest digest):
+		call(public static MessageDigest MessageDigest.getInstance(String))
+		&& args(alg) && condition(safeAlgorithms.contains(alg.toUpperCase())) {
+			md = digest;
+		}
 
-	event g1 after(String alg) returning(MessageDigest digest):
-	  call(public static MessageDigest MessageDigest.getInstance(String))
-	  && args(alg) && condition(algorithms.contains(alg.toUpperCase()))
-        {
-	  md = digest;
-	}
+	/*
+	We had to introduce this event because the agent would not compile. If we have to capture parameters passed into
+	after(), the agent fails to compile if the parameters passed do not match the ones in && args(alg)
+	 */
+	event getInstanceUsingProviderSafe after(String alg, Provider prov) returning(MessageDigest digest):
+		call(public static MessageDigest MessageDigest.getInstance(String, Provider))
+		&& args(alg, prov) && condition(safeAlgorithms.contains(alg.toUpperCase())) {
+			md = digest;
+		}
 
-	event g2 after(String alg):
-	  call(public static MessageDigest MessageDigest.getInstance(String))
-    	  && args(alg) && condition(!algorithms.contains(alg.toUpperCase()))
-        {
-          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
-             "one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
-        }
+	event getInstanceUnsafe after(String alg):
+		(call(public static MessageDigest MessageDigest.getInstance(String)) ||
+		 call(public static MessageDigest MessageDigest.getInstance(String, Provider)))
 
-	event update after(): call(* MessageDigest.update(byte[])) { }
+		&& args(alg) && condition(!safeAlgorithms.contains(alg.toUpperCase())) {
+			ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "Line: " + __LOC,
+			"one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
+		}
 
-	event reset before(): call(* MessageDigest.reset(..)) { }
+	event update after(MessageDigest digester):
+		(call(* MessageDigest.update(byte[])) ||
+		 call(* MessageDigest.update(byte))) && target(digester) {
+			System.out.println("Updating...");
+		}
 
-	event digest after() returning(byte[] out):
-	 (call(public byte[] MessageDigest.digest()) || call(public byte[] MessageDigest.digest(byte[])))  {
-	    ExecutionContext.instance().setProperty(Property.DIGESTED, out);
-	}
- 		
-	ere : g1 update (update* reset* digest)*
+	event reset before(MessageDigest digester):
+		call(* MessageDigest.reset(..)) && target(digester) {
 
-	@fail {
-           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
-           ExecutionContext.instance().unsetObjectAsInAcceptingState(md);
-           ExecutionContext.instance().remove(Property.DIGESTED);
-           System.out.println("calling the reset on failure");
-           __RESET;
-	}
+		}
 
-	@match {
-           ExecutionContext.instance().setObjectAsInAcceptingState(md);
-	}
+	event defaultDigest after(MessageDigest digester) returning(byte[] out):
+		call(public byte[] MessageDigest.digest()) && target(digester) {
+			ExecutionContext.instance().setProperty(Property.DIGESTED, out);
+		}
+
+	event digestWithoutUpdate after(MessageDigest digester) returning(byte[] out):
+		call(public byte[] MessageDigest.digest(byte[])) && target(digester) {
+			ExecutionContext.instance().setProperty(Property.DIGESTED, out);
+			System.out.println("Digesting byte array...");
+		}
+
+	ere: (getInstanceSafe | getInstanceUsingProviderSafe) (digestWithoutUpdate | (update+ defaultDigest))+
+
+@fail {
+			ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+			ExecutionContext.instance().unsetObjectAsInAcceptingState(md);
+			ExecutionContext.instance().remove(Property.DIGESTED);
+			__RESET;
+		}
+
+@match {
+			ExecutionContext.instance().setObjectAsInAcceptingState(md);
+			System.out.println("****");
+		}
+
 }
-
-
-
-
-
