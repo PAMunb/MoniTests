@@ -1,0 +1,82 @@
+package mop;
+
+import javax.crypto.Mac;
+
+import br.unb.cic.mop.jca.util.ExecutionContext;
+import java.security.spec.AlgorithmParameterSpec;
+
+MacSpec(Mac m) {
+
+        List<String> algorithms = Arrays.asList("HmacSHA256", "HmacSHA384", "HmacSHA512", "HmacPBESHA1",
+           "PBEWithHmacSHA1", "PBEWithHmacSHA224", "PBEWithHmacSHA256", "PBEWithHmacSHA384", "PBEWithHmacSHA512");
+
+        Mac mac = null;
+
+        event g1 after(String alg) returning(Mac m):
+          call(public static Mac Mac.getInstance(String)) &&
+          args(alg) &&
+          condition(algorithms.contains(alg)) {
+            mac = m;
+        }
+
+        event g2 after(String alg, String provider) returning(Mac m):
+          call(public static Mac Mac.getInstance(String, String)) &&
+          args(alg, provider) &&
+          condition(algorithms.contains(alg)) {
+            mac = m;
+        }
+
+        event g3 after(String alg) returning(Mac m):
+          call(public static Mac Mac.getInstance(String)) &&
+          args(alg) &&
+          condition(!algorithms.contains(alg)) {
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+            "one of " + String.join(",", algorithms) + " but found " + alg + "."));
+        }
+
+        event i1 before(java.security.Key key, Mac m):
+          call(public void Mac.init(java.security.Key)) &&
+          args(key) &&
+          target(m) &&
+          condition(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key)) {
+
+        }
+
+        event i2 after(java.security.Key key, java.security.spec.AlgorithmParameterSpec params, Mac m):
+          call(public void Mac.init(java.security.Key, java.security.spec.AlgorithmParameterSpec)) &&
+          args(key, params) &&
+          target(m) &&
+          condition(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key))  {
+
+        }
+
+        event update after(Mac m):
+          call(public void Mac.update(..)) &&
+          target(m) { }
+
+        event f1 after(Mac m) returning(byte[] output):
+          (call(byte[] Mac.doFinal(byte[])) || call(byte[] Mac.doFinal())) &&
+          target(m){
+           ExecutionContext.instance().setProperty(Property.GENERATED_MAC, output);
+        }
+
+        event f2 after(byte[] output, int outOffset):
+          call(void Mac.doFinal(byte[], int)) &&
+          args(output, outOffset) &&
+          target(m){
+            ExecutionContext.instance().setProperty(Property.GENERATED_MAC, output);
+        }
+
+        ere : (g1 | g2) (i1 | i2) ((f1 | f2) | (update* (f1 | f2)))
+
+        @fail {
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+            ExecutionContext.instance().remove(Property.GENERATED_MAC);
+            __RESET;
+        }
+
+        @match {
+           ExecutionContext.instance().setObjectAsInAcceptingState(mac);
+        }
+
+}

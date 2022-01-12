@@ -1,0 +1,86 @@
+package mop;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.ManagerFactoryParameters;
+import javax.net.ssl.KeyManager;
+import java.security.KeyStore;
+
+import br.unb.cic.mop.jca.util.ExecutionContext;
+
+/**
+ * KeyManagerFactory
+ *
+ * A JavaMOP specification of the correct usage of the
+ * javax.net.ssl.KeyManagerFactory class.
+ *
+ * https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/KeyManagerFactory.crysl
+ */
+KeyManagerFactorySpec(KeyManagerFactory k) {
+
+    List<String> algorithms = Arrays.asList("PKIX", "SunX509");
+
+    KeyManagerFactory keyManagerFactory = null;
+
+    event g1 after(String alg) returning(KeyManagerFactory k):
+      call(public static KeyManagerFactory KeyManagerFactory.getInstance(String))
+      && args(alg)
+      && condition(algorithms.contains(alg)) {
+        keyManagerFactory = k;
+    }
+
+    event g2 after(String alg) returning(KeyManagerFactory k):
+      call(public static KeyManagerFactory KeyManagerFactory.getInstance(String, ..))
+      && args(alg, *)
+      && condition(algorithms.contains(alg)) {
+        keyManagerFactory = k;
+    }
+
+    event g3 after(String alg) returning(KeyManagerFactory k):
+      call(public static KeyManagerFactory KeyManagerFactory.getInstance(String))
+      && args(alg)
+      && condition(!algorithms.contains(alg))  {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+          "one of " + String.join(",", algorithms) + " but found " + alg + "."));
+    }
+
+    event init before(KeyManagerFactory k):
+       ( call(public void KeyManagerFactory.init(KeyStore, char[])) ||
+         call(public void KeyManagerFactory.init(ManagerFactoryParameters))
+       ) && target(k) {
+       ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY_MANAGERS, keyManagerFactory);
+    }
+
+    event gkm1 after(KeyManagerFactory k) returning(KeyManager[] keyManager):
+      call(public KeyManager[] KeyManagerFactory.getKeyManagers())
+      && target(k) {
+        ExecutionContext.instance().setProperty(Property.GENERATED_KEY_MANAGERS, keyManager);
+    }
+
+    fsm :
+      start [
+        g1 -> waitingInit
+        g2 -> waitingInit
+      ]
+      waitingInit [
+        init -> final
+      ]
+      final [
+        g1   -> waitingInit
+        g2   -> waitingInit
+        gkm1 -> start
+      ]
+
+    alias match1 = final
+
+    @fail {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+        ExecutionContext.instance().unsetObjectAsInAcceptingState(keyManagerFactory);
+        ExecutionContext.instance().remove(Property.GENERATED_KEY_MANAGERS);
+
+        __RESET;
+    }
+
+    @match1 {
+       ExecutionContext.instance().setObjectAsInAcceptingState(keyManagerFactory);
+    }
+}

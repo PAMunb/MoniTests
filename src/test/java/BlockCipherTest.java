@@ -1,9 +1,9 @@
 import br.unb.cic.mop.jca.eh.ErrorCollector;
 
-import org.junit.After;
+import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.test.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -13,12 +13,8 @@ public class BlockCipherTest {
     @Before
     public void setUp() {
         ErrorCollector.instance().reset();
+        ExecutionContext.instance().reset();
     }
-
-//    @After
-//    public void tearDown() {
-//        ErrorCollector.instance().printErrors();
-//    }
 
     @Test
     public void simpleTest() throws Exception {
@@ -30,7 +26,7 @@ public class BlockCipherTest {
         cipher.init(Cipher.ENCRYPT_MODE, key);
         byte[] cipherText = cipher.update("secret".getBytes());
         cipherText = cipher.doFinal();
-        assertTrue(ErrorCollector.instance().getErrors().isEmpty());
+        Assertions.expectingEmptySetOfErrors();
     }
 
     @Test
@@ -41,8 +37,21 @@ public class BlockCipherTest {
 
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] cipherText = cipher.update("secret".getBytes());
-        cipherText = cipher.doFinal();
-        assertTrue(!ErrorCollector.instance().getErrors().isEmpty());
+        cipher.update("secret".getBytes());
+        cipher.doFinal();
+        Assertions.expectingNonEmptySetOfErrors();
+    }
+
+    @Test
+    public void invalidKeyTest() throws Exception {
+        KeyGenerator keygen = KeyGenerator.getInstance("DES");
+        keygen.init(56);
+        SecretKey key = keygen.generateKey();
+
+        Cipher cipher = Cipher.getInstance("DES");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        cipher.update("secret".getBytes());
+        cipher.doFinal();
+        Assertions.expectingNonEmptySetOfErrors();
     }
 }
