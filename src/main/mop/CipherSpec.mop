@@ -1,0 +1,78 @@
+package mop;
+
+import java.security.Key;
+import javax.crypto.Cipher;
+
+import br.unb.cic.mop.jca.eh.*;
+import static br.unb.cic.mop.jca.util.CipherTransformationUtil.*;
+import br.unb.cic.mop.jca.util.ExecutionContext;
+
+
+/**
+ * CipherSpec
+ *
+ * A JavaMOP specification of the correct usage of the
+ * javax.crypto.Cipher class.
+ *
+ * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/Cipher.crysl
+ */
+CipherSpec(Cipher c) {
+
+   Cipher cipher = null;
+
+   event g1 after(String transformation) returning(Cipher c):
+     call(public static Cipher Cipher.getInstance(String)) &&
+     args(transformation) &&
+     condition(isValid(transformation)) {
+       System.out.println("******** G1 ********");
+       cipher = c;
+   }
+
+ //  event invalidGetInstance after(String transformation) returning(Cipher c):
+ //  call(public static Cipher Cipher.getInstance(String)) &&
+ //    args(transformation) &&
+ //    condition(!isValid(transformation)) {
+ //       ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+ //               "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + transformation + "."));
+ //  }
+
+   event i3 before(int mode, java.security.Key key, Cipher c):
+     call(public void Cipher.init(int, java.security.Key)) &&
+     args(mode, key) &&
+     target(c) &&
+     condition(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key))  {
+       System.out.println("******** I3 ********");
+   }
+
+   event u1 before(byte[] plainText, Cipher c):
+     call(public byte[] Cipher.update(byte[])) &&
+     args(plainText) &&
+     target(c) {
+      System.out.println("******** U1 ********");
+   }
+
+   event wkb1 after(Cipher c) returning(byte[] wrappedKeyBytes):
+     call(byte[] Cipher.wrap(Key)) &&
+     target(c) {
+        System.out.println("******** WKB1 ********");
+        ExecutionContext.instance().setProperty(Property.WRAPPED_KEY, wrappedKeyBytes);
+   }
+
+   event f1 after(Cipher c):
+     (call(public byte[] Cipher.doFinal()) || call(public byte[] Cipher.doFinal(byte[]))) &&
+     target(c) {
+      System.out.println("******** F1 ********");
+   }
+
+   ere : g1 i3 (wkb1 | (u1 f1))
+
+   @fail {
+        System.out.println("******** FAILURE ********");
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+	    __RESET;
+   }
+
+   @match {
+        ExecutionContext.instance().setObjectAsInAcceptingState(cipher);
+   }
+}
