@@ -18,15 +18,17 @@ public class ExecutionContext {
     public enum Property {
         GENERATED_KEY,
         DIGESTED,
+        ENCRYPTED,
         GENERATED_MAC,
         GENERATE_SSL_CONTEXT,
         GENERATE_SSL_ENGINE,
-        RANDOMIZED,
         GENERATED_KEY_MANAGERS,
         GENERATED_TRUST_MANAGER,
         GENERATED_TRUST_MANAGERS,
         GENERATED_KEY_STORE,
+        PREPARED_GCM,
         PREPARED_HMAC,
+        RANDOMIZED,
         WRAPPED_KEY
     }
 
