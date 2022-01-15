@@ -346,4 +346,24 @@ public class BlockCipherTest {
         Assertions.mustBeInAcceptingState(cipher0);
 
     }
+
+    @Test
+    public void cipherValidTest21() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        byte[] cipherText = new byte[512];
+        byte[] plainText = "secret".getBytes();
+
+        int plain_off = 0;
+        int len = 0;
+        int ciphertext_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        cipher0.doFinal(plainText, plain_off, len, cipherText, ciphertext_off);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
 }
