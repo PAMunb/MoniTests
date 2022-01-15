@@ -21,6 +21,8 @@ KeyGeneratorSpec(KeyGenerator k) {
 
     KeyGenerator keyGenerator = null;
 
+    Key generatedKey;
+
     event g1 after(String alg) returning(KeyGenerator k):
       call(public static KeyGenerator KeyGenerator.getInstance(String))
       && args(alg)
@@ -54,7 +56,8 @@ KeyGeneratorSpec(KeyGenerator k) {
     event gk1 after(KeyGenerator k) returning(SecretKey key):
       call(public SecretKey KeyGenerator.generateKey())
       && target(k) {
-        ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, key);
+        generatedKey = key;
+        ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, generatedKey);
     }
 
     ere : (g1 | g2) ((init gk1) | gk1)
@@ -62,7 +65,7 @@ KeyGeneratorSpec(KeyGenerator k) {
     @fail {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
         ExecutionContext.instance().unsetObjectAsInAcceptingState(keyGenerator);
-        ExecutionContext.instance().remove(ExecutionContext.Property.GENERATED_KEY);
+        ExecutionContext.instance().remove(ExecutionContext.Property.GENERATED_KEY, generatedKey);
 
         __RESET;
     }
