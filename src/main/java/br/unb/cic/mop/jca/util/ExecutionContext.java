@@ -1,9 +1,6 @@
 package br.unb.cic.mop.jca.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class allows us to setup an execution
@@ -29,10 +26,11 @@ public class ExecutionContext {
         GENERATED_TRUST_MANAGER,
         GENERATED_TRUST_MANAGERS,
         GENERATED_KEY_STORE,
-        PREPARED_HMAC
+        PREPARED_HMAC,
+        WRAPPED_KEY
     }
 
-    private Map<Property, Object> context;
+    private Map<Property, Set<Object>> context;
 
     private Set<Object> acceptingState;
 
@@ -65,8 +63,18 @@ public class ExecutionContext {
      * typically call this method in a <code>@fail</code>
      * clause of an MOP specification.
      */
+    @Deprecated
     public void remove(Property property) {
         if(context.containsKey(property)) {
+            context.remove(property);
+        }
+    }
+
+    public void remove(Property property, Object obj) {
+        if(context.containsKey(property)) {
+            context.get(property).remove(obj);
+        }
+        if(context.get(property).isEmpty()) {
             context.remove(property);
         }
     }
@@ -84,7 +92,9 @@ public class ExecutionContext {
      * @param value object that will have a property assigned to
      */
     public void setProperty(Property property, Object value) {
-        context.put(property, value);
+        Set<Object> objects = context.getOrDefault(property, new HashSet<>());
+        objects.add(value);
+        context.put(property, objects);
     }
 
     /**
@@ -95,7 +105,7 @@ public class ExecutionContext {
      * a property and a value exists.
      */
     public boolean validate(Property property, Object obj) {
-        return context.containsKey(property) && context.get(property).equals(obj);
+        return context.containsKey(property) && context.get(property).contains(obj);
     }
 
     /**
@@ -130,7 +140,12 @@ public class ExecutionContext {
      * property related to it.
      */
     public boolean hasEnsuredPredicate(Object obj) {
-        return context.values().contains(obj);
+        for(Set<Object> objects: context.values()) {
+            if(objects.contains(obj)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
