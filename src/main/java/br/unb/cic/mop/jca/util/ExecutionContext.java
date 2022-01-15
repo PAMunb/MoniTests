@@ -26,6 +26,7 @@ public class ExecutionContext {
         GENERATED_TRUST_MANAGER,
         GENERATED_TRUST_MANAGERS,
         GENERATED_KEY_STORE,
+        PREPARED_DH,
         PREPARED_GCM,
         PREPARED_HMAC,
         RANDOMIZED,

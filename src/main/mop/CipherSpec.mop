@@ -2,6 +2,8 @@ package mop;
 
 import java.security.Key;
 import javax.crypto.Cipher;
+import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
 
 import br.unb.cic.mop.jca.eh.*;
 import static br.unb.cic.mop.jca.util.CipherTransformationUtil.*;
@@ -19,12 +21,14 @@ import br.unb.cic.mop.jca.util.ExecutionContext;
 CipherSpec(Cipher c) {
 
    Cipher cipher = null;
+   String transformation = "";
 
    event g1 after(String transformation) returning(Cipher c):
      call(public static Cipher Cipher.getInstance(String)) &&
      args(transformation) &&
      condition(isValid(transformation)) {
        System.out.println("******** G1 ********");
+       this.transformation = transformation;
        cipher = c;
    }
 
@@ -36,11 +40,9 @@ CipherSpec(Cipher c) {
  //               "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + transformation + "."));
  //  }
 
-   event i3 before(int mode, java.security.Key key, Cipher c):
-     call(public void Cipher.init(int, java.security.Key)) &&
-     args(mode, key) &&
-     target(c) &&
-     condition(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key))  {
+   event init before(Cipher c):
+     call(public void Cipher.init(..)) &&
+     target(c) {
        System.out.println("******** I3 ********");
    }
 
@@ -58,13 +60,54 @@ CipherSpec(Cipher c) {
         ExecutionContext.instance().setProperty(Property.WRAPPED_KEY, wrappedKeyBytes);
    }
 
-   event f1 after(Cipher c):
-     (call(public byte[] Cipher.doFinal()) || call(public byte[] Cipher.doFinal(byte[]))) &&
+   event f1 after(Cipher c) returning(byte[] cipherText):
+     call(public byte[] Cipher.doFinal()) &&
      target(c) {
       System.out.println("******** F1 ********");
+      ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
    }
 
-   ere : g1 i3 (wkb1 | (u1 f1))
+    event f2 after(Cipher c) returning(byte[] cipherText):
+        call(public byte[] Cipher.doFinal(..)) &&
+        target(c) {
+         System.out.println("******** F2 ********");
+         ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
+    }
+
+    event f5 after(byte[] plainText, int offset, int len, byte[] cipherText, Cipher c):
+      call(public int Cipher.doFinal(byte[], int, int, byte[])) &&
+      args(plainText, offset, len, cipherText) &&
+      target(c) {
+         System.out.println("******** ********");
+         ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
+      }
+
+
+
+   fsm :
+     start [
+        g1 -> s1
+     ]
+     s1 [
+       init -> s2
+     ]
+     s2 [
+       wkb1 -> end
+       f2   -> end
+       f5   -> end
+       u1   -> s3
+     ]
+     s3 [
+       f1 -> end
+     ]
+     end [
+        wkb1 -> end
+        f2   -> end
+        f5   -> end
+        u1   -> s3
+     ]
+
+   alias match1 = end
 
    @fail {
         System.out.println("******** FAILURE ********");
@@ -72,7 +115,7 @@ CipherSpec(Cipher c) {
 	    __RESET;
    }
 
-   @match {
+   @match1 {
         ExecutionContext.instance().setObjectAsInAcceptingState(cipher);
    }
 }

@@ -44,6 +44,9 @@ public class CipherTransformationUtil {
                 return padding.get(mode(transformation)).contains(pad(transformation));
             }
         }
+        else if(alg(transformation).equals("RSA")) {
+            return mode(transformation).equals("") && pad(transformation).equals("");
+        }
         return false;
     }
 }
