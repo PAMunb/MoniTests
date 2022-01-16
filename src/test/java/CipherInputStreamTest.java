@@ -19,11 +19,6 @@ public class CipherInputStreamTest {
         ErrorCollector.instance().reset();
     }
 
-    @After
-    public void tearDown() {
-        ErrorCollector.instance().printErrors();
-    }
-
     @Test
     public void simpleTest() throws Exception {
         KeyGenerator keygen = KeyGenerator.getInstance("AES");

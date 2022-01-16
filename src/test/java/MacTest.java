@@ -8,7 +8,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
 import javax.xml.crypto.dsig.spec.HMACParameterSpec;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
@@ -18,11 +17,6 @@ public class MacTest {
     @Before
     public void setUp() {
         ErrorCollector.instance().reset();
-    }
-
-    @After
-    public void tearDown() {
-        ErrorCollector.instance().printErrors();
     }
 
     @Test

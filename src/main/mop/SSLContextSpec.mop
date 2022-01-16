@@ -41,7 +41,6 @@ SSLContextSpec() {
    }
 
    event init after(): call(public void SSLContext.init(KeyManager[], TrustManager[], SecureRandom)) {
-     System.out.println("*****");
      ExecutionContext.instance().setProperty(Property.GENERATE_SSL_CONTEXT, context);
    }
 

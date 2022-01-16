@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.spec.InvalidParameterSpecException;
@@ -73,14 +74,14 @@ public class BlockCipherTest {
     }
 
     @Ignore
-    public void cipherValidTest1()
-            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeyException {
+    public void cipherValidTest1() throws Exception {
 
-        Certificate cert = null;
+        Certificate cert = loadCertificate();
+
         Key wrappedKey = null;
 
         Cipher cipher0 = Cipher.getInstance("RSA");
-        cipher0.init(1, cert);
+        cipher0.init(Cipher.WRAP_MODE, cert);
         byte[] wrappedKeyBytes = cipher0.wrap(wrappedKey);
         Assertions.hasEnsuredPredicate(wrappedKeyBytes);
         Assertions.mustBeInAcceptingState(cipher0);
@@ -582,6 +583,272 @@ public class BlockCipherTest {
         byte[] cipherText = cipher0.doFinal(plainText);
         Assertions.hasEnsuredPredicate(cipherText);
         Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Ignore
+    public void cipherValidTest31()
+            throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
+            InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        int exponentSize = 0;
+        int primeSize = 0;
+
+        DHGenParameterSpec dHGenParameterSpec0 = new DHGenParameterSpec(primeSize, exponentSize);
+        Assertions.hasEnsuredPredicate(dHGenParameterSpec0);
+        Assertions.mustBeInAcceptingState(dHGenParameterSpec0);
+
+        AlgorithmParameters algorithmParameters0 = AlgorithmParameters.getInstance("AES");
+        algorithmParameters0.init(dHGenParameterSpec0);
+        Assertions.hasEnsuredPredicate(algorithmParameters0);
+        Assertions.mustBeInAcceptingState(algorithmParameters0);
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        byte[] plainText = null;
+        byte[] pre_plaintext = null;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, secretKey, algorithmParameters0, secureRandom0);
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest32() throws Exception {
+
+        Certificate cert = loadCertificate();
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+        int pre_plain_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext, pre_plain_off, 0);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest33() throws Exception {
+
+        Certificate cert = loadCertificate();
+        int pre_len = 0;
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_ciphertext = "pre-cipher-text".getBytes();
+        byte[] pre_plaintext = "pre-plain-text".getBytes();
+        int pre_plain_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        cipher0.update(pre_plaintext, pre_plain_off, pre_len, pre_ciphertext);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest34() throws Exception {
+
+        int pre_ciphertext_off = 0;
+        Certificate cert = loadCertificate();
+        int pre_len = 0;
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_ciphertext = "pre-cipher-text".getBytes();
+        byte[] pre_plaintext = "pre-plain-text".getBytes();
+        int pre_plain_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        cipher0.update(pre_plaintext, pre_plain_off, pre_len, pre_ciphertext, pre_ciphertext_off);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest35() throws Exception {
+
+        Certificate cert = loadCertificate();
+        byte[] plainText = "secret".getBytes();
+        ByteBuffer pre_plainBuffer = ByteBuffer.allocate(256);
+        ByteBuffer pre_cipherBuffer = ByteBuffer.allocate(1024);
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        cipher0.update(pre_plainBuffer, pre_cipherBuffer);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest36() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        int plain_off = 0;
+        int len = 0;
+
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        byte[] cipherText = cipher0.doFinal(plainText, plain_off, len);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest37() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        int plain_off = 0;
+        int len = 0;
+
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+        byte[] cipherText = new byte[512];
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        cipher0.doFinal(plainText, plain_off, len, cipherText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest38() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        int plain_off = 0;
+        int len = 0;
+        int ciphertext_off = 0;
+
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+        byte[] cipherText = new byte[512];
+
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        cipher0.doFinal(plainText, plain_off, len, cipherText, ciphertext_off);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Ignore // TODO: we do not have a doFinal(ByteBuffer, ByteBuffer)
+    public void cipherValidTest39() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        ByteBuffer plainBuffer = ByteBuffer.allocate(256);
+        ByteBuffer cipherBuffer = ByteBuffer.allocate(512);
+
+        byte[] pre_plaintext = "secret".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        cipher0.doFinal(plainBuffer, cipherBuffer);
+        Assertions.hasEnsuredPredicate(cipherBuffer);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest40() throws Exception {
+
+        Certificate cert = loadCertificate();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        byte[] cipherText = cipher0.doFinal();
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Ignore // TODO: we do not have a doFinal(byte[], int)
+    public void cipherValidTest41() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        byte[] pre_plaintext = "pre-plain".getBytes();
+        byte[] cipherText = new byte[512];
+
+        int ciphertext_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        cipher0.doFinal(cipherText, ciphertext_off);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest1() throws NoSuchPaddingException, NoSuchAlgorithmException {
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest2() throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
+
+        Cipher cipher0 = Cipher.getInstance("RSA", "SunJCE");
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest3() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest4() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        Cipher cipher0 = Cipher.getInstance("RSA", "SunJCE");
+        cipher0.init(1, cert);
+        Assertions.mustNotBeInAcceptingState(cipher0);
 
     }
 }

@@ -16,11 +16,6 @@ public class MessageDigestTest  {
         ErrorCollector.instance().reset();
     }
 
-    @After
-    public void tearDown() {
-        ErrorCollector.instance().printErrors();
-    }
-
     @Test
     public void messageDigestValidTest1() throws NoSuchAlgorithmException {
 

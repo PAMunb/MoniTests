@@ -28,7 +28,6 @@ CipherSpec(Cipher c) {
      call(public static Cipher Cipher.getInstance(String)) &&
      args(transformation) &&
      condition(isValid(transformation)) {
-       System.out.println("******** G1 ********");
        this.transformation = transformation;
        cipher = c;
    }
@@ -44,35 +43,28 @@ CipherSpec(Cipher c) {
 
    event init before(Cipher c):
      call(public void Cipher.init(..)) &&
-     target(c) {
-       System.out.println("******** I3 ********");
-   }
+     target(c) { }
 
    event u1 before(byte[] plainText, Cipher c):
      call(public byte[] Cipher.update(byte[])) &&
      args(plainText) &&
-     target(c) {
-      System.out.println("******** U1 ********");
-   }
+     target(c) { }
 
    event wkb1 after(Cipher c) returning(byte[] wrappedKeyBytes):
      call(byte[] Cipher.wrap(Key)) &&
      target(c) {
-        System.out.println("******** WKB1 ********");
         ExecutionContext.instance().setProperty(Property.WRAPPED_KEY, wrappedKeyBytes);
    }
 
    event f1 after(Cipher c) returning(byte[] cipherText):
      call(public byte[] Cipher.doFinal()) &&
      target(c) {
-      System.out.println("******** F1 ********");
       ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
    }
 
     event f2 after(Cipher c) returning(byte[] cipherText):
         call(public byte[] Cipher.doFinal(..)) &&
         target(c) {
-         System.out.println("******** F2 ********");
          ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
     }
 
@@ -80,7 +72,6 @@ CipherSpec(Cipher c) {
       call(public int Cipher.doFinal(byte[], int, int, byte[])) &&
       args(plainText, offset, len, cipherText) &&
       target(c) {
-         System.out.println("******** F5 ********");
          ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
     }
 
@@ -88,7 +79,6 @@ CipherSpec(Cipher c) {
       call(public int Cipher.doFinal(byte[], int, int, byte[], int)) &&
       args(plainText, offset, len, cipherText, cipherOffset) &&
       target(c) {
-        System.out.println("******** F6 ********");
         ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
     }
 
@@ -123,7 +113,6 @@ CipherSpec(Cipher c) {
    alias match1 = end
 
    @fail {
-        System.out.println("******** FAILURE ********");
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
 	    __RESET;
    }
