@@ -5,6 +5,7 @@ import javax.crypto.Cipher;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
+import java.nio.ByteBuffer;
 import br.unb.cic.mop.jca.eh.*;
 import static br.unb.cic.mop.jca.util.CipherTransformationUtil.*;
 import br.unb.cic.mop.jca.util.ExecutionContext;
@@ -31,6 +32,7 @@ CipherSpec(Cipher c) {
        this.transformation = transformation;
        cipher = c;
    }
+
 
  //  event invalidGetInstance after(String transformation) returning(Cipher c):
  //  call(public static Cipher Cipher.getInstance(String)) &&
@@ -80,7 +82,7 @@ CipherSpec(Cipher c) {
       target(c) {
          System.out.println("******** F5 ********");
          ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
-      }
+    }
 
     event f6 after(byte[] plainText, int offset, int len, byte[] cipherText, int cipherOffset, Cipher c):
       call(public int Cipher.doFinal(byte[], int, int, byte[], int)) &&
@@ -89,8 +91,6 @@ CipherSpec(Cipher c) {
         System.out.println("******** F6 ********");
         ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
     }
-
-
 
    fsm :
      start [
@@ -108,6 +108,9 @@ CipherSpec(Cipher c) {
      ]
      s3 [
        f1 -> end
+       f2 -> end
+       f5 -> end
+       f6 -> end
      ]
      end [
         wkb1 -> end
