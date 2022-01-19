@@ -1,0 +1,39 @@
+package mop;
+
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
+import br.unb.cic.mop.jca.eh.*;
+import br.unb.cic.mop.jca.util.ExecutionContext;
+
+KeyPairSpec(KeyPair keyPair) {
+
+    KeyPair keyPair = null;
+
+    event c1 after(PublicKey publicKey, PrivateKey privateKey) returning(KeyPair kp):
+      call(public KeyPair.new(PublicKey, PrivateKey))
+      && args(publicKey, privateKey) {
+        keyPair = kp;
+    }
+
+    event gpu after(KeyPair keyPair) returning(PublicKey publicKey):
+      call(public PublicKey KeyPair.getPublic()) &&
+      target(keyPair) {
+        ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_PUBLIC_KEY, publicKey);
+    }
+
+    event gpr after(KeyPair keyPair) returning(PrivateKey privateKey):
+      call(public PrivateKey KeyPair.getPrivate()) &&
+      target(keyPair) {
+        ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_PUBLIC_KEY, privateKey);
+    }
+
+    ere: c1 (gpu | gpr)*
+
+    @match {
+        ExecutionContext.instance().setObjectAsInAcceptingState(keyPair);
+    }
+
+
+}

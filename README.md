@@ -3,7 +3,7 @@
 This project aims to apply JavaMop, a Java implementation of Monitoring-Oriented Programming, to verify the correct usage of cryptographic libraries
 ## Status 
 
-   * [ ] Cipher
+   * [x] Cipher
    * [x] HMACParameterSpec
    * [x] Mac
    * [x] MessageDigest
@@ -11,7 +11,7 @@ This project aims to apply JavaMop, a Java implementation of Monitoring-Oriented
    * [x] KeyManagerFactory
    * [x] KeyStore 
    * [ ] KeyPair
-   * [ ] SecretKey
+   * [x] SecretKey
    * [x] SecretKeySpec
    * [x] SecureRandom
    * [ ] Signature

@@ -1,0 +1,85 @@
+package mop;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+
+import br.unb.cic.mop.jca.eh.*;
+import br.unb.cic.mop.jca.util.ExecutionContext;
+
+KeyPairGenerator(KeyPairGenerator k) {
+
+        List<String> algorithms = Arrays.asList("RSA", "EC", "DSA", "DiffieHellman", "DH");
+
+        KeyPairGenerator kpg = null;
+        String algorithm;
+
+        private boolean validate(int keySize) {
+          switch(algorithm) {
+            case "RSA": return Arrays.asList(4096, 3072, 2048).contains(keySize);
+            case "DSA": return keySize == 2048;
+            case "DiffieHellman": return keySize == 2048;
+            case "DH": return keySize == 2048;
+            case "EC": return keySize == 256;
+          }
+          return false;
+        }
+
+        event g1 after(String alg) returning(KeyPairGenerator k):
+          call(public static KeyPairGenerator KeyPairGenerator.getInstance(String)) &&
+          args(alg) &&
+          condition(algorithms.contains(alg)) {
+            System.out.println("G1");
+            kpg = k;
+            algorithm = alg;
+        }
+
+        event g2 after(String alg, String provider) returning(KeyPairGenerator k):
+          call(public static KeyPairGenerator KeyPairGenerator.getInstance(String, String)) &&
+          args(alg, provider) &&
+          condition(algorithms.contains(alg)) {
+            System.out.println("G2");
+            kpg = k;
+            algorithm = alg;
+        }
+
+        event g3 after(String alg) returning(KeyPairGenerator k):
+          call(public static KeyPairGenerator KeyPairGenerator.getInstance(String)) &&
+          args(alg) &&
+          condition(!algorithms.contains(alg)) {
+             System.out.println("G3");
+             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+                         "one of " + String.join(",", algorithms) + " but found " + alg + "."));
+        }
+
+        event init1 after(int keySize, KeyPairGenerator k):
+          call(public void KeyPairGenerator.initialize(int)) &&
+          args(keySize) &&
+          target(k) &&
+          condition(validate(keySize)) {
+            System.out.println("I1");
+        }
+
+        event init2 after(int keySize, KeyPairGenerator k):
+          call(public void KeyPairGenerator.initialize(int)) &&
+          args(keySize) &&
+          target(k) &&
+          condition(!validate(keySize)) {
+             System.out.println("I2");
+             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+                                   "invalid key size for algorithm " + algorithm + "."));
+        }
+
+        event gen after(KeyPairGenerator k) returning(KeyPair keyPair):
+          (call(public KeyPair KeyPairGenerator.generateKeyPair()) || call(public KeyPair KeyPairGenerator.genKeyPair())) &&
+          target(k) {
+           System.out.println("GEN");
+           ExecutionContext.instance().setProperty(Property.GENERATED_KEY_PAIR, keyPair);
+        }
+
+        ere: (g1 | g2) init1 gen
+
+        @match {
+           ExecutionContext.instance().setObjectAsInAcceptingState(kpg);
+        }
+
+}
