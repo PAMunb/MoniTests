@@ -32,6 +32,14 @@ CipherSpec(Cipher c) {
        cipher = c;
    }
 
+   event g2 after(String transformation, String provider) returning(Cipher c):
+      call(public static Cipher Cipher.getInstance(String, String)) &&
+      args(transformation, provider) &&
+      condition(isValid(transformation)) {
+        this.transformation = transformation;
+        cipher = c;
+   }
+
 
  //  event invalidGetInstance after(String transformation) returning(Cipher c):
  //  call(public static Cipher Cipher.getInstance(String)) &&
@@ -85,6 +93,7 @@ CipherSpec(Cipher c) {
    fsm :
      start [
         g1 -> s1
+        g2 -> s1
      ]
      s1 [
        init -> s2

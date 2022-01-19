@@ -11,15 +11,13 @@ import javax.crypto.spec.DHGenParameterSpec;
 import javax.crypto.spec.GCMParameterSpec;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.spec.InvalidParameterSpecException;
 
-public class BlockCipherTest {
+public class CipherTest {
     @Before
     public void setUp() {
         ErrorCollector.instance().reset();
@@ -32,6 +30,14 @@ public class BlockCipherTest {
         KeyStore keyStore0 = KeyStore.getInstance("JKS");
         keyStore0.load(fileIn, "password".toCharArray());
         return keyStore0.getCertificate("certificate01");
+    }
+
+    private Key loadKey() throws Exception {
+        File ksInputFile = new File(getClass().getClassLoader().getResource("testInput-ks").getFile());
+        InputStream fileIn = new FileInputStream(ksInputFile);
+        KeyStore keyStore0 = KeyStore.getInstance("JKS");
+        keyStore0.load(fileIn, "password".toCharArray());
+        return keyStore0.getKey("mop", "password".toCharArray());
     }
 
     @Ignore
@@ -73,7 +79,7 @@ public class BlockCipherTest {
         Assertions.expectingNonEmptySetOfErrors();
     }
 
-    @Ignore
+    @Ignore // TODO: not able to fix this test case.
     public void cipherValidTest1() throws Exception {
 
         Certificate cert = loadCertificate();
@@ -88,7 +94,7 @@ public class BlockCipherTest {
 
     }
 
-    @Ignore
+    @Ignore // TODO: not able to fix this test case.
     public void cipherValidTest2() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
             InvalidKeyException, NoSuchProviderException {
 
@@ -103,7 +109,9 @@ public class BlockCipherTest {
 
     }
 
-    @Ignore
+
+
+    @Ignore // TODO: not able to fix this test case.
     public void cipherValidTest3()
             throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeyException {
 
@@ -121,6 +129,206 @@ public class BlockCipherTest {
         Assertions.mustBeInAcceptingState(cipher0);
 
     }
+
+    @Test
+    public void cipherValidTest4()
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeyException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        Key wrappedKey = KeyGenerator.getInstance("AES").generateKey();
+
+        Cipher cipher0 = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher0.init(Cipher.WRAP_MODE, secretKey);
+        byte[] wrappedKeyBytes = cipher0.wrap(wrappedKey);
+        Assertions.hasEnsuredPredicate(wrappedKeyBytes);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest5()
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeyException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        Key wrappedKey = KeyGenerator.getInstance("AES").generateKey();
+
+        Cipher cipher0 = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
+        cipher0.init(Cipher.WRAP_MODE, secretKey, secureRandom0);
+        byte[] wrappedKeyBytes = cipher0.wrap(wrappedKey);
+        Assertions.hasEnsuredPredicate(wrappedKeyBytes);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest6() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
+            InvalidKeyException, InvalidAlgorithmParameterException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        int num = 2024;
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        byte[] genSeed = secureRandom0.generateSeed(num);
+        Assertions.hasEnsuredPredicate(genSeed);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        GCMParameterSpec gCMParameterSpec0 = new GCMParameterSpec(96, genSeed);
+        Assertions.hasEnsuredPredicate(gCMParameterSpec0);
+        Assertions.mustBeInAcceptingState(gCMParameterSpec0);
+
+        Key wrappedKey = KeyGenerator.getInstance("AES").generateKey();
+
+        Cipher cipher0 = Cipher.getInstance("AES/GCM/NoPadding");
+
+        cipher0.init(Cipher.WRAP_MODE, secretKey, gCMParameterSpec0);
+        byte[] wrappedKeyBytes = cipher0.wrap(wrappedKey);
+        Assertions.hasEnsuredPredicate(wrappedKeyBytes);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Ignore //TODO: We could not fix this test case.
+    public void cipherValidTest7() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
+            InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        int exponentSize = 0;
+        int primeSize = 0;
+
+        DHGenParameterSpec dHGenParameterSpec0 = new DHGenParameterSpec(primeSize, exponentSize);
+        Assertions.hasEnsuredPredicate(dHGenParameterSpec0);
+        Assertions.mustBeInAcceptingState(dHGenParameterSpec0);
+
+        AlgorithmParameters algorithmParameters0 = AlgorithmParameters.getInstance("AES");
+        algorithmParameters0.init(dHGenParameterSpec0);
+        Assertions.hasEnsuredPredicate(algorithmParameters0);
+        Assertions.mustBeInAcceptingState(algorithmParameters0);
+
+        Key wrappedKey = null;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, secretKey, algorithmParameters0);
+        byte[] wrappedKeyBytes = cipher0.wrap(wrappedKey);
+        Assertions.hasEnsuredPredicate(wrappedKeyBytes);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest8() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
+            InvalidKeyException, InvalidAlgorithmParameterException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        int num = 2024;
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        byte[] genSeed = secureRandom0.generateSeed(num);
+        Assertions.hasEnsuredPredicate(genSeed);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        GCMParameterSpec gCMParameterSpec0 = new GCMParameterSpec(96, genSeed);
+        Assertions.hasEnsuredPredicate(gCMParameterSpec0);
+        Assertions.mustBeInAcceptingState(gCMParameterSpec0);
+
+        Key wrappedKey = KeyGenerator.getInstance("AES").generateKey();
+
+        Cipher cipher0 = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher0.init(Cipher.WRAP_MODE, secretKey, gCMParameterSpec0, secureRandom0);
+        byte[] wrappedKeyBytes = cipher0.wrap(wrappedKey);
+        Assertions.hasEnsuredPredicate(wrappedKeyBytes);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Ignore //TODO: We could not fix this test case.
+    public void cipherValidTest9() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
+            InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        int exponentSize = 0;
+        int primeSize = 0;
+
+        DHGenParameterSpec dHGenParameterSpec0 = new DHGenParameterSpec(primeSize, exponentSize);
+        Assertions.hasEnsuredPredicate(dHGenParameterSpec0);
+        Assertions.mustBeInAcceptingState(dHGenParameterSpec0);
+
+        AlgorithmParameters algorithmParameters0 = AlgorithmParameters.getInstance("AES");
+        algorithmParameters0.init(dHGenParameterSpec0);
+        Assertions.hasEnsuredPredicate(algorithmParameters0);
+        Assertions.mustBeInAcceptingState(algorithmParameters0);
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        Key wrappedKey = null;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, secretKey, algorithmParameters0, secureRandom0);
+        byte[] wrappedKeyBytes = cipher0.wrap(wrappedKey);
+        Assertions.hasEnsuredPredicate(wrappedKeyBytes);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest10() throws Exception {
+
+        Certificate cert = loadCertificate();
+        byte[] plainText = "secret".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherValidTest11() throws Exception {
+
+        Certificate cert = loadCertificate();
+        byte[] plainText = "secret".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA", "SunJCE");
+        cipher0.init(1, cert);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
+
 
     //TODO: This test case is not correct. There are a couple of mistakes.
     //  - we cannot use RSA with an AES key
@@ -196,7 +404,7 @@ public class BlockCipherTest {
         Assertions.hasEnsuredPredicate(secretKey);
         Assertions.mustBeInAcceptingState(keyGenerator0);
 
-        int num = 2022;// 0 leads to an empty genSeed... so we changed it.
+        int num = 2024;// 0 leads to an empty genSeed... so we changed it.
 
         SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
         byte[] genSeed = secureRandom0.generateSeed(num);
