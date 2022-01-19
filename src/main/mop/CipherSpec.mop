@@ -81,6 +81,13 @@ CipherSpec(Cipher c) {
        ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
    }
 
+   event u5 after (ByteBuffer plainBuffer, ByteBuffer cipherBuffer, Cipher c):
+     call(public int Cipher.update(ByteBuffer, ByteBuffer)) &&
+     args(plainBuffer, cipherBuffer) &&
+     target(c) {
+       ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherBuffer);
+   }
+
    event wkb1 after(Cipher c) returning(byte[] wrappedKeyBytes):
      call(byte[] Cipher.wrap(Key)) &&
      target(c) {
@@ -145,6 +152,7 @@ CipherSpec(Cipher c) {
        u2   -> s3
        u3   -> s3
        u4   -> s3
+       u5   -> s3
      ]
      s3 [
        f1 -> end
@@ -164,6 +172,7 @@ CipherSpec(Cipher c) {
         u2   -> s3
         u3   -> s3
         u4   -> s3
+        u5   -> s3
      ]
 
    alias match1 = end

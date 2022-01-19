@@ -1545,4 +1545,247 @@ public class CipherTest {
         Assertions.mustNotBeInAcceptingState(cipher0);
 
     }
+
+    @Test
+    public void cipherInvalidTest31() throws Exception {
+
+        int pre_ciphertext_off = 0;
+        Certificate cert = loadCertificate();
+        int pre_len = 0;
+        byte[] pre_ciphertext = new byte[512];
+        byte[] pre_plaintext = "secret".getBytes();
+        int pre_plain_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        cipher0.update(pre_plaintext, pre_plain_off, pre_len, pre_ciphertext, pre_ciphertext_off);
+        Assertions.hasEnsuredPredicate(pre_ciphertext);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest32() throws Exception {
+
+        Certificate cert = loadCertificate();
+
+        ByteBuffer pre_plainBuffer = ByteBuffer.allocate(512);
+        ByteBuffer pre_cipherBuffer = ByteBuffer.allocate(512);;
+
+        pre_plainBuffer.put("secret".getBytes());
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert);
+        cipher0.update(pre_plainBuffer, pre_cipherBuffer);
+        Assertions.hasEnsuredPredicate(pre_cipherBuffer);   // TODO: I had to fix this: Assertions.hasEnsuredPredicate(pre_ciphertext);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest33()
+            throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException {
+
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest34() throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, NoSuchProviderException {
+
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA", "SunJCE");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest35()
+            throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException {
+
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+        int pre_plain_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext, pre_plain_off, 0);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest36() throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, ShortBufferException {
+
+        int pre_len = 0;
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+        byte[] pre_ciphertext = new byte[512];
+
+        int pre_plain_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.update(pre_plaintext, pre_plain_off, pre_len, pre_ciphertext);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest37() throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, ShortBufferException {
+
+        int pre_ciphertext_off = 0;
+        int pre_len = 0;
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+        byte[] pre_ciphertext = new byte[512];
+
+        int pre_plain_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.update(pre_plaintext, pre_plain_off, pre_len, pre_ciphertext, pre_ciphertext_off);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest38() throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, ShortBufferException {
+
+        ByteBuffer pre_plainBuffer = ByteBuffer.allocate(512);
+        byte[] plainText = "secret".getBytes();
+        ByteBuffer pre_cipherBuffer = ByteBuffer.allocate(512);
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.update(pre_plainBuffer, pre_cipherBuffer);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest39()
+            throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException {
+
+        int plain_off = 0;
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        int len = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        byte[] cipherText = cipher0.doFinal(plainText, plain_off, len);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest40() throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, ShortBufferException {
+
+        byte[] cipherText = new byte[512];
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        int plain_off = 0;
+        int len = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        cipher0.doFinal(plainText, plain_off, len, cipherText);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest41() throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, ShortBufferException {
+
+        byte[] cipherText = new byte[512];
+        byte[] plainText = "secret".getBytes();
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        int plain_off = 0;
+        int len = 0;
+
+        int ciphertext_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        cipher0.doFinal(plainText, plain_off, len, cipherText, ciphertext_off);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest42() throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, ShortBufferException {
+
+        ByteBuffer plainBuffer = ByteBuffer.allocate(512);
+        ByteBuffer cipherBuffer = ByteBuffer.allocate(512);
+
+        plainBuffer.put("secret".getBytes());
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        cipher0.doFinal(plainBuffer, cipherBuffer);
+        Assertions.notHasEnsuredPredicate(cipherBuffer);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest43()
+            throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException {
+
+        byte[] pre_plaintext = "pre-plain".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        byte[] cipherText = cipher0.doFinal();
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test(expected = java.lang.IllegalStateException.class)
+    public void cipherInvalidTest44() throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException,
+            NoSuchAlgorithmException, ShortBufferException {
+
+        byte[] cipherText = new byte[512];
+        byte[] pre_plaintext = "pre-plain".getBytes();
+        int ciphertext_off = 0;
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        byte[] pre_ciphertext = cipher0.update(pre_plaintext);
+        cipher0.doFinal(cipherText, ciphertext_off);
+        Assertions.notHasEnsuredPredicate(cipherText);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
 }
