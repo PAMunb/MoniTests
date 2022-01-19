@@ -32,54 +32,8 @@ public class CipherTest {
         return keyStore0.getCertificate("certificate01");
     }
 
-    private Key loadKey() throws Exception {
-        File ksInputFile = new File(getClass().getClassLoader().getResource("testInput-ks").getFile());
-        InputStream fileIn = new FileInputStream(ksInputFile);
-        KeyStore keyStore0 = KeyStore.getInstance("JKS");
-        keyStore0.load(fileIn, "password".toCharArray());
-        return keyStore0.getKey("mop", "password".toCharArray());
-    }
 
-    @Ignore
-    public void simpleTest() throws Exception {
-        KeyGenerator keygen = KeyGenerator.getInstance("AES");
-        keygen.init(256);
-        SecretKey key = keygen.generateKey();
-
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] cipherText = cipher.update("secret".getBytes());
-        cipherText = cipher.doFinal();
-        Assertions.expectingEmptySetOfErrors();
-    }
-
-    @Ignore
-    public void invalidTransformationTest() throws Exception {
-        KeyGenerator keygen = KeyGenerator.getInstance("AES");
-        keygen.init(256);
-        SecretKey key = keygen.generateKey();
-
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        cipher.update("secret".getBytes());
-        cipher.doFinal();
-        Assertions.expectingNonEmptySetOfErrors();
-    }
-
-    @Ignore
-    public void invalidKeyTest() throws Exception {
-        KeyGenerator keygen = KeyGenerator.getInstance("DES");
-        keygen.init(56);
-        SecretKey key = keygen.generateKey();
-
-        Cipher cipher = Cipher.getInstance("DES");
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        cipher.update("secret".getBytes());
-        cipher.doFinal();
-        Assertions.expectingNonEmptySetOfErrors();
-    }
-
-    @Ignore // TODO: not able to fix this test case.
+    @Ignore("We could not fix test cases using WRAP and RSA.")
     public void cipherValidTest1() throws Exception {
 
         Certificate cert = loadCertificate();
@@ -94,7 +48,7 @@ public class CipherTest {
 
     }
 
-    @Ignore // TODO: not able to fix this test case.
+    @Ignore("We could not fix test cases using WRAP and RSA.")
     public void cipherValidTest2() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
             InvalidKeyException, NoSuchProviderException {
 
@@ -109,9 +63,7 @@ public class CipherTest {
 
     }
 
-
-
-    @Ignore // TODO: not able to fix this test case.
+    @Ignore("We could not fix test cases using WRAP and RSA.")
     public void cipherValidTest3()
             throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeyException {
 
@@ -204,7 +156,7 @@ public class CipherTest {
 
     }
 
-    @Ignore //TODO: We could not fix this test case.
+    @Ignore("We could not fix test cases using DHGenParameterSpec.")
     public void cipherValidTest7() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
             InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
 
@@ -265,7 +217,7 @@ public class CipherTest {
 
     }
 
-    @Ignore //TODO: We could not fix this test case.
+    @Ignore("We could not fix test cases using DHGenParameterSpec.")
     public void cipherValidTest9() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
             InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
 
@@ -443,7 +395,7 @@ public class CipherTest {
 
     }
 
-    @Ignore //TODO: We could not fix this test case.
+    @Ignore("We could not fix test cases using DHGenParameterSpec.")
     public void cipherValidTest16()
             throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
             InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
@@ -505,7 +457,7 @@ public class CipherTest {
 
     }
 
-    @Ignore //TODO: We could not fix this test case.
+    @Ignore("We could not fix test cases using DHGenParameterSpec.")
     public void cipherValidTest18()
             throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
             InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
@@ -595,8 +547,7 @@ public class CipherTest {
 
     }
 
-    @Ignore // TODO: For some reason, we could not specify the additional
-            //   doFinal(ByteBuffer, ByteBuffer) event
+    @Test
     public void cipherValidTest22() throws Exception {
 
         Certificate cert = loadCertificate();
@@ -630,8 +581,7 @@ public class CipherTest {
 
     }
 
-    @Ignore // TODO: For some reason, we could not specify the additional
-            //   getInstance(String, String) event
+    @Test
     public void cipherValidTest24() throws Exception {
 
         Certificate cert = loadCertificate();
@@ -746,7 +696,7 @@ public class CipherTest {
 
     }
 
-    @Ignore // TODO: We could not fix this test case.
+    @Ignore("We could not fix test cases using DHGenParameterSpec.")
     public void cipherValidTest29()
             throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
             InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
@@ -812,7 +762,7 @@ public class CipherTest {
 
     }
 
-    @Ignore
+    @Ignore("We could not fix test cases using DHGenParameterSpec.")
     public void cipherValidTest31()
             throws BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException,
             InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
@@ -987,7 +937,7 @@ public class CipherTest {
 
     }
 
-    @Ignore // TODO: we do not have a doFinal(ByteBuffer, ByteBuffer)
+    @Test
     public void cipherValidTest39() throws Exception {
 
         Certificate cert = loadCertificate();
