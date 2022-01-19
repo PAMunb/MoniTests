@@ -33,6 +33,8 @@ public class ExecutionContext {
         PREPARED_GCM,
         PREPARED_HMAC,
         RANDOMIZED,
+        SIGNED,
+        VERIFIED,
         WRAPPED_KEY
     }
 

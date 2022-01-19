@@ -7,6 +7,14 @@ import java.security.PublicKey;
 import br.unb.cic.mop.jca.eh.*;
 import br.unb.cic.mop.jca.util.ExecutionContext;
 
+/**
+ * KeyPairSpec
+ *
+ * A JavaMOP specification of the correct usage of the
+ * java.security.KeyPair class.
+ *
+ * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/KeyPair.crysl
+ */
 KeyPairSpec(KeyPair keyPair) {
 
     KeyPair keyPair = null;

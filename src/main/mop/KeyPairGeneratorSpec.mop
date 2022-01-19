@@ -6,7 +6,15 @@ import java.security.KeyPairGenerator;
 import br.unb.cic.mop.jca.eh.*;
 import br.unb.cic.mop.jca.util.ExecutionContext;
 
-KeyPairGenerator(KeyPairGenerator k) {
+/**
+ * KeyPairGeneratorSpec
+ *
+ * A JavaMOP specification of the correct usage of the
+ * java.security.KeyPairGenerator class.
+ *
+ * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/KeyPairGenerator.crysl
+ */
+KeyPairGeneratorSpec(KeyPairGenerator k) {
 
         List<String> algorithms = Arrays.asList("RSA", "EC", "DSA", "DiffieHellman", "DH");
 
