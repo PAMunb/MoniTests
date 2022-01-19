@@ -70,11 +70,11 @@ CipherSpec(Cipher c) {
       ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
    }
 
-    event f2 after(Cipher c) returning(byte[] cipherText):
-        call(public byte[] Cipher.doFinal(..)) &&
-        target(c) {
-         ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
-    }
+   event f2 after(Cipher c) returning(byte[] cipherText):
+     call(public byte[] Cipher.doFinal(..)) &&
+     target(c) {
+       ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
+   }
 
     event f5 after(byte[] plainText, int offset, int len, byte[] cipherText, Cipher c):
       call(public int Cipher.doFinal(byte[], int, int, byte[])) &&
@@ -90,6 +90,13 @@ CipherSpec(Cipher c) {
         ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
     }
 
+    event f7 after(ByteBuffer plainTextBuffer, ByteBuffer cipherTextBuffer, Cipher c):
+       call(public int Cipher.doFinal(ByteBuffer, ByteBuffer)) &&
+       args(plainTextBuffer, cipherTextBuffer) &&
+       target(c) {
+         ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherTextBuffer);
+    }
+
    fsm :
      start [
         g1 -> s1
@@ -103,6 +110,7 @@ CipherSpec(Cipher c) {
        f2   -> end
        f5   -> end
        f6   -> end
+       f7   -> end
        u1   -> s3
      ]
      s3 [
@@ -110,12 +118,14 @@ CipherSpec(Cipher c) {
        f2 -> end
        f5 -> end
        f6 -> end
+       f7 -> end
      ]
      end [
         wkb1 -> end
         f2   -> end
         f5   -> end
         f6   -> end
+        f7   -> end
         u1   -> s3
      ]
 

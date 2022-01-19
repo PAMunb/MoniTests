@@ -328,6 +328,24 @@ public class CipherTest {
 
     }
 
+    @Test
+    public void cipherValidTest12() throws Exception {
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        Certificate cert = loadCertificate();
+        byte[] plainText = "secret".getBytes();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert, secureRandom0);
+        byte[] cipherText = cipher0.doFinal(plainText);
+        Assertions.hasEnsuredPredicate(cipherText);
+        Assertions.mustBeInAcceptingState(cipher0);
+
+    }
+
 
 
     //TODO: This test case is not correct. There are a couple of mistakes.
