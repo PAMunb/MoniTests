@@ -76,6 +76,13 @@ CipherSpec(Cipher c) {
        ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
    }
 
+   event f3 after(byte[] cipherText, int offset, Cipher c):
+     call(public int Cipher.doFinal(byte[], int)) &&
+     args(cipherText, offset) &&
+     target(c) {
+       ExecutionContext.instance().setProperty(Property.ENCRYPTED, cipherText);
+   }
+
     event f5 after(byte[] plainText, int offset, int len, byte[] cipherText, Cipher c):
       call(public int Cipher.doFinal(byte[], int, int, byte[])) &&
       args(plainText, offset, len, cipherText) &&
@@ -116,6 +123,7 @@ CipherSpec(Cipher c) {
      s3 [
        f1 -> end
        f2 -> end
+       f3 -> end
        f5 -> end
        f6 -> end
        f7 -> end

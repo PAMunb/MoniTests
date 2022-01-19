@@ -971,7 +971,7 @@ public class CipherTest {
 
     }
 
-    @Ignore // TODO: we do not have a doFinal(byte[], int)
+    @Test
     public void cipherValidTest41() throws Exception {
 
         Certificate cert = loadCertificate();
@@ -1024,6 +1024,132 @@ public class CipherTest {
 
         Cipher cipher0 = Cipher.getInstance("RSA", "SunJCE");
         cipher0.init(1, cert);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest5() throws Exception {
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        Certificate cert = loadCertificate();
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, cert, secureRandom0);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest6() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        Cipher cipher0 = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher0.init(1, secretKey);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest7() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        Assertions.hasEnsuredPredicate(secureRandom0);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        Cipher cipher0 = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher0.init(1, secretKey, secureRandom0);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest8() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
+            InvalidAlgorithmParameterException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        int num = 2024;
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        byte[] genSeed = secureRandom0.generateSeed(num);
+        Assertions.hasEnsuredPredicate(genSeed);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        GCMParameterSpec gCMParameterSpec0 = new GCMParameterSpec(96, genSeed);
+        Assertions.hasEnsuredPredicate(gCMParameterSpec0);
+        Assertions.mustBeInAcceptingState(gCMParameterSpec0);
+
+        Cipher cipher0 = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher0.init(1, secretKey, gCMParameterSpec0);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Ignore
+    public void cipherInvalidTest9() throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidParameterSpecException, InvalidKeyException, InvalidAlgorithmParameterException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        int exponentSize = 0;
+        int primeSize = 0;
+
+        DHGenParameterSpec dHGenParameterSpec0 = new DHGenParameterSpec(primeSize, exponentSize);
+        Assertions.hasEnsuredPredicate(dHGenParameterSpec0);
+        Assertions.mustBeInAcceptingState(dHGenParameterSpec0);
+
+        AlgorithmParameters algorithmParameters0 = AlgorithmParameters.getInstance("AES");
+        algorithmParameters0.init(dHGenParameterSpec0);
+        Assertions.hasEnsuredPredicate(algorithmParameters0);
+        Assertions.mustBeInAcceptingState(algorithmParameters0);
+
+        Cipher cipher0 = Cipher.getInstance("RSA");
+        cipher0.init(1, secretKey, algorithmParameters0);
+        Assertions.mustNotBeInAcceptingState(cipher0);
+
+    }
+
+    @Test
+    public void cipherInvalidTest10() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
+            InvalidAlgorithmParameterException {
+
+        KeyGenerator keyGenerator0 = KeyGenerator.getInstance("AES");
+        SecretKey secretKey = keyGenerator0.generateKey();
+        Assertions.hasEnsuredPredicate(secretKey);
+        Assertions.mustBeInAcceptingState(keyGenerator0);
+
+        int num = 2024;
+
+        SecureRandom secureRandom0 = SecureRandom.getInstance("SHA1PRNG");
+        byte[] genSeed = secureRandom0.generateSeed(num);
+        Assertions.hasEnsuredPredicate(genSeed);
+        Assertions.mustBeInAcceptingState(secureRandom0);
+
+        GCMParameterSpec gCMParameterSpec0 = new GCMParameterSpec(96, genSeed);
+        Assertions.hasEnsuredPredicate(gCMParameterSpec0);
+        Assertions.mustBeInAcceptingState(gCMParameterSpec0);
+
+        Cipher cipher0 = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher0.init(1, secretKey, gCMParameterSpec0, secureRandom0);
         Assertions.mustNotBeInAcceptingState(cipher0);
 
     }
