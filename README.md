@@ -15,7 +15,7 @@ This project aims to apply JavaMop, a Java implementation of Monitoring-Oriented
    * [x] SecretKey
    * [x] SecretKeySpec
    * [x] SecureRandom
-   * [ ] Signature
+   * [x] Signature
    * [x] SSLContext
    * [x] TrustManagerFactory
 
