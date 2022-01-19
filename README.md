@@ -10,7 +10,8 @@ This project aims to apply JavaMop, a Java implementation of Monitoring-Oriented
    * [x] KeyGenerator
    * [x] KeyManagerFactory
    * [x] KeyStore 
-   * [ ] KeyPair
+   * [x] KeyPair
+   * [x] KeyPairGenerator
    * [x] SecretKey
    * [x] SecretKeySpec
    * [x] SecureRandom
