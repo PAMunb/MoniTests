@@ -17,7 +17,7 @@ import br.unb.cic.mop.jca.util.ExecutionContext;
  *
  * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/SSLContext.crysl
  */
-SSLContextSpec() {
+SSLContextSpec(SSLContext ctx) {
 
    List<String> protocols = Arrays.asList("TLSV1.2", "TLSV1.3");
 
@@ -25,40 +25,66 @@ SSLContextSpec() {
 
    SSLEngine engine;
 
-   event get after(String protocol) returning(SSLContext ctx):
-    call(public static SSLContext SSLContext.getInstance(String, ..))
+   event g1 after(String protocol) returning(SSLContext ctx):
+    call(public static SSLContext SSLContext.getInstance(String))
     && args(protocol)
     && condition(protocols.contains(protocol.toUpperCase())) {
+      System.out.println("G1");
       context = ctx;
     }
 
-   event unsafe_protocol after(String protocol):
-    call(public static SSLContext SSLContext.getInstance(String, ..))
-    && args(protocol)
-    && condition(!protocols.contains(protocol.toUpperCase())) {
-      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+    event g2 after(String protocol, String provider) returning(SSLContext ctx):
+      call(public static SSLContext SSLContext.getInstance(String, String)) &&
+      args(protocol, provider) &&
+      condition(protocols.contains(protocol.toUpperCase())) {
+        System.out.println("G2");
+        context = ctx;
+    }
+
+    event unsafe_protocol after(String protocol):
+      call(public static SSLContext SSLContext.getInstance(String)) &&
+      args(protocol) &&
+      condition(!protocols.contains(protocol.toUpperCase())) {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
                 "one of {TLSv1.2, TLSv1.3} but found " + protocol + "."));
+    }
+
+   event init after(SSLContext ctx):
+     call(public void SSLContext.init(KeyManager[], TrustManager[], SecureRandom)) &&
+     target(ctx) {
+       System.out.println("INIT");
+       ExecutionContext.instance().setProperty(Property.GENERATE_SSL_CONTEXT, context);
    }
 
-   event init after(): call(public void SSLContext.init(KeyManager[], TrustManager[], SecureRandom)) {
-     ExecutionContext.instance().setProperty(Property.GENERATE_SSL_CONTEXT, context);
-   }
-
-   event engine after() returning(SSLEngine eng) : call(public void SSLContext.createEngine(..)) {
+   event engine after(SSLContext ctx) returning(SSLEngine eng) :
+     call(public void SSLContext.createSSLEngine(..)) &&
+     target(ctx) {
+       System.out.println("CREATE");
        ExecutionContext.instance().setProperty(Property.GENERATE_SSL_ENGINE, eng);
    }
 
-   ere: get init engine
+  fsm:
+    start [
+      g1 -> s1
+      g2 -> s1
+    ]
+    s1 [
+      init -> end
+    ]
+    end [
+      engine -> end
+    ]
 
-   @fail {
-     ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
-     ExecutionContext.instance().unsetObjectAsInAcceptingState(context);
-     ExecutionContext.instance().remove(Property.GENERATE_SSL_ENGINE);
-     ExecutionContext.instance().remove(Property.GENERATE_SSL_CONTEXT);
-     __RESET;
-   }
+  alias match1 = end
 
-   @match {
-      ExecutionContext.instance().setObjectAsInAcceptingState(context);
-   }
+  @fail {
+    System.out.println("FAIL");
+    ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+    ExecutionContext.instance().unsetObjectAsInAcceptingState(context);
+    __RESET;
+  }
+
+  @match1 {
+     ExecutionContext.instance().setObjectAsInAcceptingState(context);
+  }
 }
