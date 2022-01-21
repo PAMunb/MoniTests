@@ -116,6 +116,11 @@ SecureRandomSpec(SecureRandom r) {
 
     alias match1 = init
 
+    @fail {
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+      __RESET;
+    }
+
     @match1 {
         ExecutionContext.instance().setObjectAsInAcceptingState(sr);
         ExecutionContext.instance().setProperty(Property.RANDOMIZED, sr);

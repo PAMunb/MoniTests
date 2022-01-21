@@ -4,6 +4,10 @@ package br.unb.cic.mop.eh;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A singleton class for collecting errors while running
+ * the monitoring process.
+ */
 public class ErrorCollector {
 
     private static ErrorCollector instance;

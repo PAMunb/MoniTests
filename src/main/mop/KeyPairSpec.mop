@@ -39,6 +39,11 @@ KeyPairSpec(KeyPair keyPair) {
 
     ere: c1 (gpu | gpr)*
 
+    @fail {
+       ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+       __RESET;
+    }
+
     @match {
         ExecutionContext.instance().setObjectAsInAcceptingState(keyPair);
     }

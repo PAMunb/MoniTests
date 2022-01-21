@@ -98,7 +98,14 @@ SignatureSpec(Signature s) {
 
        ere: (g1 | g2) ( ((i1 | i2)+ (update+ (s1 | s2)+)+)+ | ((i3 | i4)+ (update* (v1 | v2)+)+)+ )
 
+       @fail {
+          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+          __RESET;
+       }
+
        @match {
           ExecutionContext.instance().setObjectAsInAcceptingState(signature);
        }
+
+
 }

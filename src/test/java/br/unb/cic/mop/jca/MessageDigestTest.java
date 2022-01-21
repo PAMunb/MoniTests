@@ -1,18 +1,14 @@
+package br.unb.cic.mop.jca;
+
 import java.nio.ByteBuffer;
 import java.security.*;
 
-import br.unb.cic.mop.eh.ErrorCollector;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import br.unb.cic.mop.test.Assertions;
 
 public class MessageDigestTest  {
-    @Before
-    public void setUp() {
-        ErrorCollector.instance().reset();
-    }
 
     @Test
     public void messageDigestValidTest1() throws NoSuchAlgorithmException {

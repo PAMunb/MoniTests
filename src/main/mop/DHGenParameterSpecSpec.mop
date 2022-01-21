@@ -26,6 +26,11 @@ DHGenParameterSpecSpec(DHGenParameterSpec s) {
 
    ere : c1
 
+   @fail {
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+      __RESET;
+   }
+
    @match {
       ExecutionContext.instance().setProperty(ExecutionContext.Property.PREPARED_DH, spec);
       ExecutionContext.instance().setObjectAsInAcceptingState(spec);

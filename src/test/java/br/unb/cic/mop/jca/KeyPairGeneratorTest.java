@@ -1,3 +1,5 @@
+package br.unb.cic.mop.jca;
+
 import br.unb.cic.mop.test.Assertions;
 import org.junit.Ignore;
 import org.junit.Test;

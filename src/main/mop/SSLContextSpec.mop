@@ -29,7 +29,6 @@ SSLContextSpec(SSLContext ctx) {
     call(public static SSLContext SSLContext.getInstance(String))
     && args(protocol)
     && condition(protocols.contains(protocol.toUpperCase())) {
-      System.out.println("G1");
       context = ctx;
     }
 
@@ -37,7 +36,6 @@ SSLContextSpec(SSLContext ctx) {
       call(public static SSLContext SSLContext.getInstance(String, String)) &&
       args(protocol, provider) &&
       condition(protocols.contains(protocol.toUpperCase())) {
-        System.out.println("G2");
         context = ctx;
     }
 
@@ -52,14 +50,12 @@ SSLContextSpec(SSLContext ctx) {
    event init after(SSLContext ctx):
      call(public void SSLContext.init(KeyManager[], TrustManager[], SecureRandom)) &&
      target(ctx) {
-       System.out.println("INIT");
        ExecutionContext.instance().setProperty(Property.GENERATE_SSL_CONTEXT, context);
    }
 
    event engine after(SSLContext ctx) returning(SSLEngine eng) :
      call(public void SSLContext.createSSLEngine(..)) &&
      target(ctx) {
-       System.out.println("CREATE");
        ExecutionContext.instance().setProperty(Property.GENERATE_SSL_ENGINE, eng);
    }
 
@@ -78,7 +74,6 @@ SSLContextSpec(SSLContext ctx) {
   alias match1 = end
 
   @fail {
-    System.out.println("FAIL");
     ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
     ExecutionContext.instance().unsetObjectAsInAcceptingState(context);
     __RESET;

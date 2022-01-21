@@ -1,3 +1,5 @@
+package br.unb.cic.mop.jca;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

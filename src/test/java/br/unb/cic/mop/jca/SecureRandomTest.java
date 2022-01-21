@@ -1,3 +1,5 @@
+package br.unb.cic.mop.jca;
+
 import br.unb.cic.mop.eh.ErrorCollector;
 import br.unb.cic.mop.ExecutionContext;
 import br.unb.cic.mop.test.Assertions;

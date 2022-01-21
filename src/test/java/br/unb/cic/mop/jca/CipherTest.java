@@ -1,8 +1,6 @@
-import br.unb.cic.mop.eh.ErrorCollector;
+package br.unb.cic.mop.jca;
 
-import br.unb.cic.mop.ExecutionContext;
 import br.unb.cic.mop.test.Assertions;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -18,11 +16,6 @@ import java.security.cert.Certificate;
 import java.security.spec.InvalidParameterSpecException;
 
 public class CipherTest {
-    @Before
-    public void setUp() {
-        ErrorCollector.instance().reset();
-        ExecutionContext.instance().reset();
-    }
 
     private Certificate loadCertificate() throws Exception {
         File ksInputFile = new File(getClass().getClassLoader().getResource("testInput-ks").getFile());

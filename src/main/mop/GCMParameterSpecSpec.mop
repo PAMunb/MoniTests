@@ -46,6 +46,11 @@ GCMParameterSpecSpec(GCMParameterSpec s) {
 
    ere : c1 | c2
 
+   @fail {
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+      __RESET;
+   }
+
    @match {
       ExecutionContext.instance().setProperty(ExecutionContext.Property.PREPARED_GCM, spec);
       ExecutionContext.instance().setObjectAsInAcceptingState(spec);

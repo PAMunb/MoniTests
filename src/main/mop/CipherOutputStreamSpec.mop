@@ -24,7 +24,7 @@ CipherOutputStreamSpec() {
     ere : c1 (w1 | w2 | fl)+ cl
 
     @fail {
-           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
-           __RESET;
-        }
+       ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+       __RESET;
+    }
 }
