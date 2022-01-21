@@ -5,7 +5,8 @@ import javax.crypto.SecretKey;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * KeyGeneratorSpec

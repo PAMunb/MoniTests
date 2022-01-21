@@ -2,7 +2,8 @@ package mop;
 
 import javax.xml.crypto.dsig.spec.HMACParameterSpec;
 
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * HMACParameterSpecSpec

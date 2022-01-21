@@ -1,9 +1,7 @@
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 
-import br.unb.cic.mop.jca.eh.ErrorCollector;
-import org.junit.After;
+import br.unb.cic.mop.eh.ErrorCollector;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

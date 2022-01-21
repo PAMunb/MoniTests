@@ -6,9 +6,10 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 import java.nio.ByteBuffer;
-import br.unb.cic.mop.jca.eh.*;
+
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 import static br.unb.cic.mop.jca.util.CipherTransformationUtil.*;
-import br.unb.cic.mop.jca.util.ExecutionContext;
 
 
 /**

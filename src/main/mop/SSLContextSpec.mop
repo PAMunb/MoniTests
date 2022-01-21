@@ -5,8 +5,8 @@ import javax.net.ssl.SSLEngine;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 
-import br.unb.cic.mop.jca.eh.*;
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 
 /**

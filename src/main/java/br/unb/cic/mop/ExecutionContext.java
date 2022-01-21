@@ -1,4 +1,4 @@
-package br.unb.cic.mop.jca.util;
+package br.unb.cic.mop;
 
 import java.util.*;
 

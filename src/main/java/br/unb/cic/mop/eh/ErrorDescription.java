@@ -1,4 +1,4 @@
-package br.unb.cic.mop.jca.eh;
+package br.unb.cic.mop.eh;
 
 public class ErrorDescription {
     private ErrorType type;

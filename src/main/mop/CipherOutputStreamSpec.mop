@@ -3,7 +3,11 @@ package mop;
 import javax.crypto.CipherOutputStream;
 import java.io.OutputStream;
 import javax.crypto.Cipher;
-import br.unb.cic.mop.jca.eh.*;
+
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
+
+
 
 CipherOutputStreamSpec() {
     event c1 after() : call(public CipherOutputStream.new(OutputStream, Cipher)) { }

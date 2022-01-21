@@ -3,8 +3,8 @@ package mop;
 import java.security.Signature;
 import java.security.cert.Certificate;
 
-import br.unb.cic.mop.jca.eh.*;
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * SignatureSpec

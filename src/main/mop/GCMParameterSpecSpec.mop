@@ -2,8 +2,8 @@ package mop;
 
 import javax.crypto.spec.GCMParameterSpec;
 
-import br.unb.cic.mop.jca.eh.*;
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * GCMParameterSpec

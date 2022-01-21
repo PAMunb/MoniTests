@@ -3,7 +3,10 @@ package mop;
 import javax.crypto.CipherInputStream;
 import java.io.InputStream;
 import javax.crypto.Cipher;
-import br.unb.cic.mop.jca.eh.*;
+
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
+
 CipherInputStreamSpec() {
 
     event c1 after(): call(public CipherInputStream.new(InputStream, Cipher)) { }

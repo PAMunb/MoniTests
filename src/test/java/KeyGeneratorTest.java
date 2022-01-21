@@ -1,12 +1,9 @@
-import br.unb.cic.mop.jca.eh.ErrorCollector;
+import br.unb.cic.mop.eh.ErrorCollector;
 
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.ExecutionContext;
 import br.unb.cic.mop.test.Assertions;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;

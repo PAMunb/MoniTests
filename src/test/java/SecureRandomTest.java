@@ -1,5 +1,5 @@
-import br.unb.cic.mop.jca.eh.ErrorCollector;
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.ErrorCollector;
+import br.unb.cic.mop.ExecutionContext;
 import br.unb.cic.mop.test.Assertions;
 import org.junit.After;
 import org.junit.Before;

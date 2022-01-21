@@ -5,7 +5,8 @@ import javax.net.ssl.ManagerFactoryParameters;
 import javax.net.ssl.KeyManager;
 import java.security.KeyStore;
 
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * KeyManagerFactory

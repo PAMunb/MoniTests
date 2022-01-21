@@ -3,9 +3,9 @@ package mop;
 import java.security.MessageDigest;
 import java.util.List;
 
-import br.unb.cic.mop.jca.eh.*;
-import br.unb.cic.mop.jca.util.ExecutionContext;
-import br.unb.cic.mop.jca.util.ExecutionContext.Property;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
+import br.unb.cic.mop.ExecutionContext.Property;
 
 // The MessageDigestSpec specifies
 // the correct usage of the MessageDigest

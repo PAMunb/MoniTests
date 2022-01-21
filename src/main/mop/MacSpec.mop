@@ -1,9 +1,10 @@
 package mop;
 
 import javax.crypto.Mac;
-
-import br.unb.cic.mop.jca.util.ExecutionContext;
 import java.security.spec.AlgorithmParameterSpec;
+
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 MacSpec(Mac m) {
 

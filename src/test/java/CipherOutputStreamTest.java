@@ -1,4 +1,3 @@
-import br.unb.cic.mop.jca.eh.ErrorCollector;
 import br.unb.cic.mop.test.Assertions;
 import org.junit.Test;
 
@@ -8,7 +7,6 @@ import javax.crypto.KeyGenerator;
 import java.io.ByteArrayOutputStream;
 import java.security.Key;
 
-import static org.junit.Assert.*;
 public class CipherOutputStreamTest {
     @Test
     public void validSequence() throws Exception {
