@@ -1,4 +1,4 @@
-package br.unb.cic.mop.jca;
+package br.unb.cic.mop.bench01;
 
 import br.unb.cic.mop.eh.ErrorCollector;
 import br.unb.cic.mop.test.Assertions;

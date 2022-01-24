@@ -1,4 +1,4 @@
-package br.unb.cic.mop.jca.util;
+package br.unb.cic.mop.bench01.util;
 
 import org.junit.Test;
 import static org.junit.Assert.*;

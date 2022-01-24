@@ -1,4 +1,4 @@
-package br.unb.cic.mop.jca;
+package br.unb.cic.mop.bench01;
 
 import java.nio.ByteBuffer;
 import java.security.*;

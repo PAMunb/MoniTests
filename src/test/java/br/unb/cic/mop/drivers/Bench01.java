@@ -1,8 +1,8 @@
-package br.unb.cic.mop.jca.runners;
+package br.unb.cic.mop.drivers;
 
 import br.unb.cic.mop.eh.ErrorCollector;
-import br.unb.cic.mop.jca.CipherTest;
-import br.unb.cic.mop.jca.MessageDigestTest;
+import br.unb.cic.mop.bench01.CipherTest;
+import br.unb.cic.mop.bench01.MessageDigestTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -13,7 +13,7 @@ import org.junit.runners.Suite;
         CipherTest.class,
         MessageDigestTest.class
 })
-public class DefaultRunner {
+public class Bench01 {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
