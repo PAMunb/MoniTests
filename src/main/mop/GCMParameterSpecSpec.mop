@@ -47,7 +47,7 @@ GCMParameterSpecSpec(GCMParameterSpec s) {
    ere : c1 | c2
 
    @fail {
-      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "GCMParameterSpecSpec", "" + __LOC));
       __RESET;
    }
 

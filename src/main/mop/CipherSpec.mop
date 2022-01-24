@@ -179,7 +179,7 @@ CipherSpec(Cipher c) {
    alias match1 = end
 
    @fail {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "CipherSpec", "" + __LOC));
 	    __RESET;
    }
 

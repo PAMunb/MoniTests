@@ -58,7 +58,7 @@ SecureRandomSpec(SecureRandom r) {
       && args(alg)
       && condition(!algorithms.contains(alg))
     {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SecureRandomSpec", "" + __LOC,
          "one of " + String.join(",", algorithms) + " but found " + alg + "."));
     }
 
@@ -117,7 +117,7 @@ SecureRandomSpec(SecureRandom r) {
     alias match1 = init
 
     @fail {
-      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "SecureRandomSpec", "" + __LOC));
       __RESET;
     }
 

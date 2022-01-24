@@ -43,7 +43,7 @@ SSLContextSpec(SSLContext ctx) {
       call(public static SSLContext SSLContext.getInstance(String)) &&
       args(protocol) &&
       condition(!protocols.contains(protocol.toUpperCase())) {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SSLContextSpec", "" + __LOC,
                 "one of {TLSv1.2, TLSv1.3} but found " + protocol + "."));
     }
 
@@ -74,7 +74,7 @@ SSLContextSpec(SSLContext ctx) {
   alias match1 = end
 
   @fail {
-    ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+    ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "SSLContextSpec", "" + __LOC));
     ExecutionContext.instance().unsetObjectAsInAcceptingState(context);
     __RESET;
   }

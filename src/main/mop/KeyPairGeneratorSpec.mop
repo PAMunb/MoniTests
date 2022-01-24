@@ -53,7 +53,7 @@ KeyPairGeneratorSpec(KeyPairGenerator k) {
           call(public static KeyPairGenerator KeyPairGenerator.getInstance(String)) &&
           args(alg) &&
           condition(!algorithms.contains(alg)) {
-             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "KeyPairGeneratorSpec", "" + __LOC,
                          "one of " + String.join(",", algorithms) + " but found " + alg + "."));
         }
 
@@ -98,8 +98,10 @@ KeyPairGeneratorSpec(KeyPairGenerator k) {
         ere: (g1 | g2) (init1 | init2 | init3 | init4) gen
 
         @fail {
+          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "KeyPairGeneratorSpec", "" + __LOC));
           ExecutionContext.instance().remove(Property.GENERATED_KEY_PAIR, kp);
         }
+
         @match {
            ExecutionContext.instance().setObjectAsInAcceptingState(kpg);
         }

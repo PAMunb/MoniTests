@@ -27,7 +27,7 @@ DHGenParameterSpecSpec(DHGenParameterSpec s) {
    ere : c1
 
    @fail {
-      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "DHGenParameterSpecSpec", "" + __LOC));
       __RESET;
    }
 

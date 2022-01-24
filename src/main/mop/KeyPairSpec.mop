@@ -40,7 +40,7 @@ KeyPairSpec(KeyPair keyPair) {
     ere: c1 (gpu | gpr)*
 
     @fail {
-       ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+       ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "KeyPairSpec", "" + __LOC));
        __RESET;
     }
 

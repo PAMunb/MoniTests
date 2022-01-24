@@ -25,7 +25,7 @@ HMACParameterSpecSpec(HMACParameterSpec hmacParameterSpec) {
    ere : c
 
    @fail {
-      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "HMACParameterSpecSpec", "" + __LOC));
       __RESET;
    }
 

@@ -39,7 +39,7 @@ SignatureSpec(Signature s) {
          call(public static Signature Signature.getInstance(String)) &&
          args(alg) &&
          condition(!algorithms.contains(alg)) {
-             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SignatureSpec", "" + __LOC,
                                   "one of " + String.join(",", algorithms) + " but found " + alg + "."));
        }
 
@@ -99,7 +99,7 @@ SignatureSpec(Signature s) {
        ere: (g1 | g2) ( ((i1 | i2)+ (update+ (s1 | s2)+)+)+ | ((i3 | i4)+ (update* (v1 | v2)+)+)+ )
 
        @fail {
-          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "SignatureSpec", "" + __LOC));
           __RESET;
        }
 

@@ -2,7 +2,9 @@ package br.unb.cic.mop.eh;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A singleton class for collecting errors while running
@@ -12,7 +14,7 @@ public class ErrorCollector {
 
     private static ErrorCollector instance;
 
-    private List<ErrorDescription> errors;
+    private Set<ErrorDescription> errors;
 
     public static ErrorCollector instance() {
         if(instance == null) {
@@ -22,18 +24,18 @@ public class ErrorCollector {
     }
 
     private ErrorCollector() {
-        errors = new ArrayList<>();
+        errors = new HashSet<>();
     }
 
     public void reset() {
-        errors = new ArrayList<>();
+        errors = new HashSet<>();
     }
 
     public void addError(ErrorDescription err) {
         errors.add(err);
     }
 
-    public List<ErrorDescription> getErrors() {
+    public Set<ErrorDescription> getErrors() {
         return errors;
     }
 
