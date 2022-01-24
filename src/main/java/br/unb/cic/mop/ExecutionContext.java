@@ -82,7 +82,7 @@ public class ExecutionContext {
         if(context.containsKey(property)) {
             context.get(property).remove(obj);
         }
-        if(context.get(property).isEmpty()) {
+        if(context.get(property) != null && context.get(property).isEmpty()) {
             context.remove(property);
         }
     }
