@@ -3,6 +3,7 @@ package br.unb.cic.mop.drivers;
 import br.unb.cic.mop.eh.ErrorCollector;
 import br.unb.cic.mop.bench01.CipherTest;
 import br.unb.cic.mop.bench01.MessageDigestTest;
+import br.unb.cic.mop.eh.report.STDOutputReport;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -22,8 +23,6 @@ public class Bench01 {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        ErrorCollector.instance().getErrors().stream().forEach(e ->
-                System.out.println(e.getLocation())
-        );
+        ErrorCollector.instance().printErrors();
     }
 }

@@ -17,6 +17,10 @@ public class ErrorDescription {
         this.expecting = expecting;
     }
 
+    public String getSpec() {
+        return spec;
+    }
+
     public ErrorType getType() {
         return type;
     }

@@ -1,6 +1,9 @@
 package br.unb.cic.mop.eh;
 
 
+import br.unb.cic.mop.eh.report.DefaultReport;
+import br.unb.cic.mop.eh.report.IErrorReport;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +19,8 @@ public class ErrorCollector {
 
     private Set<ErrorDescription> errors;
 
+    private IErrorReport report;
+
     public static ErrorCollector instance() {
         if(instance == null) {
             instance = new ErrorCollector();
@@ -24,6 +29,7 @@ public class ErrorCollector {
     }
 
     private ErrorCollector() {
+        report = new DefaultReport();
         errors = new HashSet<>();
     }
 
@@ -39,9 +45,13 @@ public class ErrorCollector {
         return errors;
     }
 
-    public void printErrors() {
-        for(ErrorDescription e: getErrors()) {
-            System.out.println(e);
-        }
+    public void setReport(IErrorReport report) {
+        this.report = report;
     }
+
+    public void printErrors() throws Exception {
+        report.exportErrors(errors);
+    }
+
+
 }
