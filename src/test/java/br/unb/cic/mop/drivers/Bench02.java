@@ -25,8 +25,8 @@ public class Bench02 {
     }
 
     @AfterClass
-    public static void tearDown() {
-        ErrorCollector.instance().getErrors().stream().forEach(err -> System.out.println(err));
+    public static void tearDown() throws Exception {
+        ErrorCollector.instance().printErrors();
     }
 
     @Test
