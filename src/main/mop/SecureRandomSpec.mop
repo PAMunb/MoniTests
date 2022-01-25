@@ -2,8 +2,8 @@ package mop;
 
 import java.security.SecureRandom;
 
-import br.unb.cic.mop.jca.eh.*;
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * SecureRandomSpec
@@ -58,7 +58,7 @@ SecureRandomSpec(SecureRandom r) {
       && args(alg)
       && condition(!algorithms.contains(alg))
     {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SecureRandomSpec", "" + __LOC,
          "one of " + String.join(",", algorithms) + " but found " + alg + "."));
     }
 
@@ -115,6 +115,11 @@ SecureRandomSpec(SecureRandom r) {
       ]
 
     alias match1 = init
+
+    @fail {
+      ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "SecureRandomSpec", "" + __LOC));
+      __RESET;
+    }
 
     @match1 {
         ExecutionContext.instance().setObjectAsInAcceptingState(sr);

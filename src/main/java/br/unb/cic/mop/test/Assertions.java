@@ -1,7 +1,7 @@
 package br.unb.cic.mop.test;
 
-import br.unb.cic.mop.jca.eh.ErrorCollector;
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.ErrorCollector;
+import br.unb.cic.mop.ExecutionContext;
 
 import org.junit.Assert;
 

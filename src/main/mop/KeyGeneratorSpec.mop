@@ -5,7 +5,8 @@ import javax.crypto.SecretKey;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * KeyGeneratorSpec
@@ -20,6 +21,8 @@ KeyGeneratorSpec(KeyGenerator k) {
     List<String> algorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384", "HmacSHA512");
 
     KeyGenerator keyGenerator = null;
+
+    Key generatedKey;
 
     event g1 after(String alg) returning(KeyGenerator k):
       call(public static KeyGenerator KeyGenerator.getInstance(String))
@@ -39,7 +42,7 @@ KeyGeneratorSpec(KeyGenerator k) {
       call(public static KeyGenerator KeyGenerator.getInstance(String))
       && args(alg)
       && condition(!algorithms.contains(alg))  {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "KeyGeneratorSpec", "" + __LOC,
           "one of" + String.join(",", algorithms) + " but found " + alg + "."));
     }
 
@@ -54,15 +57,16 @@ KeyGeneratorSpec(KeyGenerator k) {
     event gk1 after(KeyGenerator k) returning(SecretKey key):
       call(public SecretKey KeyGenerator.generateKey())
       && target(k) {
-        ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, key);
+        generatedKey = key;
+        ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, generatedKey);
     }
 
     ere : (g1 | g2) ((init gk1) | gk1)
 
     @fail {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "KeyGeneratorSpec", "" + __LOC));
         ExecutionContext.instance().unsetObjectAsInAcceptingState(keyGenerator);
-        ExecutionContext.instance().remove(ExecutionContext.Property.GENERATED_KEY);
+        ExecutionContext.instance().remove(ExecutionContext.Property.GENERATED_KEY, generatedKey);
 
         __RESET;
     }
