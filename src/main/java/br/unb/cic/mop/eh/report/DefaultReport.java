@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +27,19 @@ public class DefaultReport implements IErrorReport {
         String error;
         String className;
         String methodName;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Summary summary = (Summary) o;
+            return Objects.equals(spec, summary.spec) && Objects.equals(error, summary.error) && Objects.equals(className, summary.className) && Objects.equals(methodName, summary.methodName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(spec, error, className, methodName);
+        }
 
         @Override
         public String toString() {

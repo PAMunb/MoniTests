@@ -47,8 +47,12 @@ public class Bench02 {
         int executions = 0;
         int errors = 0;
 
+        Set<String> classNames = new HashSet<>();
+
         for (Class<?> c : classes) {
             Method mainMethod = findMainMethod(c);
+
+            classNames.add(c.getName());
 
             try {
                 if (mainMethod != null) {
@@ -78,8 +82,10 @@ public class Bench02 {
 
         Assert.assertTrue(executions > 0);
 
-        logger.log(Level.WARNING, "number of executed methods : " + executions);
-        logger.log(Level.WARNING, "number of executions with errors " + errors);
+        logger.log(Level.WARNING, "number of classes: " + classes.size());
+        logger.log(Level.WARNING, "number of distinct classes: " + classNames.size());
+        logger.log(Level.WARNING, "number of executed methods: " + executions);
+        logger.log(Level.WARNING, "number of executions with errors: " + errors);
 
         restoreStandardOutput();
     }

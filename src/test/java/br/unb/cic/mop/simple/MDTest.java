@@ -2,6 +2,7 @@ package br.unb.cic.mop.simple;
 
 import br.unb.cic.mop.eh.ErrorCollector;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,5 +27,6 @@ public class MDTest {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(name.getBytes());
         System.out.println(md.digest());
+        Assert.assertEquals(4, ErrorCollector.instance().getErrors().size());
     }
 }
