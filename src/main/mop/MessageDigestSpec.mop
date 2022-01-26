@@ -27,7 +27,7 @@ MessageDigestSpec(MessageDigest digest) {
       md = digest;
     }
 
-	event g3 after(String alg):
+	event g3 after(String alg) returning(MessageDigest digest):
 	  call(public static MessageDigest MessageDigest.getInstance(String))
     	  && args(alg) && condition(!algorithms.contains(alg.toUpperCase()))
         {
