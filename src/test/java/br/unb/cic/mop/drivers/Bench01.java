@@ -1,18 +1,21 @@
 package br.unb.cic.mop.drivers;
 
+import br.unb.cic.mop.bench01.MacTest;
 import br.unb.cic.mop.eh.ErrorCollector;
 import br.unb.cic.mop.bench01.CipherTest;
 import br.unb.cic.mop.bench01.MessageDigestTest;
-import br.unb.cic.mop.eh.report.STDOutputReport;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         CipherTest.class,
-        MessageDigestTest.class
+        MessageDigestTest.class,
+        MacTest.class
 })
 public class Bench01 {
 

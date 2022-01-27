@@ -84,7 +84,7 @@ KeyPairGeneratorSpec(KeyPairGenerator k) {
           args(keySize) &&
           target(k) &&
           condition(!validate(keySize)) {
-             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "KeyPairGeneratorSpec", "" + __LOC,
                                    "invalid key size for algorithm " + algorithm + "."));
         }
 

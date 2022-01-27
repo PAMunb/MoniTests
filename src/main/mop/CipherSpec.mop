@@ -42,13 +42,13 @@ CipherSpec(Cipher c) {
    }
 
 
- //  event invalidGetInstance after(String transformation) returning(Cipher c):
- //  call(public static Cipher Cipher.getInstance(String)) &&
- //    args(transformation) &&
- //    condition(!isValid(transformation)) {
- //       ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
- //               "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + transformation + "."));
- //  }
+   event g3 after(String transformation) returning(Cipher c):
+     call(public static Cipher Cipher.getInstance(String)) &&
+     args(transformation) &&
+     condition(!isValid(transformation)) {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "CipherSpec", "" + __LOC,
+                "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + transformation + "."));
+   }
 
    event init before(Cipher c):
      call(public void Cipher.init(..)) &&
