@@ -1,5 +1,6 @@
 package br.unb.cic.mop.drivers;
 
+import br.unb.cic.mop.bench01.IvParameterSpecTest;
 import br.unb.cic.mop.bench01.MacTest;
 import br.unb.cic.mop.eh.ErrorCollector;
 import br.unb.cic.mop.bench01.CipherTest;
@@ -13,9 +14,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        CipherTest.class,
-        MessageDigestTest.class,
-        MacTest.class
+        IvParameterSpecTest.class,
 })
 public class Bench01 {
 
