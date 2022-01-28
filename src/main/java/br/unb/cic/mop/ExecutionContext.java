@@ -32,6 +32,7 @@ public class ExecutionContext {
         PREPARED_DH,
         PREPARED_GCM,
         PREPARED_HMAC,
+        PREPARED_PBE,
         RANDOMIZED,
         SIGNED,
         VERIFIED,
