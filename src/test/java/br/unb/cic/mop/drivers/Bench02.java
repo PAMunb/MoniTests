@@ -24,10 +24,10 @@ public class Bench02 {
         ErrorCollector.instance().reset();
     }
 
-    @AfterClass
-    public static void tearDown() throws Exception {
-        ErrorCollector.instance().printErrors();
-    }
+//    @AfterClass
+//    public static void tearDown() throws Exception {
+//        ErrorCollector.instance().printErrors();
+//    }
 
     @Test
     public void executeBenchmark()  {

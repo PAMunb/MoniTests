@@ -9,4 +9,9 @@ public class STDOutputReport implements IErrorReport {
     public void exportErrors(Set<ErrorDescription> errors) throws Exception {
         errors.stream().forEach(System.out::println);
     }
+
+    @Override
+    public void exportError(ErrorDescription error) throws Exception {
+
+    }
 }

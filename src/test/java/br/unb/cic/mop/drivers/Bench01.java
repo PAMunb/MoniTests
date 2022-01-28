@@ -13,7 +13,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        CipherTest.class,
+//        CipherTest.class,
         MessageDigestTest.class,
         MacTest.class
 })
@@ -24,8 +24,8 @@ public class Bench01 {
         ErrorCollector.instance().reset();
     }
 
-    @AfterClass
-    public static void afterClass() throws Exception {
-        ErrorCollector.instance().printErrors();
-    }
+//    @AfterClass
+//    public static void afterClass() throws Exception {
+//        ErrorCollector.instance().printErrors();
+//    }
 }

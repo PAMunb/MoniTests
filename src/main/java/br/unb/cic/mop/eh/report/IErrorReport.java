@@ -12,5 +12,6 @@ import java.util.Set;
 public interface IErrorReport {
 
     public void exportErrors(Set<ErrorDescription> errors) throws Exception;
+    public void exportError(ErrorDescription error) throws Exception;
 
 }

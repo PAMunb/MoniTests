@@ -39,6 +39,11 @@ public class ErrorCollector {
 
     public void addError(ErrorDescription err) {
         errors.add(err);
+        try {
+            report.exportError(err);
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
     }
 
     public Set<ErrorDescription> getErrors() {
