@@ -1,0 +1,63 @@
+package mop;
+
+import javax.crypto.spec.PBEKeySpec;
+
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
+import br.unb.cic.mop.ExecutionContext.Property;
+
+/**
+ * GCMParameterSpec
+ *
+ * A JavaMOP specification of the correct usage of the
+ * javax.crypto.spec.GCMParameterSpec.
+ *
+ * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/GCMParameterSpec.crysl
+ */
+PBEKeySpecSpec(PBEKeySpec s) {
+
+        PBEKeySpec spec;
+
+        event f1 after(char[] password):
+        call (public PBEKeySpec.new(char[])) &&
+        target(password) {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "PBEKeySpec",  "" + __LOC));
+        }
+
+        event f2 after(char[] password, byte[] salt, int keyLength):
+        call (public PBEKeySpec.new(char[], byte[], int)) &&
+        args(password, salt, keyLength) &&
+        target(password) {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "PBEKeySpec",  "" + __LOC));
+        }
+
+        event c1 after(char[] password, byte[] salt, int iterationCount, int keyLength) returning(PBEKeySpec s):
+        call(public PBEKeySpec.new(char[], byte[], int, int)) &&
+        args(password, salt, iterationCount, keyLength) &&
+        condition(
+        iterationCount >= 10000 &&
+        ExecutionContext.instance().validate(Property.RANDOMIZED, salt)
+        )
+        {
+        spec = s;
+        ExecutionContext.instance().setProperty(Property.SPECCED_KEY, spec);
+        }
+
+        event c2 after(PBEKeySpec s): call(public void PBEKeySpec.clearPassword()) &&
+        target(s)
+        {
+        ExecutionContext.instance().remove(Property.SPECCED_KEY, s);
+        }
+
+        ere : c1 c2
+
+@fail {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "PBEKeySpec", "" + __LOC));
+        __RESET;
+        }
+
+@match {
+        ExecutionContext.instance().setObjectAsInAcceptingState(spec);
+        }
+
+        }

@@ -34,6 +34,7 @@ public class ExecutionContext {
         PREPARED_HMAC,
         RANDOMIZED,
         SIGNED,
+        SPECCED_KEY,
         VERIFIED,
         WRAPPED_KEY
     }
