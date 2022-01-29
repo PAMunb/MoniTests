@@ -5,7 +5,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.ManagerFactoryParameters;
 import java.security.KeyStore;
 
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * KeyManagerFactory
@@ -39,7 +40,7 @@ TrustManagerFactorySpec(TrustManagerFactory mf) {
       call(public static TrustManagerFactory TrustManagerFactory.getInstance(String))
       && args(alg)
       && condition(!algorithms.contains(alg))  {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "TrustManagerFactorySpec", "" + __LOC,
           "one of " + String.join(",", algorithms) + " but found " + alg + "."));
     }
 
@@ -73,7 +74,7 @@ TrustManagerFactorySpec(TrustManagerFactory mf) {
     alias match1 = final
 
     @fail {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "TrustManagerFactorySpec", "" + __LOC));
         ExecutionContext.instance().unsetObjectAsInAcceptingState(trustManagerFactory);
         ExecutionContext.instance().remove(Property.GENERATED_TRUST_MANAGER);
         ExecutionContext.instance().remove(Property.GENERATED_TRUST_MANAGERS);

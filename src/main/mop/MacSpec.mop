@@ -1,9 +1,10 @@
 package mop;
 
 import javax.crypto.Mac;
-
-import br.unb.cic.mop.jca.util.ExecutionContext;
 import java.security.spec.AlgorithmParameterSpec;
+
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 MacSpec(Mac m) {
 
@@ -30,7 +31,7 @@ MacSpec(Mac m) {
           call(public static Mac Mac.getInstance(String)) &&
           args(alg) &&
           condition(!algorithms.contains(alg)) {
-            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "MacSpec", "" + __LOC,
             "one of " + String.join(",", algorithms) + " but found " + alg + "."));
         }
 
@@ -70,7 +71,7 @@ MacSpec(Mac m) {
         ere : (g1 | g2) (i1 | i2) ((f1 | f2) | (update* (f1 | f2)))
 
         @fail {
-            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "MacSpec", "" + __LOC));
             ExecutionContext.instance().remove(Property.GENERATED_MAC);
             __RESET;
         }

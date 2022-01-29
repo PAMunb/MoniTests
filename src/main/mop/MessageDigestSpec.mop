@@ -3,9 +3,9 @@ package mop;
 import java.security.MessageDigest;
 import java.util.List;
 
-import br.unb.cic.mop.jca.eh.*;
-import br.unb.cic.mop.jca.util.ExecutionContext;
-import br.unb.cic.mop.jca.util.ExecutionContext.Property;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
+import br.unb.cic.mop.ExecutionContext.Property;
 
 // The MessageDigestSpec specifies
 // the correct usage of the MessageDigest
@@ -27,11 +27,11 @@ MessageDigestSpec(MessageDigest digest) {
       md = digest;
     }
 
-	event g3 after(String alg):
+	event g3 after(String alg) returning(MessageDigest digest):
 	  call(public static MessageDigest MessageDigest.getInstance(String))
     	  && args(alg) && condition(!algorithms.contains(alg.toUpperCase()))
         {
-          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "MessageDigestSpec", "" + __LOC,
              "expecting one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
         }
 
@@ -65,7 +65,7 @@ MessageDigestSpec(MessageDigest digest) {
 	ere : (g1 | g2) (d2 | (update+ (d1 | d2 | d3)))+
 
 	@fail {
-           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "MessageDigestSpec",  "" + __LOC));
            ExecutionContext.instance().unsetObjectAsInAcceptingState(md);
            __RESET;
 	}

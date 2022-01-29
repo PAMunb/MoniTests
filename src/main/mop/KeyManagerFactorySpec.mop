@@ -5,7 +5,8 @@ import javax.net.ssl.ManagerFactoryParameters;
 import javax.net.ssl.KeyManager;
 import java.security.KeyStore;
 
-import br.unb.cic.mop.jca.util.ExecutionContext;
+import br.unb.cic.mop.eh.*;
+import br.unb.cic.mop.ExecutionContext;
 
 /**
  * KeyManagerFactory
@@ -39,7 +40,7 @@ KeyManagerFactorySpec(KeyManagerFactory k) {
       call(public static KeyManagerFactory KeyManagerFactory.getInstance(String))
       && args(alg)
       && condition(!algorithms.contains(alg))  {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "" + __LOC,
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "KeyManagerFactorySpec", "" + __LOC,
           "one of " + String.join(",", algorithms) + " but found " + alg + "."));
     }
 
@@ -73,7 +74,7 @@ KeyManagerFactorySpec(KeyManagerFactory k) {
     alias match1 = final
 
     @fail {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "" + __LOC));
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "KeyManagerFactorySpec", "" + __LOC));
         ExecutionContext.instance().unsetObjectAsInAcceptingState(keyManagerFactory);
         ExecutionContext.instance().remove(Property.GENERATED_KEY_MANAGERS);
 
