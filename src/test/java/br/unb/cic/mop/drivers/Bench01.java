@@ -1,7 +1,9 @@
 package br.unb.cic.mop.drivers;
 
+import br.unb.cic.mop.bench01.IvParameterSpecTest;
 import br.unb.cic.mop.bench01.MacTest;
 import br.unb.cic.mop.bench01.PBEKeySpecTest;
+import br.unb.cic.mop.bench01.PBEParameterSpecTest;
 import br.unb.cic.mop.eh.ErrorCollector;
 import br.unb.cic.mop.bench01.CipherTest;
 import br.unb.cic.mop.bench01.MessageDigestTest;
@@ -14,8 +16,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	CipherTest.class, 
         PBEKeySpecTest.class,
-        MessageDigestTest.class
+	MessageDigestTest.class,
+        PBEParameterSpecTest.class,
+        IvParameterSpecTest.class
 })
 public class Bench01 {
 
