@@ -15,12 +15,6 @@ public class MDTest {
         ErrorCollector.instance().reset();
     }
 
-    @After
-    public void tearDown() {
-        System.out.println(ErrorCollector.instance().getErrors().size());
-        ErrorCollector.instance().getErrors().stream().forEach(System.out::println);
-    }
-
     @Test
     public void BrokenHashBBCase2() throws NoSuchAlgorithmException {
         String name = "abcdef";

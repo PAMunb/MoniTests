@@ -36,6 +36,7 @@ public class ExecutionContext {
         PREPARED_IV,
         RANDOMIZED,
         SIGNED,
+        SPECCED_KEY,
         VERIFIED,
         WRAPPED_KEY
     }

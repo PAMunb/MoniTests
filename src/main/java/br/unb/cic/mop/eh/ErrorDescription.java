@@ -1,5 +1,8 @@
 package br.unb.cic.mop.eh;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ErrorDescription {
     private ErrorType type;
     private String spec;
@@ -27,6 +30,24 @@ public class ErrorDescription {
 
     public String getLocation() {
         return location;
+    }
+
+    public ErrorSummary getErrorSummary() {
+        ErrorSummary s = new ErrorSummary();
+        s.spec = spec;
+        s.error = type.toString();
+
+        Pattern pattern = Pattern.compile("([\\w+\\.]+)[.](\\w+)\\(.+\\)");
+        Matcher matcher = pattern.matcher(location);
+
+        s.className = location;
+        s.methodName = location;
+
+        if(matcher.matches()) {
+            s.className = matcher.group(1);
+            s.methodName = matcher.group(2);
+        }
+        return s;
     }
 
     @Override
