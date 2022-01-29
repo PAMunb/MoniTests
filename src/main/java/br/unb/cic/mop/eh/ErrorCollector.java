@@ -1,12 +1,11 @@
 package br.unb.cic.mop.eh;
 
-
+import br.unb.cic.mop.eh.logger.CSVLogger;
+import br.unb.cic.mop.eh.logger.ILogger;
 import br.unb.cic.mop.eh.report.DefaultReport;
 import br.unb.cic.mop.eh.report.IErrorReport;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,12 +13,13 @@ import java.util.Set;
  * the monitoring process.
  */
 public class ErrorCollector {
-
     private static ErrorCollector instance;
 
     private Set<ErrorDescription> errors;
 
     private IErrorReport report;
+
+    ILogger logger = new CSVLogger(); // TODO: we should use DI to inject a logger
 
     public static ErrorCollector instance() {
         if(instance == null) {
@@ -39,6 +39,7 @@ public class ErrorCollector {
 
     public void addError(ErrorDescription err) {
         errors.add(err);
+        logger.logError(err);
     }
 
     public Set<ErrorDescription> getErrors() {
@@ -52,6 +53,4 @@ public class ErrorCollector {
     public void printErrors() throws Exception {
         report.exportErrors(errors);
     }
-
-
 }
