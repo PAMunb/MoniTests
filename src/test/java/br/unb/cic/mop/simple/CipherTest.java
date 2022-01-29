@@ -19,42 +19,6 @@ public class CipherTest {
         ErrorCollector.instance().reset();
     }
 
-    @After
-    public void tearDown() {
-        ErrorCollector.instance().getErrors().stream().forEach(System.out::println);
-    }
-
-//    public void go() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-//        KeyGenerator keyGen = KeyGenerator.getInstance("DES");
-//        SecretKey key = keyGen.generateKey();
-//        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
-//        cipher.init(Cipher.ENCRYPT_MODE, key);
-//    }
-//
-//    @Ignore
-//    public void brokenCryptoBBCase1() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-//        BrokenCryptoBBCase1 bc = new BrokenCryptoBBCase1();
-//        bc.go();
-//        Assert.assertEquals(6, ErrorCollector.instance().getErrors().size());
-//    }
-
-//    public static void method2(String c) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-//        String cryptoAlgo = c;
-//        method1(cryptoAlgo);
-//    }
-//    public static void method1(String crypto) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-//        KeyGenerator keyGen = KeyGenerator.getInstance(crypto);
-//        SecretKey key = keyGen.generateKey();
-//        Cipher cipher = Cipher.getInstance(crypto);
-//        cipher.init(Cipher.ENCRYPT_MODE, key);
-//    }
-//
-//    @Test
-//    public void fooTest () throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-//        String crypto = "IDEA";
-//        method2(crypto);
-//    }
-
     public void go() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
         KeyPairGenerator kgp = KeyPairGenerator.getInstance("RSA");
         int keysize = 1024;
