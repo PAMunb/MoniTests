@@ -10,9 +10,9 @@ import br.unb.cic.mop.ExecutionContext.Property;
  * PBEKeySpecSpec
  *
  * A JavaMOP specification of the correct usage of the
- * javax.crypto.spec.GCMParameterSpec.
+ * javax.crypto.spec.PBEKeySpec
  *
- * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/GCMParameterSpec.crysl
+ * @see https://github.com/CROSSINGTUD/Crypto-API-Rules/blob/master/JavaCryptographicArchitecture/src/PBEKeySpec.crysl
  */
 PBEKeySpecSpec(PBEKeySpec s) {
 
