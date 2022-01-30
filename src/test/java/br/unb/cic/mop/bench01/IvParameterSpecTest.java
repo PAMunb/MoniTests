@@ -4,6 +4,7 @@ import br.unb.cic.mop.test.Assertions;
 import org.junit.Test;
 
 import javax.crypto.spec.IvParameterSpec;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -41,6 +42,21 @@ public class IvParameterSpecTest {
         IvParameterSpec ivParameterSpec0 = new IvParameterSpec(genSeed, offset, len);
         Assertions.hasEnsuredPredicate(ivParameterSpec0);
         Assertions.mustBeInAcceptingState(ivParameterSpec0);
+
+    }
+
+    @Test
+    public void ivParameterSpecInvalidTest1() throws NoSuchAlgorithmException {
+        byte[] genSeed = "abcde".getBytes(StandardCharsets.UTF_8);
+
+        Assertions.notHasEnsuredPredicate(genSeed);
+
+        int offset = 0;
+        int len = 0;
+
+        IvParameterSpec ivParameterSpec0 = new IvParameterSpec(genSeed);
+        Assertions.notHasEnsuredPredicate(ivParameterSpec0);
+        Assertions.mustNotBeInAcceptingState(ivParameterSpec0);
 
     }
 }
