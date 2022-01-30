@@ -50,9 +50,16 @@ CipherSpec(Cipher c) {
                 "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + transformation + "."));
    }
 
-   event init before(Cipher c):
-     call(public void Cipher.init(..)) &&
+   event i1 before(int mode, Certificate cert, Cipher c):
+     call(public void Cipher.init(int, Certificate, ..)) &&
+     args(mode, cert, ..) &&
      target(c) { }
+
+   event i2 before(int mode, Key key, Cipher c):
+     call(public void Cipher.init(int, Key,..)) &&
+     args(mode, key, ..) &&
+     target(c) &&
+     condition(ExecutionContext.instance().validate(Property.GENERATED_KEY, key)){ }
 
    event u1 after (byte[] plainText, Cipher c) returning(byte[] cipherText):
      call(public byte[] Cipher.update(byte[])) &&
@@ -141,7 +148,8 @@ CipherSpec(Cipher c) {
         g2 -> s1
      ]
      s1 [
-       init -> s2
+       i1 -> s2
+       i2 -> s2
      ]
      s2 [
        wkb1 -> end
