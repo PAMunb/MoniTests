@@ -75,7 +75,8 @@ public class Bench02 {
                 errors++;
             }
             catch (Exception ex) {
-                logger.log(Level.WARNING, ex.getCause() + " " + ex.getMessage());
+                logger.log(Level.WARNING, ex.getCause() + " " + ex.getMessage() + " when executing " + c.getName());
+                ex.getCause().printStackTrace();
                 errors++;
             }
         }
