@@ -1,5 +1,6 @@
 package br.unb.cic.mop.bench02.predictablekeystorepassword;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.KeyStore;
@@ -18,7 +19,7 @@ public class PredictableKeyStorePasswordCorrected {
     public void go() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         String type = "JKS";
         KeyStore ks = KeyStore.getInstance(type);
-        cacerts = new URL("https://www.google.com");
+        cacerts = new File("./target/test-classes/testInput-ks").toURI().toURL();
 
         SecureRandom random = new SecureRandom();
         String password = String.valueOf(random.ints());

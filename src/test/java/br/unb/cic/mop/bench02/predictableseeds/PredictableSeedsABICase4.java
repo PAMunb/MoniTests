@@ -21,7 +21,7 @@ public class PredictableSeedsABICase4 {
     }
 
     private static void go() {
-        SecureRandom sr = new SecureRandom(new byte[]{Byte.parseByte(seed.toString())});
+        SecureRandom sr = new SecureRandom(new byte[]{Byte.parseByte(new String(seed))});
         int v = sr.nextInt();
         System.out.println(v);
     }

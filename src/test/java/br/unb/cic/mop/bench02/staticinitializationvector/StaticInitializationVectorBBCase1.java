@@ -14,7 +14,7 @@ public class StaticInitializationVectorBBCase1 {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
 
-        byte [] bytes = "abcde".getBytes();
+        byte [] bytes = "abcde-----------".getBytes();
         IvParameterSpec ivSpec = new IvParameterSpec(bytes);
 
         cipher.init(Cipher.ENCRYPT_MODE,key,ivSpec);
