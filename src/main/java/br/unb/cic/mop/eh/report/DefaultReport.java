@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class DefaultReport implements IErrorReport {
 
-    public static final String HEADER = "spec,error,class,method";
+    public static final String HEADER = "spec,error,class,className,method";
 
     @Override
     public void exportErrors(Set<ErrorDescription> errors) throws Exception {
