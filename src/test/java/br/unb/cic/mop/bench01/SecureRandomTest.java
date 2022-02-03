@@ -24,7 +24,7 @@ public class SecureRandomTest {
         // ErrorCollector.instance().printErrors();
     }
 
-    
+
 
     @Test
     public void secureRandomValidTest1() throws NoSuchAlgorithmException {
