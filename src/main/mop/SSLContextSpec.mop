@@ -20,6 +20,7 @@ import br.unb.cic.mop.ExecutionContext;
 SSLContextSpec(SSLContext ctx) {
 
    List<String> protocols = Arrays.asList("TLSV1.2", "TLSV1.3");
+   String currentProtocol = "";
 
    SSLContext context;
 
@@ -30,6 +31,7 @@ SSLContextSpec(SSLContext ctx) {
     && args(protocol)
     && condition(protocols.contains(protocol.toUpperCase())) {
       context = ctx;
+      currentProtocol = protocol;
     }
 
     event g2 after(String protocol, String provider) returning(SSLContext ctx):
@@ -37,19 +39,23 @@ SSLContextSpec(SSLContext ctx) {
       args(protocol, provider) &&
       condition(protocols.contains(protocol.toUpperCase())) {
         context = ctx;
+        currentProtocol = protocol;
     }
 
     event unsafe_protocol after(String protocol):
       call(public static SSLContext SSLContext.getInstance(String)) &&
       args(protocol) &&
       condition(!protocols.contains(protocol.toUpperCase())) {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SSLContextSpec", "" + __LOC,
-                "one of {TLSv1.2, TLSv1.3} but found " + protocol + "."));
+        currentProtocol = protocol;
     }
 
    event init after(SSLContext ctx):
      call(public void SSLContext.init(KeyManager[], TrustManager[], SecureRandom)) &&
      target(ctx) {
+       if (!protocols.contains(currentProtocol.toUpperCase())) {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeProtocol, "SSLContextSpec", "" + __LOC,
+        "one of {TLSv1.2, TLSv1.3} but found " + currentProtocol + "."));
+       }
        ExecutionContext.instance().setProperty(Property.GENERATE_SSL_CONTEXT, context);
    }
 
