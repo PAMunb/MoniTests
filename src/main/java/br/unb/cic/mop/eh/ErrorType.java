@@ -4,5 +4,6 @@ public enum ErrorType {
     UnsafeAlgorithm,
     InvalidSequenceOfMethodCalls,
     UnsatisfiedConstraint,
-    InvalidKeySize
+    InvalidKeySize,
+    InvalidKeyStoreType
 }
