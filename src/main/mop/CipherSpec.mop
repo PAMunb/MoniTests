@@ -23,13 +23,13 @@ import static br.unb.cic.mop.jca.util.CipherTransformationUtil.*;
 CipherSpec(Cipher c) {
 
    Cipher cipher = null;
-   String transformation = "";
+   String currentTransformation = "";
 
    event g1 after(String transformation) returning(Cipher c):
      call(public static Cipher Cipher.getInstance(String)) &&
      args(transformation) &&
      condition(isValid(transformation)) {
-       this.transformation = transformation;
+       currentTransformation = transformation;
        cipher = c;
    }
 
@@ -37,7 +37,7 @@ CipherSpec(Cipher c) {
       call(public static Cipher Cipher.getInstance(String, String)) &&
       args(transformation, provider) &&
       condition(isValid(transformation)) {
-        this.transformation = transformation;
+        currentTransformation = transformation;
         cipher = c;
    }
 
@@ -46,20 +46,29 @@ CipherSpec(Cipher c) {
      call(public static Cipher Cipher.getInstance(String)) &&
      args(transformation) &&
      condition(!isValid(transformation)) {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "CipherSpec", "" + __LOC,
-                "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + transformation + "."));
+        currentTransformation = transformation;
    }
 
    event i1 before(int mode, Certificate cert, Cipher c):
      call(public void Cipher.init(int, Certificate, ..)) &&
      args(mode, cert, ..) &&
-     target(c) { }
+     target(c) {
+       if (!isValid(currentTransformation)) {
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "CipherSpec", "" + __LOC,
+        "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + currentTransformation + "."));
+        }
+    }
 
    event i2 before(int mode, Key key, Cipher c):
      call(public void Cipher.init(int, Key,..)) &&
      args(mode, key, ..) &&
      target(c) &&
-     condition(ExecutionContext.instance().validate(Property.GENERATED_KEY, key)){ }
+     condition(ExecutionContext.instance().validate(Property.GENERATED_KEY, key)){
+        if (!isValid(currentTransformation)) {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "CipherSpec", "" + __LOC,
+        "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + currentTransformation + "."));
+        }
+    }
 
    event u1 after (byte[] plainText, Cipher c) returning(byte[] cipherText):
      call(public byte[] Cipher.update(byte[])) &&
@@ -144,8 +153,14 @@ CipherSpec(Cipher c) {
 
    fsm :
      start [
+        g3 -> unsafeAlg
         g1 -> s1
         g2 -> s1
+     ]
+     unsafeAlg [
+        g3 -> unsafeAlg
+        g1 -> s1
+        g2 -> s2
      ]
      s1 [
        i1 -> s2

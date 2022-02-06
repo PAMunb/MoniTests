@@ -31,8 +31,8 @@ public class CipherTransformationUtil {
     public static boolean isValid(String transformation) {
         List<String> modes = Arrays.asList("CBC", "GCM", "PCBC", "CTR", "CTS", "CFB", "OFB");
         HashMap<String, List<String>> padding = new HashMap<>();
-        padding.put("CBC", Arrays.asList("PKCS5Padding", "ISO10126Padding"));
-        padding.put("PCBC", Arrays.asList("PKCS5Padding", "ISO10126Padding"));
+        padding.put("CBC", Arrays.asList("PKCS5Padding", "ISO10126Padding", "PKCS5PADDING"));
+        padding.put("PCBC", Arrays.asList("PKCS5Padding", "ISO10126Padding", "PKCS5PADDING"));
         padding.put("GCM", Arrays.asList("", "NoPadding"));
         padding.put("CTR", Arrays.asList("", "NoPadding"));
         padding.put("CTS", Arrays.asList("", "NoPadding"));
