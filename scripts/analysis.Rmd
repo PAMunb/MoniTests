@@ -114,27 +114,38 @@ tn <- gt[gt$vulnerability == "FALSE",]
 sqldf("select count(distinct class) from tp")
 sqldf("select count(distinct class) from tn")
 
-# true positive 
-sqldf("select count(distinct className) 
-       from bench02mop 
-       where className in (select class from tp)")
+# compute true positive 
+mop_tp <- sqldf("select count(distinct className) as tp
+                 from bench02mop 
+                 where className in (select class from tp)")
 
-# false positive 
-sqldf("select count(distinct className) 
-       from bench02mop 
-       where className in (select class from tn)")
+# fcompute alse positive 
+mop_fp <- sqldf("select count(distinct className) as fp
+                 from bench02mop 
+                 where className in (select class from tn)")
 
 
 
-# false-negative  
-sqldf("select count(distinct class)
-       from tp 
-       where class not in (select className from bench02mop)")
+# compute false-negative  
+mop_fn <- sqldf("select count(distinct class) as fn
+                 from tp 
+                 where class not in (select className from bench02mop)")
 
-precision_mop <- 79 / (79 + 14)
+# MOP true positives
+mop_tp
+
+# MOP false positives
+mop_fp
+
+# MOP false negatives
+mop_fn
+
+
+
+precision_mop <- mop_tp$tp / (mop_tp$tp + mop_fp$fp)
 precision_mop
 
-recall_mop <- 79 / (79 + 58)
+recall_mop <- mop_tp$tp / (mop_tp$tp + mop_fn$fn)
 recall_mop
 ```
 
@@ -142,26 +153,36 @@ recall_mop
 ## Ground Truth (CC)
 
 ```{r}
-# true positive 
-sqldf("select count(distinct className) 
-       from bench02cc
-       where className in (select class from tp)")
+# compute true positive 
+cc_tp <- sqldf("select count(distinct className) as tp
+                from bench02cc
+                where className in (select class from tp)")
 
-# false positive 
-sqldf("select count(distinct className) 
-       from bench02cc
-       where className in (select class from tn)")
+# compute false positive 
+cc_fp <- sqldf("select count(distinct className) as fp
+                from bench02cc
+                where className in (select class from tn)")
 
-# false-negative  
-sqldf("select count(distinct class)
-       from tp 
-       where class not in (select className from bench02cc)")
+# compute false-negative  
+cc_fn <- sqldf("select count(distinct class) as fn
+                from tp 
+                where class not in (select className from bench02cc)")
 
-precision_mop <- 99 / (99 + 27)
-precision_mop
 
-recall_mop <- 99 / (99 + 38)
-recall_mop
+# CC true positives
+cc_tp
+
+# CC false positives
+cc_fp
+
+# CC false negatives
+cc_fn
+
+precision_cc <- cc_tp$tp / (cc_tp$tp + cc_fp$fp)
+precision_cc
+
+recall_cc <- cc_tp$tp / (cc_tp$tp + cc_fn$fn)
+recall_cc
 ```
 
 ## Examples of FP and FN 
