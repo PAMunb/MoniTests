@@ -6,11 +6,24 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public class BrokenCryptoABSCase1 {
-    Crypto2 crypto;
-    public BrokenCryptoABSCase1() throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
-        crypto = new Crypto2("DES/ECB/PKCS5Padding");
+
+    /* TODO: It must be a main method for running on our Bench02 driver.
+      *  since this is a static method for now, we have to move the field instance
+      *  crypto to a local variable.
+      *  We also have to fix the string key algorithm and cipher transformation... since
+      *  they must be compatible */
+    public static void main(String args[]) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
+        Crypto2 crypto = new Crypto2("AES/ECB/PKCS5Padding");
         crypto.encrypt("abc","");
     }
+
+// Crypto2 crypto;
+
+//
+//    public BrokenCryptoABSCase1() throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
+//        crypto = new Crypto2("DES/ECB/PKCS5Padding");
+//        crypto.encrypt("abc","");
+//    }
 }
 
 class Crypto2 {
@@ -25,7 +38,7 @@ class Crypto2 {
             passedAlgo = defaultAlgo;
         }
 
-        KeyGenerator keyGen = KeyGenerator.getInstance(defaultAlgo);
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
         SecretKey key = keyGen.generateKey();
         Cipher cipher = Cipher.getInstance(defaultAlgo);
         cipher.init(Cipher.ENCRYPT_MODE, key);
