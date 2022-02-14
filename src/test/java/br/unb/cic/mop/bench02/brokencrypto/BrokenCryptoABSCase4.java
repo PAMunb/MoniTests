@@ -6,16 +6,14 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public class BrokenCryptoABSCase4 {
-    Crypto5 crypto;
-    public BrokenCryptoABSCase4() throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
-        crypto = new Crypto5("RC2");
+    public static void main(String args[]) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
+        Crypto5 crypto = new Crypto5("RC2");
         crypto.encrypt("abc","");
     }
 }
 
 
 class Crypto5 {
-    Cipher cipher;
     String defaultAlgo;
     public Crypto5(String defAlgo) throws NoSuchPaddingException, NoSuchAlgorithmException {
         defaultAlgo = defAlgo;

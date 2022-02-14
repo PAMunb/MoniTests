@@ -15,26 +15,19 @@ public class CipherTest {
         ErrorCollector.instance().reset();
     }
 
-    Crypto2 crypto;
 
     @Test
-    public void executeTest() throws Exception {
-        CipherTest instance = new CipherTest();
-
-        instance.go();
-        Assert.assertTrue(ErrorCollector.instance().getErrors().size() > 0);
-    }
-
-    public void go() throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
-        crypto = new Crypto2("AES/ECB/PKCS5Padding");
+    public void runTestCase() throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
+        Crypto5 crypto = new Crypto5("RC2");
         crypto.encrypt("abc","");
+        Assert.assertTrue(ErrorCollector.instance().getErrors().size() > 0);
     }
 }
 
-class Crypto2 {
-    Cipher cipher;
+
+class Crypto5 {
     String defaultAlgo;
-    public Crypto2(String defAlgo) throws NoSuchPaddingException, NoSuchAlgorithmException {
+    public Crypto5(String defAlgo) throws NoSuchPaddingException, NoSuchAlgorithmException {
         defaultAlgo = defAlgo;
     }
 
@@ -43,7 +36,7 @@ class Crypto2 {
             passedAlgo = defaultAlgo;
         }
 
-        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        KeyGenerator keyGen = KeyGenerator.getInstance(defaultAlgo);
         SecretKey key = keyGen.generateKey();
         Cipher cipher = Cipher.getInstance(defaultAlgo);
         cipher.init(Cipher.ENCRYPT_MODE, key);
