@@ -9,9 +9,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class BrokenHashABSCase3 {
-    CryptoHash3 crypto;
-    public BrokenHashABSCase3() throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
-        crypto = new CryptoHash3("MD4");
+    public static void main(String args[]) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
+        CryptoHash3 crypto = new CryptoHash3("MD4");
         crypto.encrypt("abc","");
     }
 }
