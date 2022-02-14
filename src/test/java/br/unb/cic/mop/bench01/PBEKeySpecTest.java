@@ -1,6 +1,7 @@
 package br.unb.cic.mop.bench01;
 
 import br.unb.cic.mop.test.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.crypto.spec.PBEKeySpec;
@@ -20,7 +21,8 @@ public class PBEKeySpecTest {
         Assertions.mustBeInAcceptingState(secureRandom0);
 
         int keylength = 64;
-        char[] password = "secret".toCharArray();
+
+        char[] password = String.valueOf(secureRandom0.ints()).toCharArray();
 
         PBEKeySpec pBEKeySpec0 = new PBEKeySpec(password, genSeed, 13289, keylength);
         Assertions.hasEnsuredPredicate(pBEKeySpec0);
@@ -40,7 +42,7 @@ public class PBEKeySpecTest {
         Assertions.mustBeInAcceptingState(secureRandom0);
 
         int keylength = 64;
-        char[] password = "secret".toCharArray();
+        char[] password = String.valueOf(secureRandom0.ints()).toCharArray();
 
         PBEKeySpec pBEKeySpec0 = new PBEKeySpec(password, genSeed, 13369, keylength);
         Assertions.hasEnsuredPredicate(pBEKeySpec0);

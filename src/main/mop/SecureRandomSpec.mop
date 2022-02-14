@@ -1,6 +1,7 @@
 package mop;
 
 import java.security.SecureRandom;
+import java.util.stream.IntStream;
 
 import br.unb.cic.mop.eh.*;
 import br.unb.cic.mop.ExecutionContext;
@@ -122,6 +123,12 @@ SecureRandomSpec(SecureRandom r) {
          ExecutionContext.instance().setProperty(Property.RANDOMIZED, randInt);
     }
 
+     event ints after(SecureRandom r) returning(IntStream stream):
+       call(public IntStream SecureRandom.ints(..))
+       && target(r) {
+          ExecutionContext.instance().setProperty(Property.RANDOMIZED, stream);
+     }
+
     fsm :
       start [
          c1 -> init
@@ -138,6 +145,7 @@ SecureRandomSpec(SecureRandom r) {
          next1    -> end
          next2    -> end
          next3    -> end
+         ints     -> end
       ]
       end [
          genSeed  -> end
@@ -145,6 +153,7 @@ SecureRandomSpec(SecureRandom r) {
          setSeed2 -> end
          next1    -> end
          next3    -> end
+         ints     -> end
       ]
 
     alias match1 = init

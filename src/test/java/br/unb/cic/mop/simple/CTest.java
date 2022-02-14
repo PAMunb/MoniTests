@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class CipherTest {
+public class CTest {
 
     @Before
     public void setUp() {
