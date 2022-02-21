@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 setwd(".")
 library(sqldf)
+library(xtable)
 ```
 
 ## R Markdown
@@ -245,4 +246,11 @@ sqldf("select distinct className
 sqldf("select distinct class
        from tp 
        where class not in (select className from bench02mop)")
+```
+
+## Errors
+
+```{r}
+errors <- read.csv("bench02-exceptions.csv", head=T, sep=",")
+xtable(sqldf("select Exception, count(*) from errors group by Exception order by 2 desc"))
 ```
