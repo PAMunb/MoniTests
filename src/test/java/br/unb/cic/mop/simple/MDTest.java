@@ -21,6 +21,6 @@ public class MDTest {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(name.getBytes());
         System.out.println(md.digest());
-        Assert.assertEquals(4, ErrorCollector.instance().getErrors().size());
+        Assert.assertEquals(3, ErrorCollector.instance().getErrors().size());
     }
 }

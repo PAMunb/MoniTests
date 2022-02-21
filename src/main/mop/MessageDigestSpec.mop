@@ -30,9 +30,10 @@ MessageDigestSpec(MessageDigest digest) {
 	  currentAlgorithmInstance = alg;
 	}
 
-	event g2 after(String alg) returning(MessageDigest digest):
-      call(public static MessageDigest MessageDigest.getInstance(String, ..))
-      && args(alg, *) && condition(algorithms.contains(alg.toUpperCase())) {
+	event g2 after(String alg, String provider) returning(MessageDigest digest):
+      call(public static MessageDigest MessageDigest.getInstance(String, String))
+      && args(alg, provider) && condition(algorithms.contains(alg.toUpperCase())) {
+      md = digest;
 	  currentAlgorithmInstance = alg;
     }
 
@@ -93,7 +94,7 @@ MessageDigestSpec(MessageDigest digest) {
     }
 
 	/*
-	Allowing g3 followed by g1 or g2 will elminiate the InvalideSequenceOfMethodCalls false positive in
+	Allowing g3 followed by g1 or g2 will eliminate the Invalid SequenceOfMethodCalls false positive in
 	bench02.BrokenHashABPSCase1
 	*/
 	ere : (g3* g1 | g3* g2) (d2 | (update+ (d1 | d2 | d3)))+
