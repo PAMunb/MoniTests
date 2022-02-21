@@ -23,7 +23,7 @@ public class PredictableKeyStorePasswordABICase3 {
     public void method2(String key) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         String type = "JKS";
         KeyStore ks = KeyStore.getInstance(type);
-        cacerts = new URL("https://www.google.com");
+        cacerts = new URL("./target/test-classes/testInput-ks");
         ks.load(cacerts.openStream(), key.toCharArray());
     }
 }

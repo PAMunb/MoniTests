@@ -35,14 +35,36 @@ PBEKeySpecSpec(PBEKeySpec s) {
           args(password, salt, iterationCount, keyLength) &&
           condition(
            iterationCount >= 10000 &&
+           ExecutionContext.instance().validate(Property.RANDOMIZED, password) &&
            ExecutionContext.instance().validate(Property.RANDOMIZED, salt)
           ) {
            spec = s;
            ExecutionContext.instance().setProperty(Property.SPECCED_KEY, spec);
         }
 
+        event err1 after(char[] password, byte[] salt, int iterationCount, int keyLength) returning(PBEKeySpec s):
+           call(public PBEKeySpec.new(char[], byte[], int, int)) &&
+           args(password, salt, iterationCount, keyLength) &&
+           condition( iterationCount < 10000 ) {
+               ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec", "third argument should be >= 1000 " + __LOC));
+         }
+
+        event err2 after(char[] password, byte[] salt, int iterationCount, int keyLength) returning(PBEKeySpec s):
+          call(public PBEKeySpec.new(char[], byte[], int, int)) &&
+          args(password, salt, iterationCount, keyLength) &&
+          condition( ! ExecutionContext.instance().validate(Property.RANDOMIZED, password) ) {
+             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec", "first argument should have been randomized " + __LOC));
+        }
+
+        event err3 after(char[] password, byte[] salt, int iterationCount, int keyLength) returning(PBEKeySpec s):
+          call(public PBEKeySpec.new(char[], byte[], int, int)) &&
+          args(password, salt, iterationCount, keyLength) &&
+          condition( ! ExecutionContext.instance().validate(Property.RANDOMIZED, salt) ) {
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec", "second argument should have been randomized " + __LOC));
+        }
+
         event c2 after(PBEKeySpec s):
-	  call(public void PBEKeySpec.clearPassword()) &&
+	      call(public void PBEKeySpec.clearPassword()) &&
           target(s) {
             ExecutionContext.instance().remove(Property.SPECCED_KEY, s);
         }

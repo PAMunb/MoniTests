@@ -24,7 +24,7 @@ public class StaticSaltsABICase2 {
 
     public void key2(int count){
         PBEParameterSpec pbeParamSpec = null;
-        pbeParamSpec = new PBEParameterSpec(new byte[]{Byte.parseByte(salt.toString())}, count);
+        pbeParamSpec = new PBEParameterSpec(new byte[]{Byte.parseByte(new String(salt))}, count);
     }
 }
 

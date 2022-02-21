@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 
 public class CSVLogger implements ILogger {
 
-    public static final String HEADER = "spec,error,class,method";
+    public static final String HEADER = "spec,error,class,className,method";
 
     @Override
     public void logError(ErrorDescription err) {

@@ -16,7 +16,7 @@ public class StaticInitializationVectorABHCase1 {
         SecretKey key = keyGen.generateKey();
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-        byte [] bytes = "abcde".getBytes("UTF-8");
+        byte [] bytes = "abcde-----------".getBytes("UTF-8");
 
         IvParameterSpec ivSpec = new IvParameterSpec(bytes);
 

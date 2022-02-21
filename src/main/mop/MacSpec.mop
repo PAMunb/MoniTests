@@ -8,31 +8,33 @@ import br.unb.cic.mop.ExecutionContext;
 
 MacSpec(Mac m) {
 
-        List<String> algorithms = Arrays.asList("HmacSHA256", "HmacSHA384", "HmacSHA512", "HmacPBESHA1",
+        List<String> safeAlgorithms = Arrays.asList("HmacSHA256", "HmacSHA384", "HmacSHA512", "HmacPBESHA1",
            "PBEWithHmacSHA1", "PBEWithHmacSHA224", "PBEWithHmacSHA256", "PBEWithHmacSHA384", "PBEWithHmacSHA512");
+        String currentAlgorithmInstance = "";
 
         Mac mac = null;
 
         event g1 after(String alg) returning(Mac m):
           call(public static Mac Mac.getInstance(String)) &&
           args(alg) &&
-          condition(algorithms.contains(alg)) {
+          condition(safeAlgorithms.contains(alg)) {
             mac = m;
+            currentAlgorithmInstance = alg;
         }
 
         event g2 after(String alg, String provider) returning(Mac m):
           call(public static Mac Mac.getInstance(String, String)) &&
           args(alg, provider) &&
-          condition(algorithms.contains(alg)) {
+          condition(safeAlgorithms.contains(alg)) {
             mac = m;
+            currentAlgorithmInstance = alg;
         }
 
         event g3 after(String alg) returning(Mac m):
           call(public static Mac Mac.getInstance(String)) &&
           args(alg) &&
-          condition(!algorithms.contains(alg)) {
-            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "MacSpec", "" + __LOC,
-            "one of " + String.join(",", algorithms) + " but found " + alg + "."));
+          condition(!safeAlgorithms.contains(alg)) {
+            currentAlgorithmInstance = alg;
         }
 
         event i1 before(java.security.Key key, Mac m):
@@ -40,6 +42,10 @@ MacSpec(Mac m) {
           args(key) &&
           target(m) &&
           condition(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key)) {
+            if (!safeAlgorithms.contains(currentAlgorithmInstance)) {
+                ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "MacSpec", "" + __LOC,
+        "one of " + String.join(",", safeAlgorithms) + " but found " + currentAlgorithmInstance + "."));
+            }
 
         }
 
@@ -48,7 +54,10 @@ MacSpec(Mac m) {
           args(key, params) &&
           target(m) &&
           condition(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key))  {
-
+            if (!safeAlgorithms.contains(currentAlgorithmInstance)) {
+                ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "MacSpec", "" + __LOC,
+        "one of " + String.join(",", safeAlgorithms) + " but found " + currentAlgorithmInstance + "."));
+        }
         }
 
         event update after(Mac m):
@@ -68,7 +77,7 @@ MacSpec(Mac m) {
             ExecutionContext.instance().setProperty(Property.GENERATED_MAC, output);
         }
 
-        ere : (g1 | g2) (i1 | i2) ((f1 | f2) | (update* (f1 | f2)))
+        ere : (g3* g1 | g3* g2) (i1 | i2) ((f1 | f2) | (update* (f1 | f2)))
 
         @fail {
             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "MacSpec", "" + __LOC));

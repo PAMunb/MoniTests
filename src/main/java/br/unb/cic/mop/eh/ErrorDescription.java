@@ -40,11 +40,11 @@ public class ErrorDescription {
         Pattern pattern = Pattern.compile("([\\w+\\.]+)[.](\\w+)\\(.+\\)");
         Matcher matcher = pattern.matcher(location);
 
-        s.className = location;
+        s.classQualifiedName = location;
         s.methodName = location;
 
         if(matcher.matches()) {
-            s.className = matcher.group(1);
+            s.classQualifiedName = matcher.group(1);
             s.methodName = matcher.group(2);
         }
         return s;

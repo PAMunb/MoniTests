@@ -5,7 +5,7 @@ import java.util.Objects;
 public class ErrorSummary {
     public String spec;
     public String error;
-    public String className;
+    public String classQualifiedName;
     public String methodName;
 
     @Override
@@ -13,17 +13,21 @@ public class ErrorSummary {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ErrorSummary summary = (ErrorSummary) o;
-        return Objects.equals(spec, summary.spec) && Objects.equals(error, summary.error) && Objects.equals(className, summary.className) && Objects.equals(methodName, summary.methodName);
+        return Objects.equals(spec, summary.spec) && Objects.equals(error, summary.error) && Objects.equals(classQualifiedName, summary.classQualifiedName) && Objects.equals(methodName, summary.methodName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(spec, error, className, methodName);
+        return Objects.hash(spec, error, classQualifiedName, methodName);
     }
 
     @Override
     public String toString() {
-        return String.format("%s,%s,%s,%s", spec, error, className, methodName);
+        return String.format("%s,%s,%s,%s,%s", spec, error, classQualifiedName, className(), methodName);
+    }
+
+    private String className() {
+        return classQualifiedName.substring(classQualifiedName.lastIndexOf(".")+1);
     }
 
 

@@ -24,50 +24,7 @@ public class SecureRandomTest {
         // ErrorCollector.instance().printErrors();
     }
 
-    @Test
-    public void validExecutionWithNativePRNG() throws Exception {
-        SecureRandom random = SecureRandom.getInstance("NativePRNG");
-        random.setSeed(123L);
-        random.nextInt(123);
-        Assertions.expectingEmptySetOfErrors();
-    }
 
-    @Test
-    public void validExecutionWithInstanceStrong() throws Exception {
-        SecureRandom random = SecureRandom.getInstanceStrong();
-        random.setSeed(123L);
-        random.nextInt(123);
-        Assertions.expectingEmptySetOfErrors();
-    }
-
-    @Test
-    public void validExecutionWithNativePRNGBlocking() throws Exception {
-        SecureRandom random = SecureRandom.getInstance("NativePRNGBlocking");
-        byte[] seed = "password".getBytes();
-        random.setSeed(seed);
-        random.nextInt(123);
-        assertTrue(ErrorCollector.instance().getErrors().isEmpty());
-    }
-
-    @Test
-    public void validExecutionWithNativePRNGBlockingNextIntWithoutParameter() throws Exception {
-        SecureRandom random = SecureRandom.getInstance("NativePRNGBlocking");
-        byte[] seed = "password".getBytes();
-        random.setSeed(seed);
-        random.nextInt();
-        random.nextInt();
-        Assertions.expectingEmptySetOfErrors();
-    }
-
-    @Test
-    public void validExecutionWithDefaultConstructorNextIntWithoutParameter() throws Exception {
-        SecureRandom random = new SecureRandom();
-        byte[] seed = "password".getBytes();
-        random.setSeed(seed);
-        random.nextInt();
-        random.nextInt();
-        Assertions.expectingEmptySetOfErrors();
-    }
 
     @Test
     public void secureRandomValidTest1() throws NoSuchAlgorithmException {

@@ -38,6 +38,13 @@ IvParameterSpecSpec(IvParameterSpec s) {
             spec = s;
         }
 
+        event c3 after(byte[] iv) returning(IvParameterSpec s):
+           call(public IvParameterSpec.new(byte[])) &&
+           args(iv) &&
+           condition(
+             !ExecutionContext.instance().validate(Property.RANDOMIZED, iv)
+           ) { }
+
         ere : c1 | c2
 
         @fail {

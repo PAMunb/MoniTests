@@ -1,5 +1,6 @@
 package br.unb.cic.mop.bench02.predictablekeystorepassword;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,7 +14,7 @@ public class PredictableKeyStorePasswordABMC1 {
     public void go(String key) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         String type = "JKS";
         KeyStore ks = KeyStore.getInstance(type);
-        cacerts = new URL("https://www.google.com");
+        cacerts = new File("./target/test-classes/testInput-Ks").toURI().toURL();
         ks.load(cacerts.openStream(), key.toCharArray());
     }
 }

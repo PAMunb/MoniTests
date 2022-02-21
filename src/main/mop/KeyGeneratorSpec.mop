@@ -18,8 +18,8 @@ import br.unb.cic.mop.ExecutionContext;
  */
 KeyGeneratorSpec(KeyGenerator k) {
 
-    List<String> algorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384", "HmacSHA512");
-
+    List<String> safeAlgorithms = Arrays.asList("AES", "HmacSHA256", "HmacSHA384", "HmacSHA512");
+    String currentAlgorithmInstance = "";
     KeyGenerator keyGenerator = null;
 
     Key generatedKey;
@@ -27,23 +27,24 @@ KeyGeneratorSpec(KeyGenerator k) {
     event g1 after(String alg) returning(KeyGenerator k):
       call(public static KeyGenerator KeyGenerator.getInstance(String))
       && args(alg)
-      && condition(algorithms.contains(alg)) {
+      && condition(safeAlgorithms.contains(alg)) {
         keyGenerator = k;
+        currentAlgorithmInstance = alg;
     }
 
     event g2 after(String alg) returning(KeyGenerator k):
       call(public static KeyGenerator KeyGenerator.getInstance(String, ..))
       && args(alg, *)
-      && condition(algorithms.contains(alg)) {
+      && condition(safeAlgorithms.contains(alg)) {
         keyGenerator = k;
+        currentAlgorithmInstance = alg;
     }
 
     event g3 after(String alg) returning(KeyGenerator k):
       call(public static KeyGenerator KeyGenerator.getInstance(String))
       && args(alg)
-      && condition(!algorithms.contains(alg))  {
-        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "KeyGeneratorSpec", "" + __LOC,
-          "one of" + String.join(",", algorithms) + " but found " + alg + "."));
+      && condition(!safeAlgorithms.contains(currentAlgorithmInstance))  {
+        currentAlgorithmInstance = alg;
     }
 
     event init before(KeyGenerator k):
@@ -57,11 +58,15 @@ KeyGeneratorSpec(KeyGenerator k) {
     event gk1 after(KeyGenerator k) returning(SecretKey key):
       call(public SecretKey KeyGenerator.generateKey())
       && target(k) {
+        if (!safeAlgorithms.contains(currentAlgorithmInstance)) {
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "KeyGeneratorSpec", "" + __LOC,
+        "one of" + String.join(",", safeAlgorithms) + " but found " + currentAlgorithmInstance + "."));
+        }
         generatedKey = key;
         ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, generatedKey);
     }
 
-    ere : (g1 | g2) ((init gk1) | gk1)
+    ere : (g3* g1+ | g3* g2+) ((init gk1) | gk1)
 
     @fail {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "KeyGeneratorSpec", "" + __LOC));
