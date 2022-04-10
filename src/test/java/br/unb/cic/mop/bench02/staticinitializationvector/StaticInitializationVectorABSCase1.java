@@ -11,11 +11,13 @@ import java.security.NoSuchAlgorithmException;
 
 public class StaticInitializationVectorABSCase1 {
     CryptoStaticIV1 crypto;
-    public StaticInitializationVectorABSCase1() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {
-        byte [] bytes = "abcde".getBytes();
 
-        crypto = new CryptoStaticIV1(bytes);
-        crypto.method1(null);
+    public static void main(String args[]) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {
+        StaticInitializationVectorABSCase1 m = new StaticInitializationVectorABSCase1();
+        byte [] bytes = "abcde-----------".getBytes();
+
+        m.crypto = new CryptoStaticIV1(bytes);
+        m.crypto.method1(null);
     }
 }
 

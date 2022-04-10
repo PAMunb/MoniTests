@@ -6,10 +6,11 @@ import java.security.SecureRandom;
 
 public class PredictablePBEPasswordABSCase1 {
     CryptoPredictablePBE crypto;
-    public PredictablePBEPasswordABSCase1(){
+    public static void main(String args[]){
+        PredictablePBEPasswordABSCase1 m = new PredictablePBEPasswordABSCase1();
         String password = "sagar";
-        crypto = new CryptoPredictablePBE(password);
-        crypto.method1("");
+        m.crypto = new CryptoPredictablePBE(password);
+        m.crypto.method1("");
     }
 }
 

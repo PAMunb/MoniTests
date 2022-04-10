@@ -1,5 +1,6 @@
 package br.unb.cic.mop.bench02.predictablekeystorepassword;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.KeyStore;
@@ -9,10 +10,11 @@ import java.security.cert.CertificateException;
 
 public class PredictableKeyStorePasswordABSCase1 {
     CryptoPredictableKeyStorePassword1 crypto;
-    public PredictableKeyStorePasswordABSCase1() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
-        String key = "changeit";
-        crypto = new CryptoPredictableKeyStorePassword1(key);
-        crypto.method1("");
+    public static void main(String args[]) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
+        PredictableKeyStorePasswordABSCase1 m = new PredictableKeyStorePasswordABSCase1();
+        String key = "password";
+        m.crypto = new CryptoPredictableKeyStorePassword1(key);
+        m.crypto.method1("");
     }
 }
 
@@ -30,7 +32,7 @@ class CryptoPredictableKeyStorePassword1 {
 
         String type = "JKS";
         KeyStore ks = KeyStore.getInstance(type);
-        cacerts = new URL("https://www.google.com");
+        cacerts = new File("./target/test-classes/testInput-ks").toURI().toURL();
         ks.load(cacerts.openStream(), passedKey.toCharArray());
     }
 }

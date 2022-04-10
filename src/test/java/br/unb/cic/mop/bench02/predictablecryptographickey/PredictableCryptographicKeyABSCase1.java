@@ -11,16 +11,17 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class PredictableCryptographicKeyABSCase1 {
-    Crypto crypto;
-    public PredictableCryptographicKeyABSCase1() throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
+    PredictableCryptographicKeyABSCase1Internal crypto;
+    public static void main(String args[]) throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
+        PredictableCryptographicKeyABSCase1 m = new PredictableCryptographicKeyABSCase1();
         String passKey = PredictableCryptographicKeyABSCase1.getKey("pass.key");
 
         if(passKey == null) {
             byte defaultKey[] = {20,10,30,5,5,6,8,7};
-            crypto = new Crypto(defaultKey);
+            m.crypto = new PredictableCryptographicKeyABSCase1Internal(defaultKey);
         }
         else {
-            crypto = new Crypto(passKey.getBytes("UTF-8"));
+            m.crypto = new PredictableCryptographicKeyABSCase1Internal(passKey.getBytes("UTF-8"));
         }
     }
 
@@ -34,12 +35,12 @@ public class PredictableCryptographicKeyABSCase1 {
     }
 }
 
-class Crypto {
+class PredictableCryptographicKeyABSCase1Internal {
     Cipher cipher;
     String algoSpec = "AES/CBC/PKCS5Padding";
     String algo = "AES";
     byte [] defaultKey;
-    public Crypto(byte [] defkey) throws NoSuchPaddingException, NoSuchAlgorithmException {
+    public PredictableCryptographicKeyABSCase1Internal(byte [] defkey) throws NoSuchPaddingException, NoSuchAlgorithmException {
         cipher = Cipher.getInstance(algoSpec);
         defaultKey = defkey;
     }

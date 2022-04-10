@@ -17,7 +17,7 @@ public class StaticInitializationVectorABHCase2 {
         SecretKey key = keyGen.generateKey();
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-        String name = "abcdef-----------";
+        String name = "abcde-----------";
         Map<String,String> hm = new HashMap<String, String>();
         hm.put("aaa", "abcde-----------");
         hm.put("bbb", "fghij");
