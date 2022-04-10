@@ -26,7 +26,7 @@ IvParameterSpecSpec(IvParameterSpec s) {
              spec = s;
         }
 
-        event c1 after(byte[] iv, int offset, int len) returning(IvParameterSpec s):
+        event c2 after(byte[] iv, int offset, int len) returning(IvParameterSpec s):
           call(public IvParameterSpec.new(byte[], int, int)) &&
           args(iv, offset, len) &&
           condition(
@@ -43,7 +43,10 @@ IvParameterSpecSpec(IvParameterSpec s) {
            args(iv) &&
            condition(
              !ExecutionContext.instance().validate(Property.RANDOMIZED, iv)
-           ) { }
+           ) {
+           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "IvParameterSpecSpec",
+            "the byte[] initialization vector must be randomized" + __LOC));
+        }
 
         ere : c1 | c2
 
