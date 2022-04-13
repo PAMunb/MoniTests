@@ -27,6 +27,12 @@ public class ErrorSummary {
     }
 
     private String className() {
+        if(classQualifiedName.contains("$")) {
+            int idx1 = classQualifiedName.indexOf("$") + 1;
+            String temp = classQualifiedName.substring(idx1);
+
+            return temp.substring(0, temp.indexOf("."));
+        }
         return classQualifiedName.substring(classQualifiedName.lastIndexOf(".")+1);
     }
 
