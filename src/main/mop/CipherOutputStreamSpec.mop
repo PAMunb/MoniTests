@@ -12,26 +12,27 @@ CipherOutputStreamSpec() {
         System.out.println("c1 was called");
     }
 
-    event w1 after() : call(public void CipherInputStream.write(int)) || call(public void CipherInputStream.write(byte[])) {
+    event w1 after() : call(public void CipherOutputStream.write(int)) || call(public void CipherOutputStream.write(byte[])) {
         System.out.println("w1 was called");
     }
 
     event w2 after(byte[] b, int off, int len) :
-     call(public void CipherInputStream.write(byte[], int, int)) && args(b, off, len) {
+     call(public void CipherOutputStream.write(byte[], int, int)) && args(b, off, len) {
         System.out.println("w2 was called");
     }
 
-    event fl after() : call(public void CipherInputStream.flush()) {
+    event fl after() : call(public void CipherOutputStream.flush()) {
         System.out.println("fl was called");
     }
 
-    event cl after(): call(public void CipherInputStream.close()) {
+    event cl after(): call(public void CipherOutputStream.close()) {
         System.out.println("cl was called");
     }
 
     ere : c1 (w1 | w2 | fl)+ cl
 
     @fail {
+       System.out.println("InvalidSequenceOfMethodCalls");
        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "CipherOutputStreamSpec", "" + __LOC));
        __RESET;
     }

@@ -52,5 +52,10 @@ public class InteractionBetweenOSandCOS {
 
         cos.flush();
         cos.close();
+
+        /*
+        When the line below gets uncommented, we see 8 errors.
+        Assertions.expectingEmptySetOfErrors();
+         */
     }
 }
