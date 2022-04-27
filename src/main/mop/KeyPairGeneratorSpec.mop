@@ -66,7 +66,7 @@ KeyPairGeneratorSpec(KeyPairGenerator k) {
           condition(validate(keySize)) {
              if (!safeAlgorithms.contains(algorithm)) {
                 ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "KeyPairGeneratorSpec", "" +
-        __LOC, "one of " + String.join(",", safeAlgorithms) + " but found " + algorithm + "."));
+                 __LOC, " expecting one of " + String.join(",", safeAlgorithms) + " but found " + algorithm + "."));
              }
           }
 

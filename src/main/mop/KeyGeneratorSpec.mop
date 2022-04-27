@@ -60,7 +60,7 @@ KeyGeneratorSpec(KeyGenerator k) {
       && target(k) {
         if (!safeAlgorithms.contains(currentAlgorithmInstance)) {
             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "KeyGeneratorSpec", "" + __LOC,
-        "one of" + String.join(",", safeAlgorithms) + " but found " + currentAlgorithmInstance + "."));
+        "expecting one of" + String.join(",", safeAlgorithms) + " but found " + currentAlgorithmInstance + "."));
         }
         generatedKey = key;
         ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_KEY, generatedKey);

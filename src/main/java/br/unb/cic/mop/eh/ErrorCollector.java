@@ -38,8 +38,10 @@ public class ErrorCollector {
     }
 
     public void addError(ErrorDescription err) {
-        errors.add(err);
-        logger.logError(err);
+        if(!errors.contains(err)) {
+            errors.add(err);
+            logger.logError(err);
+        }
     }
 
     public Set<ErrorDescription> getErrors() {

@@ -44,8 +44,7 @@ IvParameterSpecSpec(IvParameterSpec s) {
            condition(
              !ExecutionContext.instance().validate(Property.RANDOMIZED, iv)
            ) {
-           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "IvParameterSpecSpec",
-            "the byte[] initialization vector must be randomized" + __LOC));
+           ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "IvParameterSpecSpec", "" + __LOC));
         }
 
         ere : c1 | c2

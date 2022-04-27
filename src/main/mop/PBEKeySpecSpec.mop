@@ -46,21 +46,24 @@ PBEKeySpecSpec(PBEKeySpec s) {
            call(public PBEKeySpec.new(char[], byte[], int, int)) &&
            args(password, salt, iterationCount, keyLength) &&
            condition( iterationCount < 10000 ) {
-               ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec", "third argument should be >= 1000 " + __LOC));
+               ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec",
+                  ""  + __LOC, "third argument should be >= 1000"));
          }
 
         event err2 after(char[] password, byte[] salt, int iterationCount, int keyLength) returning(PBEKeySpec s):
           call(public PBEKeySpec.new(char[], byte[], int, int)) &&
           args(password, salt, iterationCount, keyLength) &&
           condition( ! ExecutionContext.instance().validate(Property.RANDOMIZED, password) ) {
-             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec", "first argument should have been randomized " + __LOC));
+             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec",
+                  "" + __LOC, "first argument should have been randomized" ));
         }
 
         event err3 after(char[] password, byte[] salt, int iterationCount, int keyLength) returning(PBEKeySpec s):
           call(public PBEKeySpec.new(char[], byte[], int, int)) &&
           args(password, salt, iterationCount, keyLength) &&
           condition( ! ExecutionContext.instance().validate(Property.RANDOMIZED, salt) ) {
-            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec", "second argument should have been randomized " + __LOC));
+            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "PBEKeySpec",
+                 "" + __LOC, "second argument should have been randomized"));
         }
 
         event c2 after(PBEKeySpec s):
@@ -72,7 +75,8 @@ PBEKeySpecSpec(PBEKeySpec s) {
         ere : c1 c2
 
         @fail {
-          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "PBEKeySpec", "" + __LOC));
+          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "PBEKeySpec",
+               "" + __LOC));
           __RESET;
         }
 
