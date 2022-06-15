@@ -4,10 +4,11 @@ import javax.crypto.spec.PBEParameterSpec;
 
 public class StaticSaltsABSCase1 {
     CryptoStaticSalt1 crypto;
-    public StaticSaltsABSCase1() {
+    public static void main(String args[]) {
+        StaticSaltsABSCase1 m = new StaticSaltsABSCase1();
         byte[] salt = {(byte) 0xa2};
-        crypto = new CryptoStaticSalt1(salt);
-        crypto.method1(null);
+        m.crypto = new CryptoStaticSalt1(salt);
+        m.crypto.method1(null);
     }
 }
 

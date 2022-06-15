@@ -11,10 +11,11 @@ import java.security.SecureRandom;
 
 public class LessThan1000IterationPBEABSCase1 {
     CryptoPBEIteration1 crypto;
-    public LessThan1000IterationPBEABSCase1() throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
-        crypto = new CryptoPBEIteration1(20);
-        crypto.method1(0);
+    public static void main(String args[]) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
+        LessThan1000IterationPBEABSCase1 m = new LessThan1000IterationPBEABSCase1();
 
+        m.crypto = new CryptoPBEIteration1(20);
+        m.crypto.method1(0);
     }
 }
 
@@ -31,13 +32,10 @@ class CryptoPBEIteration1 {
 
         SecureRandom random = new SecureRandom();
         PBEParameterSpec pbeParamSpec = null;
-        byte[] salt = new byte[32];
+        byte[] salt = new byte[16];
         random.nextBytes(salt);
 
         pbeParamSpec = new PBEParameterSpec(salt,passedCount);
-
-
-
     }
 }
 

@@ -54,7 +54,7 @@ SSLContextSpec(SSLContext ctx) {
      target(ctx) {
        if (!protocols.contains(currentProtocol.toUpperCase())) {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeProtocol, "SSLContextSpec", "" + __LOC,
-        "one of {TLSv1.2, TLSv1.3} but found " + currentProtocol + "."));
+           "expecting one of {TLSv1.2, TLSv1.3} but found " + currentProtocol + "."));
        }
        ExecutionContext.instance().setProperty(Property.GENERATE_SSL_CONTEXT, context);
    }

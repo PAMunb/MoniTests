@@ -23,6 +23,4 @@ public class PredictableKeyStorePasswordBBCase1 {
         String defaultKey = "password";
         ks.load(cacerts.openStream(), defaultKey.toCharArray());
     }
-
-
 }

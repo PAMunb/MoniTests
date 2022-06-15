@@ -51,7 +51,7 @@ SignatureSpec(Signature s) {
          target(s) {
            if (!algorithms.contains(currentAlgorithmInstance)) {
               ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SignatureSpec", "" + __LOC,
-        "one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
+               "expecting one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
            }
         }
 
@@ -61,7 +61,7 @@ SignatureSpec(Signature s) {
          target(s) {
               if (!algorithms.contains(currentAlgorithmInstance)) {
                ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SignatureSpec", "" + __LOC,
-        "one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
+                "expecting one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
         }
         }
 
@@ -71,7 +71,7 @@ SignatureSpec(Signature s) {
          target(s) {
            if (!algorithms.contains(currentAlgorithmInstance)) {
                ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SignatureSpec", "" + __LOC,
-        "one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
+                "expecting one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
         }
         }
 
@@ -81,7 +81,7 @@ SignatureSpec(Signature s) {
          target(s) {
               if (!algorithms.contains(currentAlgorithmInstance)) {
                ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "SignatureSpec", "" + __LOC,
-        "one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
+                 "expecting one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
         }
         }
 

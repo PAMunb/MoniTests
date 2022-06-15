@@ -12,16 +12,17 @@ import java.util.Arrays;
 import java.security.SecureRandom;
 
 public class CredentialInStringABSCase1 {
-    Crypto crypto;
-    public CredentialInStringABSCase1() throws NoSuchAlgorithmException, NoSuchPaddingException {
+    CredentialInStringABSCase1Internal crypto;
+    public static void main(String args[]) throws NoSuchAlgorithmException, NoSuchPaddingException {
+        CredentialInStringABSCase1 m = new CredentialInStringABSCase1();
         String passKey = CredentialInStringABSCase1.getKey("pass.key");
 
         if(passKey == null) {
             SecureRandom random = new SecureRandom();
             String defaultKey = String.valueOf(random.ints());
-            crypto = new Crypto(defaultKey);
+            m.crypto = new CredentialInStringABSCase1Internal(defaultKey);
         }
-        crypto = new Crypto(passKey);
+        m.crypto = new CredentialInStringABSCase1Internal(passKey);
     }
 
     byte[] encryptPass(String pass, String src) throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
@@ -34,12 +35,12 @@ public class CredentialInStringABSCase1 {
     }
 }
 
-class Crypto {
+class CredentialInStringABSCase1Internal {
     Cipher cipher;
     String algoSpec = "AES/CBC/PKCS5Padding";
     String algo = "AES";
     String defaultKey;
-    public Crypto(String defkey) throws NoSuchPaddingException, NoSuchAlgorithmException {
+    public CredentialInStringABSCase1Internal(String defkey) throws NoSuchPaddingException, NoSuchAlgorithmException {
         cipher = Cipher.getInstance(algoSpec);
         defaultKey = defkey;
     }

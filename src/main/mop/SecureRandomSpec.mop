@@ -95,7 +95,10 @@ SecureRandomSpec(SecureRandom r) {
       call(public void SecureRandom.setSeed(byte[]))  &&
       args(seed) &&
       target(r) &&
-      condition(!ExecutionContext.instance().validate(Property.RANDOMIZED, seed)) {  }
+      condition(!ExecutionContext.instance().validate(Property.RANDOMIZED, seed)) {
+        ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsatisfiedConstraint, "SecureRandomSpec",
+        "setSeed() expects a randomized byte array." + __LOC));
+    }
 
     event genSeed after(SecureRandom r) returning(byte[] seed):
       call(public byte[] SecureRandom.generateSeed(int))

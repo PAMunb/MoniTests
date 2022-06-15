@@ -48,7 +48,7 @@ MessageDigestSpec(MessageDigest digest) {
         {
 //          ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "MessageDigestSpec", "" + __LOC,
 //             "expecting one of {SHA-256, SHA-384, SHA-512} but found " + alg + "."));
-		currentAlgorithmInstance = alg;
+		    currentAlgorithmInstance = alg;
         }
 
 	/*
@@ -81,7 +81,7 @@ MessageDigestSpec(MessageDigest digest) {
      target(digest) {
 		if (!algorithms.contains(currentAlgorithmInstance.toUpperCase())) {
 			ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "MessageDigestSpec", "" +
-		__LOC,"expecting one of {SHA-256, SHA-384, SHA-512} but found " + currentAlgorithmInstance + "."));
+		     __LOC, "expecting one of {SHA-256, SHA-384, SHA-512} but found " + currentAlgorithmInstance + "."));
 		}
     	ExecutionContext.instance().setProperty(Property.DIGESTED, out);
     }

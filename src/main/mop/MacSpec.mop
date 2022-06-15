@@ -44,7 +44,7 @@ MacSpec(Mac m) {
           condition(ExecutionContext.instance().validate(ExecutionContext.Property.GENERATED_KEY, key)) {
             if (!safeAlgorithms.contains(currentAlgorithmInstance)) {
                 ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "MacSpec", "" + __LOC,
-        "one of " + String.join(",", safeAlgorithms) + " but found " + currentAlgorithmInstance + "."));
+                 " expecting one of " + String.join(",", safeAlgorithms) + " but found " + currentAlgorithmInstance + "."));
             }
 
         }

@@ -52,7 +52,7 @@ TrustManagerFactorySpec(TrustManagerFactory mf) {
        ) && target(mf) {
         if (!algorithms.contains(currentAlgorithmInstance)) {
             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "TrustManagerFactorySpec", "" + __LOC,
-        "one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
+              "expecting one of " + String.join(",", algorithms) + " but found " + currentAlgorithmInstance + "."));
         }
        ExecutionContext.instance().setProperty(ExecutionContext.Property.GENERATED_TRUST_MANAGER, trustManagerFactory);
     }

@@ -1,5 +1,6 @@
 package br.unb.cic.mop.bench02.predictablekeystorepassword;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.KeyStore;
@@ -19,7 +20,7 @@ public class PredictableKeyStorePasswordABHCase2 {
     public void go() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         String type = "JKS";
         Map<String,String> hm = new HashMap<String, String>();
-        hm.put("aaa", "afix");
+        hm.put("aaa", "password");
         hm.put("bbb", "bfix");
         hm.put("ccc", "cfix");
         hm.put("ddd", "dfix");
@@ -27,7 +28,7 @@ public class PredictableKeyStorePasswordABHCase2 {
         String key = hm.get("aaa");
 
         KeyStore ks = KeyStore.getInstance(type);
-        cacerts = new URL("https://www.google.com");
+        cacerts = new File("./target/test-classes/testInput-ks").toURI().toURL();
         ks.load(cacerts.openStream(), key.toCharArray());
     }
 

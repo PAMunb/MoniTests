@@ -38,6 +38,17 @@ PBEParameterSpecSpec(PBEParameterSpec s) {
             spec = s;
         }
 
+        event c3 after(byte[] salt, int iterationCount) returning(PBEParameterSpec s):
+          call(public PBEParameterSpec.new(byte[], int)) &&
+          args(salt, iterationCount) &&
+          condition(
+            iterationCount < 10000 ||
+            !(ExecutionContext.instance().validate(Property.RANDOMIZED, salt))
+          ) {
+             ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "PBEParameterSpec", "" + __LOC,
+                    "expecting at least 1000 iterations and a randomized salt."));
+        }
+
         ere : c1 | c2
 
         @fail {

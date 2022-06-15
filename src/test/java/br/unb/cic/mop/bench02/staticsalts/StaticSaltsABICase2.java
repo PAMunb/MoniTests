@@ -3,7 +3,7 @@ package br.unb.cic.mop.bench02.staticsalts;
 import javax.crypto.spec.PBEParameterSpec;
 
 public class StaticSaltsABICase2 {
-    public static final String DEFAULT_SALT = "12345";
+    public static final String DEFAULT_SALT = "64";
     private static char[] SALT;
     private static char[] salt;
     public static void main(String [] args){

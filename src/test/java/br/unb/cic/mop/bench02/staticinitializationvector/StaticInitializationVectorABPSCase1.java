@@ -14,7 +14,7 @@ public class StaticInitializationVectorABPSCase1 {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecureRandom sr = new SecureRandom();
 
-        byte [] bytes = "abcde".getBytes();
+        byte [] bytes = "abcde-----------".getBytes();
 
         if(choice>1){
             bytes = new byte[16];
