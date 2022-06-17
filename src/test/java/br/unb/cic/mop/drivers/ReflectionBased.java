@@ -1,18 +1,24 @@
 package br.unb.cic.mop.drivers;
 
-import br.unb.cic.mop.eh.ErrorCollector;
-import com.google.common.reflect.ClassPath;
-import org.junit.*;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.google.common.reflect.ClassPath;
+
+import br.unb.cic.mop.eh.ErrorCollector;
 
 public abstract class ReflectionBased {
 
@@ -110,7 +116,7 @@ public abstract class ReflectionBased {
         Method[] methods = c.getDeclaredMethods();
 
         for(Method m: methods) {
-            if(m.getName().equals("main")) {
+            if("main".equals(m.getName())) {
                 return m;
             }
         }

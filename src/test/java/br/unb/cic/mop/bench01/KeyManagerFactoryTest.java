@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import br.unb.cic.misc.Assertions;
+
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.KeyStoreBuilderParameters;
@@ -11,8 +13,6 @@ import javax.net.ssl.ManagerFactoryParameters;
 import java.io.*;
 import java.security.*;
 import java.security.cert.CertificateException;
-
-import br.unb.cic.mop.test.Assertions;
 
 
 public class KeyManagerFactoryTest  {

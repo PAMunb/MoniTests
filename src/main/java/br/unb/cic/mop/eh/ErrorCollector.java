@@ -1,12 +1,12 @@
 package br.unb.cic.mop.eh;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import br.unb.cic.mop.eh.logger.CSVLogger;
 import br.unb.cic.mop.eh.logger.ILogger;
 import br.unb.cic.mop.eh.report.DefaultReport;
 import br.unb.cic.mop.eh.report.IErrorReport;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A singleton class for collecting errors while running
@@ -17,6 +17,9 @@ public class ErrorCollector {
 
     private Set<ErrorDescription> errors;
 
+    private Set<IErrorReport> errorReports;
+
+    @Deprecated
     private IErrorReport report;
 
     ILogger logger = new CSVLogger(); // TODO: we should use DI to inject a logger
@@ -31,6 +34,8 @@ public class ErrorCollector {
     private ErrorCollector() {
         report = new DefaultReport();
         errors = new HashSet<>();
+        //TODO
+        errorReports = new HashSet<>();
     }
 
     public void reset() {

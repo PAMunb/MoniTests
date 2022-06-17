@@ -2,6 +2,7 @@ package br.unb.cic.mop.eh;
 
 import java.util.Objects;
 
+//TODO private fields
 public class ErrorSummary {
     public String spec;
     public String error;
@@ -11,10 +12,16 @@ public class ErrorSummary {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ErrorSummary that = (ErrorSummary) o;
-        return Objects.equals(spec, that.spec) && Objects.equals(error, that.error) && Objects.equals(classQualifiedName, that.classQualifiedName) && Objects.equals(methodName, that.methodName) && Objects.equals(location, that.location);
+        return Objects.equals(spec, that.spec)
+                && Objects.equals(error, that.error)
+                && Objects.equals(classQualifiedName, that.classQualifiedName)
+                && Objects.equals(methodName, that.methodName)
+                && Objects.equals(location, that.location);
     }
 
     @Override
@@ -33,8 +40,7 @@ public class ErrorSummary {
 //            int idx = classQualifiedName.indexOf("$");
 //            res =  res.substring(0, idx);
 //        }
-        return res.substring(res.lastIndexOf(".")+1);
+        return res.substring(res.lastIndexOf(".") + 1);
     }
-
 
 }

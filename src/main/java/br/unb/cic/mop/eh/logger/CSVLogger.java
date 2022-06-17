@@ -1,17 +1,19 @@
 package br.unb.cic.mop.eh.logger;
 
-import br.unb.cic.mop.eh.ErrorDescription;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
+import br.unb.cic.mop.eh.ErrorDescription;
+
+@Deprecated
 public class CSVLogger implements ILogger {
 
     public static final String HEADER = "spec,class,className,method,location,error";
 
     @Override
     public void logError(ErrorDescription err) {
+
         File outDir = new File("output");
 
         if(! outDir.exists()) {

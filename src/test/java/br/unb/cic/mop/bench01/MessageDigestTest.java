@@ -6,7 +6,7 @@ import java.security.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import br.unb.cic.mop.test.Assertions;
+import br.unb.cic.misc.Assertions;
 
 public class MessageDigestTest  {
 

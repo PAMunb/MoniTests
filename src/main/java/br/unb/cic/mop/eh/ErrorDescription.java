@@ -72,6 +72,6 @@ public class ErrorDescription {
 
     @Override
     public String toString() {
-        return "[" + spec + "]" + " " + type + " at " + location + " expecting " + expecting;
+        return String.format("[%s] %s at %s expecting %s", spec, type, location, expecting);
     }
 }

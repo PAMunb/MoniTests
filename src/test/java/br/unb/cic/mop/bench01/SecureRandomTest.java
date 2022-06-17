@@ -1,8 +1,9 @@
 package br.unb.cic.mop.bench01;
 
 import br.unb.cic.mop.eh.ErrorCollector;
+import br.unb.cic.misc.Assertions;
 import br.unb.cic.mop.ExecutionContext;
-import br.unb.cic.mop.test.Assertions;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

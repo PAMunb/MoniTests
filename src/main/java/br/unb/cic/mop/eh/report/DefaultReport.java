@@ -1,14 +1,14 @@
 package br.unb.cic.mop.eh.report;
 
-import br.unb.cic.mop.eh.ErrorDescription;
-import br.unb.cic.mop.eh.ErrorSummary;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
+
+import br.unb.cic.mop.eh.ErrorDescription;
+import br.unb.cic.mop.eh.ErrorSummary;
 
 /**
  * This report exports the list of errors to a CSV
@@ -36,6 +36,8 @@ public class DefaultReport implements IErrorReport {
         }
 
         File csvOutputFile = new File(generateFileName());
+
+        System.err.println("********** ********** DefaultReport ...........");
 
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             pw.println(HEADER);

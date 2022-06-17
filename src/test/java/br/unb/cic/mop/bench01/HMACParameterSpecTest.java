@@ -1,8 +1,8 @@
 package br.unb.cic.mop.bench01;
 
-import br.unb.cic.mop.test.Assertions;
 import org.junit.Test;
 
+import br.unb.cic.misc.Assertions;
 
 import javax.xml.crypto.dsig.spec.HMACParameterSpec;
 

@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import br.unb.cic.misc.Assertions;
+
 import java.io.*;
 import java.security.*;
 import java.security.KeyStore.Entry;
@@ -13,8 +15,6 @@ import java.security.KeyStore.ProtectionParameter;
 import java.security.cert.CertificateException;
 import java.util.Collections;
 import java.util.Random;
-
-import br.unb.cic.mop.test.Assertions;
 
 
 public class KeyStoreTest  {

@@ -6,7 +6,7 @@
 
 	<groupId>br.unb.cic</groupId>
 	<artifactId>mop-test-suite</artifactId>
-	<version>1.2.5</version>
+	<version>1.2.6-SNAPSHOT</version>
 
 	<organization>
 		<name>Universidade de Brasília</name>
@@ -34,6 +34,9 @@
 		<spotbugs-maven-plugin.version>4.7.0.0</spotbugs-maven-plugin.version>
 		<fb-contrib.version>7.4.3.sb</fb-contrib.version>
 		<findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
+		<dependency-check-maven.version>7.1.1</dependency-check-maven.version>
+		<maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+		<com.puppycrawl.tools.checkstyle.version>10.3</com.puppycrawl.tools.checkstyle.version>
 	</properties>
 
 	<dependencies>
@@ -58,17 +61,19 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
+			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.10.2</version>
-		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>org.reflections</groupId> -->
+		<!-- <artifactId>reflections</artifactId> -->
+		<!-- <version>0.10.2</version> -->
+		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13.2</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.surefire</groupId>
@@ -124,6 +129,7 @@
 						<debug>false</debug>
 						<includeTests>false</includeTests>
 						<spotbugsXmlOutput>true</spotbugsXmlOutput>
+						<onlyAnalyze>br.unb.cic.*</onlyAnalyze>
 						<plugins>
 							<plugin>
 								<groupId>com.mebigfatguy.fb-contrib</groupId>
@@ -136,6 +142,65 @@
 								<version>${findsecbugs-plugin.version}</version>
 							</plugin>
 						</plugins>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.owasp</groupId>
+					<artifactId>dependency-check-maven</artifactId>
+					<version>${dependency-check-maven.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>${maven-checkstyle-plugin.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>${com.puppycrawl.tools.checkstyle.version}</version>
+						</dependency>
+						<!-- <dependency> -->
+						<!-- <groupId>io.spring.nohttp</groupId> -->
+						<!-- <artifactId>nohttp-checkstyle</artifactId> -->
+						<!-- <version>${versao.nohttp-checkstyle}</version> -->
+						<!-- </dependency> -->
+					</dependencies>
+					<configuration>
+						<configLocation>checkstyle.xml</configLocation>
+						<sourceDirectories>
+							<sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+							<!-- <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory> -->
+						</sourceDirectories>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+						<includes>pom.xml,**/*.java,**/*.xml,**/*.yml</includes>
+						<excludes>.git/**/*,target/**/*,node_modules/**/*,node/**/*,README.md</excludes>
+						<!-- <sourceDirectories>./</sourceDirectories> -->
+						<detail>true</detail>
+						<enableRulesSummary>true</enableRulesSummary>
+						<enableSeveritySummary>true</enableSeveritySummary>
+						<consoleOutput>true</consoleOutput>
+						<failsOnError>true</failsOnError>
+						<failOnViolation>true</failOnViolation>
+						<logViolationsToConsole>true</logViolationsToConsole>
+						<logViolationCountToConsole>true</logViolationCountToConsole>
+						<skip>${checkstyle.skip}</skip>
+						<maxAllowedViolations>0</maxAllowedViolations>
+						<!-- Valid values are "error", "warning" and "info". -->
+						<violationSeverity>error</violationSeverity>
 					</configuration>
 					<executions>
 						<execution>
@@ -176,9 +241,40 @@
 					<runOrder>alphabetical</runOrder>
 					<testFailureIgnore>false</testFailureIgnore>
 					<trimStackTrace>true</trimStackTrace>
+					<!-- <includes> -->
+					<!-- <include>br/unb/cic/mop/drivers/Bench01.java</include> -->
+					<!-- <include>br/unb/cic/mop/drivers/Bench02.java</include> -->
+					<!-- <include>br/unb/cic/mop/drivers/Bench03.java</include> -->
+					<!-- </includes> -->
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>check</id>
+			<properties>
+				<skipMopAgent>true</skipMopAgent>
+				<skipTests>true</skipTests>
+			</properties>
+			<build>
+				<plugins>
+					<!-- <plugin> -->
+					<!-- <groupId>org.apache.maven.plugins</groupId> -->
+					<!-- <artifactId>maven-checkstyle-plugin</artifactId> -->
+					<!-- </plugin> -->
+					<plugin>
+						<groupId>com.github.spotbugs</groupId>
+						<artifactId>spotbugs-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.owasp</groupId>
+						<artifactId>dependency-check-maven</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
