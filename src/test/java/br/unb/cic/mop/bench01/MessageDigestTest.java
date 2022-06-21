@@ -1,7 +1,10 @@
 package br.unb.cic.mop.bench01;
 
 import java.nio.ByteBuffer;
-import java.security.*;
+import java.security.DigestException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 import org.junit.Ignore;
 import org.junit.Test;

@@ -25,6 +25,7 @@ public abstract class ReflectionBased {
     private PrintStream original, dummy = null;
     private Logger logger;
 
+
     @BeforeClass
     public static void setUp() {
         ErrorCollector.instance().reset();
@@ -34,6 +35,8 @@ public abstract class ReflectionBased {
     public static void tearDown() throws Exception {
         ErrorCollector.instance().printErrors();
     }
+
+
 
     @Test
     public void executeBenchmark()  {

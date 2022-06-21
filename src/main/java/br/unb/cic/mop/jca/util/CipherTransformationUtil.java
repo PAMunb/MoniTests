@@ -7,14 +7,14 @@ import java.util.List;
 public class CipherTransformationUtil {
 
     public static String alg(String transformation) {
-       if(transformation.contains("/")) {
-           return transformation.split("/")[0];
-       }
-       return transformation;
+        if (transformation.contains("/")) {
+            return transformation.split("/")[0];
+        }
+        return transformation;
     }
 
     public static String mode(String transformation) {
-        if(transformation.contains("/")) {
+        if (transformation.contains("/")) {
             return transformation.split("/")[1];
         }
         return "";
@@ -22,7 +22,7 @@ public class CipherTransformationUtil {
 
     public static String pad(String transformation) {
         String[] arr = transformation.split("/");
-        if(arr.length == 3) {
+        if (arr.length == 3) {
             return arr[2];
         }
         return "";
@@ -39,13 +39,12 @@ public class CipherTransformationUtil {
         padding.put("CFB", Arrays.asList("", "NoPadding"));
         padding.put("OFB", Arrays.asList("", "NoPadding"));
 
-        if(alg(transformation).equals("AES")) {
-            if(modes.contains(mode(transformation))) {
+        if ("AES".equals(alg(transformation))) {
+            if (modes.contains(mode(transformation))) {
                 return padding.get(mode(transformation)).contains(pad(transformation));
             }
-        }
-        else if(alg(transformation).equals("RSA")) {
-            return mode(transformation).equals("") && pad(transformation).equals("");
+        } else if ("RSA".equals(alg(transformation))) {
+            return "".equals(mode(transformation)) && "".equals(pad(transformation));
         }
         return false;
     }

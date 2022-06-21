@@ -11,6 +11,7 @@ public class ErrorDescription {
     private String spec;
     private String location;
     private String expecting;
+    private ErrorSummary summary;
 
     public ErrorDescription(ErrorType type, String spec, String location) {
         this(type, spec, location, "unknown");
@@ -21,38 +22,42 @@ public class ErrorDescription {
         this.spec = spec;
         this.location = location;
         this.expecting = expecting;
-    }
-
-    public String getSpec() {
-        return spec;
+        summary = createErrorSummary();
     }
 
     public ErrorType getType() {
         return type;
     }
 
+    public String getSpec() {
+        return spec;
+    }
+
     public String getLocation() {
         return location;
     }
 
+    public String getExpecting() {
+        return expecting;
+    }
+
     public ErrorSummary getErrorSummary() {
-        ErrorSummary s = new ErrorSummary();
-        s.spec = spec;
-        s.error = type.toString();
+        return summary;
+    }
+
+    private ErrorSummary createErrorSummary() {
+        String clazz = location;
+        String method = location;
+        String loc = location;
 
         Matcher matcher = pattern.matcher(location);
-
-        s.classQualifiedName = location;
-        s.methodName = location;
-        s.location = location;
-
         if (matcher.matches()) {
-            s.classQualifiedName = matcher.group(1);
-            s.methodName = matcher.group(2);
-            s.location = matcher.group(3);
+            clazz = matcher.group(1);
+            method = matcher.group(2);
+            loc = matcher.group(3);
         }
 
-        return s;
+        return new ErrorSummary(spec, type, clazz, method, loc);
     }
 
     @Override
@@ -74,4 +79,5 @@ public class ErrorDescription {
     public String toString() {
         return String.format("[%s] %s at %s expecting %s", spec, type, location, expecting);
     }
+
 }
