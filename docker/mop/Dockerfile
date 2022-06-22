@@ -11,7 +11,7 @@ RUN git clone https://github.com/PAMunb/mop-maven-plugin.git && \
 		
 RUN mkdir /projects/output && \
 	mkdir /projects/mop && \
-	git clone https://github.com/helpmehelpus/MoniTests.git && \
+	git clone https://github.com/PAMunb/MoniTests.git && \
 	cd MoniTests && \
 	mvn clean install -DskipTests -DskipMopAgent && \
 	cd src/main && \

@@ -176,6 +176,9 @@
 					<pathToMopFiles>src/main/mop</pathToMopFiles>
 					<pathToJavaMop>${basedir}/../javamop/bin</pathToJavaMop>
 					<pathToMonitor>${basedir}/../rv-monitor/bin</pathToMonitor>
+					
+					<generateMopStatistics>true</generateMopStatistics>
+		
 				</configuration>
 			</plugin>
 			<plugin>

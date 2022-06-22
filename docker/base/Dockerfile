@@ -31,9 +31,3 @@ RUN git clone https://github.com/owolabileg/javamop.git && \
     git checkout -b statistics 6b602baccf1c3a97d7e8123b0a132f9ea34ffe31 && \
 	mvn clean install -DskipTests && \
 	cd ..		
-	
-#RUN git clone https://github.com/PAMunb/mop-maven-plugin.git && \
-#    cd mop-maven-plugin && \
-#	mvn clean install && \
-#	cd ..				
-
