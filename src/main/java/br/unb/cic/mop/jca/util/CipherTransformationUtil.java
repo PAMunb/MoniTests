@@ -31,21 +31,21 @@ public class CipherTransformationUtil {
     public static boolean isValid(String transformation) {
         List<String> modes = Arrays.asList("CBC", "GCM", "PCBC", "CTR", "CTS", "CFB", "OFB");
         HashMap<String, List<String>> padding = new HashMap<>();
-        padding.put("CBC", Arrays.asList("PKCS5Padding", "ISO10126Padding", "PKCS5PADDING"));
-        padding.put("PCBC", Arrays.asList("PKCS5Padding", "ISO10126Padding", "PKCS5PADDING"));
-        padding.put("GCM", Arrays.asList("", "NoPadding"));
-        padding.put("CTR", Arrays.asList("", "NoPadding"));
-        padding.put("CTS", Arrays.asList("", "NoPadding"));
-        padding.put("CFB", Arrays.asList("", "NoPadding"));
-        padding.put("OFB", Arrays.asList("", "NoPadding"));
+        padding.put("CBC", Arrays.asList("PKCS5PADDING", "ISO10126PADDING", "PKCS5PADDING"));
+        padding.put("PCBC", Arrays.asList("PKCS5PADDING", "ISO10126PADDING", "PKCS5PADDING"));
+        padding.put("GCM", Arrays.asList("", "NOPADDING"));
+        padding.put("CTR", Arrays.asList("", "NOPADDING"));
+        padding.put("CTS", Arrays.asList("", "NOPADDING"));
+        padding.put("CFB", Arrays.asList("", "NOPADDING"));
+        padding.put("OFB", Arrays.asList("", "NOPADDING"));
 
         if(alg(transformation).equals("AES")) {
             if(modes.contains(mode(transformation))) {
-                return padding.get(mode(transformation)).contains(pad(transformation));
+                return padding.get(mode(transformation)).contains(pad(transformation).toUpperCase());
             }
         }
         else if(alg(transformation).equals("RSA")) {
-            return mode(transformation).equals("") && pad(transformation).equals("");
+            return mode(transformation).equals("") && pad(transformation).equalsIgnoreCase("");
         }
         return false;
     }
