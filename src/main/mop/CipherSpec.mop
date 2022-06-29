@@ -63,7 +63,11 @@ CipherSpec(Cipher c) {
      call(public void Cipher.init(int, Key,..)) &&
      args(mode, key, ..) &&
      target(c) &&
-     condition(ExecutionContext.instance().validate(Property.GENERATED_KEY, key)){
+     condition(
+         ExecutionContext.instance().validate(Property.GENERATED_KEY, key)
+      || ExecutionContext.instance().validate(Property.GENERATED_PUBLIC_KEY, key)
+      || ExecutionContext.instance().validate(Property.GENERATED_PRIVATE_KEY, key)
+     ){
         if (!isValid(currentTransformation)) {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "CipherSpec", "" + __LOC,
         "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + currentTransformation + "."));
