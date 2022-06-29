@@ -1,58 +1,83 @@
 package br.unb.cic.mop.eh;
 
-import br.unb.cic.mop.eh.logger.CSVLogger;
-import br.unb.cic.mop.eh.logger.ILogger;
-import br.unb.cic.mop.eh.report.DefaultReport;
-import br.unb.cic.mop.eh.report.IErrorReport;
-
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import br.unb.cic.mop.eh.logger.CsvLogger;
+import br.unb.cic.mop.eh.logger.ILogger;
+import br.unb.cic.mop.eh.logger.StdOutLogger;
+
 /**
- * A singleton class for collecting errors while running
- * the monitoring process.
+ * A singleton class for collecting errors while running the monitoring process.
  */
 public class ErrorCollector {
     private static ErrorCollector instance;
 
     private Set<ErrorDescription> errors;
 
-    private IErrorReport report;
-
-    ILogger logger = new CSVLogger(); // TODO: we should use DI to inject a logger
+    private Map<Class<? extends ILogger>, ILogger> loggers;
 
     public static ErrorCollector instance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new ErrorCollector();
         }
         return instance;
     }
 
     private ErrorCollector() {
-        report = new DefaultReport();
         errors = new HashSet<>();
+
+        loggers = new HashMap<>();
+        addLogger(new CsvLogger());
+//        addLogger(new CsvSummaryLogger());
+//        addLogger(new StdOutLogger());
+
     }
 
     public void reset() {
         errors = new HashSet<>();
     }
 
+    public void addError(ErrorType type, String spec, String location) {
+        addError(new ErrorDescription(type, spec, location));
+    }
+
+    public void addError(ErrorType type, String spec, String location, String expecting) {
+        addError(new ErrorDescription(type, spec, location, expecting));
+    }
+
     public void addError(ErrorDescription err) {
-        if(!errors.contains(err)) {
-            errors.add(err);
-            logger.logError(err);
+        if (errors.add(err)) {
+            loggers.values().forEach(l -> l.logError(err));
         }
     }
 
     public Set<ErrorDescription> getErrors() {
-        return errors;
+        return Collections.unmodifiableSet(errors);
     }
 
-    public void setReport(IErrorReport report) {
-        this.report = report;
+    public void addLogger(ILogger logger) {
+        loggers.put(logger.getClass(), logger);
     }
 
+    public void removeLogger(Class<? extends ILogger> clazz) {
+        loggers.remove(clazz);
+    }
+
+    public Set<Class<? extends ILogger>> listLoggers() {
+        return Collections.unmodifiableSet(loggers.keySet());
+    }
+
+    @Deprecated
     public void printErrors() throws Exception {
-        report.exportErrors(errors);
+        System.err.println("printErrors ................................");
+        ILogger logger = new StdOutLogger();
+
+        for (ErrorDescription error : errors) {
+            logger.logError(error);
+        }
     }
 }

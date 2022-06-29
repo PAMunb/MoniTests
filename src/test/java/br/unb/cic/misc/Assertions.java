@@ -1,9 +1,9 @@
-package br.unb.cic.mop.test;
-
-import br.unb.cic.mop.eh.ErrorCollector;
-import br.unb.cic.mop.ExecutionContext;
+package br.unb.cic.misc;
 
 import org.junit.Assert;
+
+import br.unb.cic.mop.ExecutionContext;
+import br.unb.cic.mop.eh.ErrorCollector;
 
 public class Assertions extends Assert {
 

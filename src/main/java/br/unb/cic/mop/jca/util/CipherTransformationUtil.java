@@ -7,14 +7,14 @@ import java.util.List;
 public class CipherTransformationUtil {
 
     public static String alg(String transformation) {
-       if(transformation.contains("/")) {
-           return transformation.split("/")[0];
-       }
-       return transformation;
+        if (transformation.contains("/")) {
+            return transformation.split("/")[0];
+        }
+        return transformation;
     }
 
     public static String mode(String transformation) {
-        if(transformation.contains("/")) {
+        if (transformation.contains("/")) {
             return transformation.split("/")[1];
         }
         return "";
@@ -22,7 +22,7 @@ public class CipherTransformationUtil {
 
     public static String pad(String transformation) {
         String[] arr = transformation.split("/");
-        if(arr.length == 3) {
+        if (arr.length == 3) {
             return arr[2];
         }
         return "";

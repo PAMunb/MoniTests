@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import br.unb.cic.misc.Assertions;
+
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,8 +15,6 @@ import java.security.*;
 import java.security.cert.CertSelector;
 import java.security.cert.CertificateException;
 import java.security.cert.PKIXBuilderParameters;
-
-import br.unb.cic.mop.test.Assertions;
 
 
 public class TrustManagerFactoryTest  {

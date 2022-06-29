@@ -1,8 +1,9 @@
 package br.unb.cic.mop.bench01;
 
-import br.unb.cic.mop.test.Assertions;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import br.unb.cic.misc.Assertions;
 
 import javax.crypto.spec.DHGenParameterSpec;
 import java.security.*;

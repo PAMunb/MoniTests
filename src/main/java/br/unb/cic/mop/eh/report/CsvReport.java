@@ -1,20 +1,22 @@
-package br.unb.cic.mop.eh.logger;
-
-import br.unb.cic.mop.eh.ErrorDescription;
+package br.unb.cic.mop.eh.report;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.Set;
 
-public class CSVLogger implements ILogger {
+import br.unb.cic.mop.eh.ErrorDescription;
+
+@Deprecated
+public class CsvReport implements IErrorReport {
 
     public static final String HEADER = "spec,class,className,method,location,error";
 
     @Override
-    public void logError(ErrorDescription err) {
+    public void exportErrors(Set<ErrorDescription> errors) throws Exception {
         File outDir = new File("output");
 
-        if(! outDir.exists()) {
+        if (!outDir.exists()) {
             outDir.mkdir();
         }
 
@@ -23,11 +25,11 @@ public class CSVLogger implements ILogger {
         boolean generateHeader = !logger.exists();
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(logger, true))) {
-            if(generateHeader) {
+            if (generateHeader) {
                 pw.println(HEADER);
             }
-            pw.println(err.getErrorSummary().toString());
-        }
-        catch(Exception e) {}
+            errors.forEach(err -> pw.println(err.getErrorSummary().toString()));
+        } catch (Exception e) { }
     }
+
 }

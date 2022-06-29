@@ -5,10 +5,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ErrorDescription {
+    static Pattern pattern = Pattern.compile("([\\w+\\.\\$]+)[.](\\<?\\w+\\>?)\\((.+)\\)");
+
     private ErrorType type;
     private String spec;
     private String location;
     private String expecting;
+    private ErrorSummary summary;
 
     public ErrorDescription(ErrorType type, String spec, String location) {
         this(type, spec, location, "unknown");
@@ -19,49 +22,50 @@ public class ErrorDescription {
         this.spec = spec;
         this.location = location;
         this.expecting = expecting;
-    }
-
-    public String getSpec() {
-        return spec;
+        summary = createErrorSummary();
     }
 
     public ErrorType getType() {
         return type;
     }
 
+    public String getSpec() {
+        return spec;
+    }
+
     public String getLocation() {
         return location;
     }
 
-    public ErrorSummary getErrorSummary() {
-        ErrorSummary s = new ErrorSummary();
-        s.spec = spec;
-        s.error = type.toString();
-
-        Pattern pattern = Pattern.compile("([\\w+\\.\\$]+)[.](\\<?\\w+\\>?)\\((.+)\\)");
-        Matcher matcher = pattern.matcher(location);
-
-        s.classQualifiedName = location;
-        s.methodName = location;
-        s.location = location;
-
-        if(matcher.matches()) {
-            s.classQualifiedName = matcher.group(1);
-            s.methodName = matcher.group(2);
-            s.location = matcher.group(3);
-        }
-        return s;
+    public String getExpecting() {
+        return expecting;
     }
 
-    @Override
-    public String toString() {
-        return "[" + spec + "]" + " " + type + " at " + location + " expecting " + expecting;
+    public ErrorSummary getErrorSummary() {
+        return summary;
+    }
+
+    private ErrorSummary createErrorSummary() {
+        String clazz = location;
+        String method = location;
+        String loc = location;
+
+        Matcher matcher = pattern.matcher(location);
+        if (matcher.matches()) {
+            clazz = matcher.group(1);
+            method = matcher.group(2);
+            loc = matcher.group(3);
+        }
+
+        return new ErrorSummary(spec, type, clazz, method, loc);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ErrorDescription that = (ErrorDescription) o;
         return getErrorSummary().equals(that.getErrorSummary());
     }
@@ -70,4 +74,10 @@ public class ErrorDescription {
     public int hashCode() {
         return Objects.hash(getErrorSummary().hashCode());
     }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s at %s expecting %s", spec, type, location, expecting);
+    }
+
 }

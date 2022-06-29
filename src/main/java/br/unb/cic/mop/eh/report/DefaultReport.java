@@ -1,37 +1,29 @@
 package br.unb.cic.mop.eh.report;
 
-import br.unb.cic.mop.eh.ErrorDescription;
-import br.unb.cic.mop.eh.ErrorSummary;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 import java.util.Set;
 
-/**
- * This report exports the list of errors to a CSV
- * file. This is a short representation of the erros.
- * And a given type of error appears only once in a given
- * method.
- */
-public class DefaultReport implements IErrorReport {
+import br.unb.cic.mop.eh.ErrorDescription;
 
-    public static final String HEADER = "spec,error,class,className,method";
+/**
+ * This report exports the list of errors to a CSV file. This is a short
+ * representation of the erros. And a given type of error appears only once in a
+ * given method.
+ */
+@Deprecated
+public class DefaultReport implements IErrorReport {
+    static final String HEADER = "spec,error,class,className,method";
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     @Override
     public void exportErrors(Set<ErrorDescription> errors) throws Exception {
-        Set<ErrorSummary> summary = new HashSet<>();
-
-        for(ErrorDescription err: errors) {
-            ErrorSummary s = err.getErrorSummary();
-            summary.add(s);
-        }
-
         File outDir = new File("output");
 
-        if(! outDir.exists()) {
+        if (!outDir.exists()) {
             outDir.mkdir();
         }
 
@@ -39,15 +31,16 @@ public class DefaultReport implements IErrorReport {
 
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             pw.println(HEADER);
-            summary.stream().forEach(pw::println);
+            errors.stream()
+                    .map(ErrorDescription::getErrorSummary)
+                    .map(s -> String.format("%s,%s,%s,%s,%s", s.getSpec(), s.getError(), s.getClassQualifiedName(), s.getClassQualifiedName(), s.getMethodName()))
+                    .forEach(pw::println);
         }
     }
 
-
     private String generateFileName() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime now = LocalDateTime.now();
 
-        return "output/report-" + dtf.format(now) + ".csv";
+        return "output"+File.separator+"report-" + dtf.format(now) + ".csv";
     }
 }
