@@ -36,14 +36,15 @@ $ cd projects
    * clone and build the rv-monitor and java-mop projects
    
 ```{shell}
-$ git clone https://github.com/runtimeverification/rv-monitor.git
+$ git clone https://github.com/PAMunb/rv-monitor.git
 $ cd rv-monitor
-$ mvn clean package install
-$ export PATH=$PATH:./target/release/rv-monitor/bin
+$ git checkout statistics-1.4
+$ mvn clean package install -DskipTests
 $ cd ..
 
-$ git clone https://github.com/runtimeverification/javamop.git
+$ git clone https://github.com/PAMunb/javamop.git
 $ cd javamop
+$ git checkout statistics-4.0
 $ mvn clean package install
 $ cd ..
 ````
@@ -56,14 +57,14 @@ $ cd mop-maven-plugin
 $ mvn compile package install
 ```
 
+   * clone this repository and execute the test cases
+
+```{shell}
+$ mvn test
+```
+
    * setup the classpath
 
 ```{shell}
 $ source ./config.sh		  
-````
-
-   * clone the repository and execute the test cases
-
-```{shell}
-$ mvn test
 ```
