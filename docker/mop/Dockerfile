@@ -1,18 +1,24 @@
 FROM pamunb/mop-base:0.0.1
 
-ARG RV_MONITOR_VERSION="1.4-SNAPSHOT"
+ARG RV_MONITOR_VERSION="statistics-1.4"
 
 WORKDIR /projects		
 		
 RUN git clone https://github.com/PAMunb/mop-maven-plugin.git && \
     cd mop-maven-plugin && \
+    git checkout 1.0.1 && \
 	mvn clean install && \
 	cd ..				
 		
+#TODO: fix the pom (rv-monitor version) in the next tag and generate/publish the image again	
+COPY pom.xml /tmp			
+
 RUN mkdir /projects/output && \
 	mkdir /projects/mop && \
 	git clone https://github.com/PAMunb/MoniTests.git && \
 	cd MoniTests && \
+	git checkout v-1.2.8 && \
+	cp -v /tmp/pom.xml . && \
 	mvn clean install -DskipTests -DskipMopAgent && \
 	cd src/main && \
 	rm -Rf mop && \

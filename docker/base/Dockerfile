@@ -13,9 +13,9 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update && \
 	apt-get clean && apt-get --purge -y autoremove && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 	
-RUN git clone https://github.com/owolabileg/rv-monitor.git && \
+RUN git clone https://github.com/PAMunb/rv-monitor.git && \
     cd rv-monitor && \
-    git checkout -b statistics 2848c85a7589077f14384c9c730371507df07bfe && \
+    git checkout statistics-1.4 && \
 	mvn clean install -DskipTests && \
 	cd ..
 COPY rv-monitor /projects/rv-monitor/target/release/rv-monitor/bin/
@@ -26,8 +26,8 @@ RUN mkdir aspectj && \
 	java -jar aspectj-1.8.14.jar -to /projects/aspectj && \
 	rm /projects/aspectj-1.8.14.jar
 		
-RUN git clone https://github.com/owolabileg/javamop.git && \
+RUN git clone https://github.com/PAMunb/javamop.git && \
     cd javamop && \
-    git checkout -b statistics 6b602baccf1c3a97d7e8123b0a132f9ea34ffe31 && \
+    git checkout statistics-4.0 && \
 	mvn clean install -DskipTests && \
 	cd ..		

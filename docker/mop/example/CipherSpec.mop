@@ -1,5 +1,6 @@
 package mop;
 
+import java.security.Provider;
 import java.security.Key;
 import javax.crypto.Cipher;
 import java.security.SecureRandom;
@@ -40,9 +41,15 @@ CipherSpec(Cipher c) {
         currentTransformation = transformation;
         cipher = c;
    }
+   event g3 after(String transformation, Provider provider) returning(Cipher c):
+       call(public static Cipher Cipher.getInstance(String, Provider)) &&
+       args(transformation, provider) &&
+       condition(isValid(transformation)) {
+         currentTransformation = transformation;
+         cipher = c;
+    }
 
-
-   event g3 after(String transformation) returning(Cipher c):
+   event g4 after(String transformation) returning(Cipher c):
      call(public static Cipher Cipher.getInstance(String)) &&
      args(transformation) &&
      condition(!isValid(transformation)) {
@@ -63,7 +70,11 @@ CipherSpec(Cipher c) {
      call(public void Cipher.init(int, Key,..)) &&
      args(mode, key, ..) &&
      target(c) &&
-     condition(ExecutionContext.instance().validate(Property.GENERATED_KEY, key)){
+     condition(
+         ExecutionContext.instance().validate(Property.GENERATED_KEY, key)
+      || ExecutionContext.instance().validate(Property.GENERATED_PUBLIC_KEY, key)
+      || ExecutionContext.instance().validate(Property.GENERATED_PRIVATE_KEY, key)
+     ){
         if (!isValid(currentTransformation)) {
         ErrorCollector.instance().addError(new ErrorDescription(ErrorType.UnsafeAlgorithm, "CipherSpec", "" + __LOC,
         "expecting one of {AES/CBC/PKCS5Padding, AES/PCBC/ISO10126Padding, ...} but found " + currentTransformation + "."));
@@ -153,14 +164,16 @@ CipherSpec(Cipher c) {
 
    fsm :
      start [
-        g3 -> unsafeAlg
+        g4 -> unsafeAlg
         g1 -> s1
         g2 -> s1
+        g3 -> s1
      ]
      unsafeAlg [
-        g3 -> unsafeAlg
+        g4 -> unsafeAlg
         g1 -> s1
-        g2 -> s2
+        g2 -> s1
+        g3 -> s1
      ]
      s1 [
        i1 -> s2

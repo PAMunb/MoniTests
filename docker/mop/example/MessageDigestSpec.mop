@@ -1,5 +1,6 @@
 package mop;
 
+import java.security.Provider;
 import java.security.MessageDigest;
 import java.util.List;
 
@@ -37,12 +38,19 @@ MessageDigestSpec(MessageDigest digest) {
 	  currentAlgorithmInstance = alg;
     }
 
+    event g3 after(String alg, Provider provider) returning(MessageDigest digest):
+      call(public static MessageDigest MessageDigest.getInstance(String, Provider))
+      && args(alg, provider) && condition(algorithms.contains(alg.toUpperCase())) {
+        md = digest;
+    	currentAlgorithmInstance = alg;
+    }
+
 	/*
 	We no longer throw errors after unsafe instantiation events, otherwise we would throw InvalidSequenceOfMethodCalls
 	in cases like (g3* g1 | g3* g2).
 	Not throwing here eliminates the InvalidSequenceOfMethodCalls false positive in bench02.BrokenHashABPSCase1
 	 */
-	event g3 after(String alg) returning(MessageDigest digest):
+	event g4 after(String alg) returning(MessageDigest digest):
 	  call(public static MessageDigest MessageDigest.getInstance(String))
     	  && args(alg) && condition(!algorithms.contains(currentAlgorithmInstance.toUpperCase()))
         {
@@ -97,7 +105,7 @@ MessageDigestSpec(MessageDigest digest) {
 	Allowing g3 followed by g1 or g2 will eliminate the Invalid SequenceOfMethodCalls false positive in
 	bench02.BrokenHashABPSCase1
 	*/
-	ere : (g3* g1 | g3* g2) (d2 | (update+ (d1 | d2 | d3)))+
+	ere : (g4* g1 | g4* g2 | g4* g3) (d2 | (update+ (d1 | d2 | d3)))+
 
 	@fail {
            ErrorCollector.instance().addError(new ErrorDescription(ErrorType.InvalidSequenceOfMethodCalls, "MessageDigestSpec",  "" + __LOC));
