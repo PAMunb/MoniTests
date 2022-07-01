@@ -24,7 +24,11 @@
 		<skipMopAgent>false</skipMopAgent>
 		<skipTests>false</skipTests>
 
+		<rv-monitor.version>statistics-1.4</rv-monitor.version>
+		<mop-maven-plugin.version>1.0.2-SNAPSHOT</mop-maven-plugin.version>
+		
 		<aspectj.version>1.8.1</aspectj.version>
+		<guava.version>19.0</guava.version>
 
 		<maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
 		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
@@ -43,8 +47,7 @@
 		<dependency>
 			<groupId>com.runtimeverification.rvmonitor</groupId>
 			<artifactId>rv-monitor</artifactId>
-			<!-- Allow any released (non-snapshot) RV-Monitor release >= 1.3 -->
-			<version>1.4-SNAPSHOT</version>
+			<version>${rv-monitor.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -62,7 +65,7 @@
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -163,7 +166,7 @@
 			<plugin>
 				<groupId>br.unb.cic</groupId>
 				<artifactId>mop-maven-plugin</artifactId>
-				<version>1.0.1</version>
+				<version>${mop-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -176,9 +179,8 @@
 					<pathToMopFiles>src/main/mop</pathToMopFiles>
 					<pathToJavaMop>${basedir}/../javamop/bin</pathToJavaMop>
 					<pathToMonitor>${basedir}/../rv-monitor/bin</pathToMonitor>
-					
+
 					<generateMopStatistics>true</generateMopStatistics>
-		
 				</configuration>
 			</plugin>
 			<plugin>
@@ -191,12 +193,12 @@
 					<runOrder>alphabetical</runOrder>
 					<testFailureIgnore>false</testFailureIgnore>
 					<trimStackTrace>true</trimStackTrace>
-<!-- 					<includes> -->
-<!-- 						<include>br.unb.cic.mop.bench01.MessageDigestTest</include> -->
-						<!-- <include>br/unb/cic/mop/drivers/Bench01.java</include> -->
-						<!-- <include>br/unb/cic/mop/drivers/Bench02.java</include> -->
-						<!-- <include>br/unb/cic/mop/drivers/Bench03.java</include> -->
-<!-- 					</includes> -->
+					<!-- <includes> -->
+					<!-- <include>br.unb.cic.mop.bench01.MessageDigestTest</include> -->
+					<!-- <include>br/unb/cic/mop/drivers/Bench01.java</include> -->
+					<!-- <include>br/unb/cic/mop/drivers/Bench02.java</include> -->
+					<!-- <include>br/unb/cic/mop/drivers/Bench03.java</include> -->
+					<!-- </includes> -->
 				</configuration>
 			</plugin>
 		</plugins>

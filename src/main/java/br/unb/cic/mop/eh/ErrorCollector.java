@@ -73,7 +73,6 @@ public class ErrorCollector {
 
     @Deprecated
     public void printErrors() throws Exception {
-        System.err.println("printErrors ................................");
         ILogger logger = new StdOutLogger();
 
         for (ErrorDescription error : errors) {

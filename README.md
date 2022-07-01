@@ -39,13 +39,13 @@ $ cd projects
 $ git clone https://github.com/PAMunb/rv-monitor.git
 $ cd rv-monitor
 $ git checkout statistics-1.4
-$ mvn clean package install -DskipTests
+$ mvn clean install -DskipTests
 $ cd ..
 
 $ git clone https://github.com/PAMunb/javamop.git
 $ cd javamop
 $ git checkout statistics-4.0
-$ mvn clean package install
+$ mvn clean install
 $ cd ..
 ````
 
@@ -54,7 +54,7 @@ $ cd ..
 ```{shell}
 $ git clone https://github.com/PAMunb/mop-maven-plugin.git
 $ cd mop-maven-plugin
-$ mvn compile package install
+$ mvn clean install
 ```
 
    * clone this repository and execute the test cases
